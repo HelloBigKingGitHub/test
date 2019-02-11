@@ -1,0 +1,95 @@
+/*杞挱鍣�--------------------------------------------------------------------------------------------------------------*/
+/*灏嗚疆鎾櫒澶撮儴澶栬竟璺濊缃�50鍍忕礌*/
+#myCarousel {
+    margin: 50px 0 0 0;
+    z-index:-1;
+}
+.carousel-inner .item img {
+    margin: 0 auto;
+}
+.tp1{
+    background:#ECEDF1;
+}
+.tp2{
+    background:#ECEDF1;
+}
+.tp3{
+    background:#ECEDF1;
+}
+
+/*棣栭〉鑿滃崟渚ф爮鐨刢ss鏍峰紡*/
+.menu{
+	position: relative;
+    top: -375px;
+}
+
+/*缃戦〉椤靛ご鐨勬牱寮�*/
+.page-header{
+	margin-top: 10px;
+
+
+}
+
+/**首页的下部分样式**/
+
+.title{
+	border-bottom: 1px solid #e5e5e5;
+    color: #08b2e3;
+    font-size: 18px;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+.school_news{
+
+	width: 65%;
+}
+.school_news li{
+	list-style-type: disc;
+    list-style-position: inside;
+    text-align: -webkit-match-parent;
+    color: #08b2e3;
+}
+.school_news span{
+	margin-left: 140px; 
+}
+.ranking div{
+	display: inline;
+	margin-right: 20px;
+}
+.video{
+	margin-bottom: 50px;
+	margin-top: 50px;
+
+}
+.course {
+	margin-bottom: 50px;
+
+}
+.friendship-link{
+	margin-bottom: 50px;
+}
+.cloumn{
+	display: inline-table;
+}
+.box{
+	margin-right: 30px;
+}
+.box >p>a{
+	display: inline-block;
+}
+.box >p>a>img{
+	width: 220px;
+	height: 146px;
+	border-radius: 13px; 
+}
+.friendship-link{
+	margin-top: 20px;
+	background-color: #f9f9f9;
+}
+.c1{
+	display: inline-block;
+	width: 283px;
+	height: 87px;
+	margin-right: 50px;
+	border:1px solid #e3e197;background:#ffffdd
+}

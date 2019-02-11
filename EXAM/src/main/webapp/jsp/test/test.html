@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"> 
+	<title>Bootstrap 实例 - 简单的轮播（Carousel）插件</title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/user_index.css">
+	<script src="js/jquery-3.2.1.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/user_index.js"></script>
+</head>
+<body>
+	<div id="myCarousel" class="carousel slide">                        <!--设置轮播器区域样式，设置轮播器滚动样式-->
+	    <ol class="carousel-indicators">                                <!--设置轮播器列表区域样式，就是小圆点区域样式-->
+	        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>    <!--设置当前列表首选-->
+	        <li data-target="#myCarousel" data-slide-to="1"></li>
+	        <li data-target="#myCarousel" data-slide-to="2"></li>
+	    </ol>
+	    <div class="carousel-inner">                                    <!--设置轮播器图片区域-->
+	        <div class="item active tp1">                                <!--设置轮播器图片样式-->
+	            <a href="#"><img src="images/slide1.png" alt="第一张"></a>
+	        </div>
+	        <div class="item tp2">
+	            <a href="#"><img src="images/slide2.png" alt="第二张"></a>
+	        </div>
+	        <div class="item tp3">
+	            <a href="#"><img src="images/slide3.png" alt="第三张"></a>
+	        </div>
+	    </div>
+	    <!--设置轮播器箭头区域-->
+	    <a href="#myCarousel" data-slide="prev" class="carousel-control left">
+	        <span class="glyphicon glyphicon-chevron-left"></span>
+	    </a>
+	    <a href="#myCarousel" data-slide="next" class="carousel-control right">
+	        <span class="glyphicon glyphicon-chevron-right"></span>
+	    </a>
+	</div>
+
+
+ 
+<div class="input-group">
+  <div class="input-group-btn">
+    <!-- Buttons -->
+  </div>
+  <input type="text" class="form-control" aria-label="1">
+</div>
+
+<div class="input-group">
+  <input type="text" class="form-control" aria-label="2">
+  <div class="input-group-btn">
+    <!-- Buttons -->
+  </div>
+</div>
+</body>
+</html>

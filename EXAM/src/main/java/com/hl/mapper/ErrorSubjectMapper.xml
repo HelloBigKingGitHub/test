@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hl.mapper.ErrorSubjectMapper">
+
+	<insert id="insertErrorSubject" parameterType="ErrorSubject">
+		insert into errorsubject(sid,userid,ekey) values(#{subject.sid},#{userid},#{ekey});
+	</insert>
+	<select id="errorSubjectIsExist" parameterType="ErrorSubject" resultMap="errorSubjectMap">
+	    select es.* from errorsubject es 
+	    join  subject s
+	    on es.sid = s.sid
+	    where es.sid = #{subject.sid}
+	    and ekey = #{ekey}
+	</select>
+	<resultMap type="ErrorSubject" id="errorSubjectMap">
+	 <id column="esid" property="esid"/>
+	 <result column="userid" property="userid"/>
+	 <result column="ekey" property="ekey"/>
+	 <association property="subject" javaType="ChoseSubject">
+	   <id column="sid" jdbcType="INTEGER" property="sid"/>
+	   <result column="scontent" jdbcType="VARCHAR" property="scontent"/>
+	   <result column="skey" jdbcType="VARCHAR" property="skey"/>
+	   <result column="sa" jdbcType="VARCHAR" property="sa"/>
+	   <result column="sb" jdbcType="VARCHAR" property="sb"/>
+	   <result column="sc" jdbcType="VARCHAR" property="sc"/>
+	   <result column="sd" jdbcType="VARCHAR" property="sd"/>
+	   <result column="testcount" jdbcType="INTEGER" property="testcount"/>
+	   <result column="sstate" jdbcType="INTEGER" property="sstate"/>
+	 </association>
+	</resultMap>
+	
+	<select id="listErrorSubject" resultMap="errorSubjectMap">
+	    select es.* ,s.* from errorsubject es 
+	    join  subject s
+	    on es.sid = s.sid
+	</select>
+	
+	<select id="queryUserOfErrorSubject" resultType="Userinfo" parameterType="Subject">
+	    select es.userid ,u.userid,u.usertel,u.usertruename from errorsubject es 
+	    join sysuser u
+	    on es.userid = u.userid
+	    where es.sid = #{sid};
+	
+	</select>
+</mapper>

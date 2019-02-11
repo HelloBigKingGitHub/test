@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hl.mapper.UserMapper">
+	<select id="listUserinfo" resultType="userinfo">
+		select * from sysuser 
+	</select>
+	<select id="userIsExist" parameterType="userinfo" resultType="userinfo">
+		select * from sysuser u where u.usertel = #{usertel}
+	</select>
+	
+	<insert id="insertUserinfo" parameterType="userinfo">
+		insert into sysuser(usertel,userpwd) values(#{usertel},#{userpwd});
+	</insert>
+	
+</mapper>

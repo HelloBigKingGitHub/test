@@ -1,0 +1,137 @@
+@charset "utf-8";
+/* CSS Document */
+
+/*公共*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+    font-family: arial,"Lantinghei SC","Microsoft Yahei";	
+}
+
+html,body {
+	height: 100%;
+	background:#f5f5f5 ;
+}
+
+a {
+  color: #000;
+  text-decoration: none;
+}
+.header >a >img{
+	width: 140px;
+	height: 60px;
+	margin-left: 180px;
+
+}
+.banner{
+	background-color: #fd7a72;
+	width: 100%;
+	display: inline-block;
+
+}
+.login-banner-bg{
+	float: left;
+	margin: 20px 50px 20px 100px;
+	width: 600px;
+	height: 430px;
+	background-image: url(../images/big.jpg);
+}
+
+.log_reg{
+	width: 360px;
+	height: 430px;
+	margin:20px 150px 20px 50px;
+	background-color: #f8f8f8;
+	float: right;
+}
+.log_reg ul {
+
+}
+.log_reg ul li {
+	display: inline-block;
+	margin:20px 60px 20px 45px;
+	font-weight:bold;
+}
+/*登录表单样式*/
+#log div{
+	float: right;
+	margin:10px;
+	height: 50px;
+}
+
+#log input{
+	height: 42px;
+	width: 300px;
+	border: 1px solid #fff;
+}
+#log .user-code input{
+	width: 200px;
+} 
+#log .user-code img{
+	width: 100px;
+	height: 42px;
+	vertical-align: middle;
+}
+#log .log-meg{
+	display:none;
+	clear: both;
+} 
+.btn input{
+	margin: 10px;
+	color: #fff;
+    background-color: #0e90d2;
+    border-color: #0e90d2;
+    border-radius: 2px;
+}
+
+/*注册表单样式*/
+#reg {
+	display: none;
+}
+#reg div{
+	float: right;
+	margin:10px;
+	height: 50px;
+}
+
+#reg input{
+	height: 42px;
+	width: 300px;
+	border: 1px solid #fff;
+}
+#reg .reg-code input[type="text"]{
+	width: 200px;
+} 
+#reg .reg-code input[type="button"]{
+	width: 100px;
+	height: 42px;
+	vertical-align: middle;
+}
+#reg .reg-meg{
+	display:none;
+	clear: both;
+} 
+
+
+/*底部*/
+.footer {text-align:left; display:block;position: relative;margin: 0px auto; padding: 7px 0px 9px; margin-top:20px;max-width: 1200px;}
+.footer .footer-bd p, .footer .footer-hd p {margin-bottom: 8px;line-height: 27px;text-align:left;border-bottom:1px solid #ddd ;}
+.footer .footer-hd a { margin: 0px 4px;white-space: nowrap;color: #6C6C6C;}
+.footer .footer-hd b { margin: 0px 3px;font-weight: 400;color: #DDD;}
+.footer .footer-bd p{ border-bottom:none;}

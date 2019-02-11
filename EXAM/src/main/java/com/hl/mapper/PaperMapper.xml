@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hl.mapper.PaperMapper">
+	<select id="listPaper" resultType="Paper">
+		select * from paper; 
+	</select>
+	
+	<resultMap id="subjectMap" type="com.hl.entity.ChoseSubject">
+		<id column="sid" jdbcType="INTEGER" property="sid"/>
+		<result column="scontent" jdbcType="VARCHAR" property="scontent"/>
+		<result column="sa" jdbcType="VARCHAR" property="sa"/>
+		<result column="sb" jdbcType="VARCHAR" property="sb"/>
+		<result column="sc" jdbcType="VARCHAR" property="sc"/>
+		<result column="sd" jdbcType="VARCHAR" property="sd"/>
+		<result column="skey" jdbcType="VARCHAR" property="skey"/>
+		<result column="testcount" jdbcType="INTEGER" property="testcount"/>
+		<result column="sstate" jdbcType="INTEGER" property="sstate"/>
+	</resultMap>
+	<select id="listChoseSubject" parameterType="string" resultMap="subjectMap">
+	   select p.*,s.*,p_s.* 
+	   from paper p 
+	   join paper_subject p_s
+	   on p.pid = p_s.pid 
+	   join subject s 
+	   on s.sid = p_s.sid
+	   where p.pid = #{0};
+	</select>
+	
+	<resultMap type="com.hl.entity.PaperDetail" id="paperDetailMap">
+	     <id property="pdid" column="pdid"/>
+         <result property="paggregatescore" column="paggregatescore"/>
+         <result property="ptime" column="ptime"/>
+         <result property="testdegree" column="testdegree"/>
+         <result property="avescore" column="avescore"/>
+         <result property="paggregatescore" column="paggregatescore"/>
+         <association property="paper" javaType="com.hl.entity.Paper">
+             <id property="pid" column="pid"/>
+             <result property="pname" column="pname"/>
+             <result property="pstate" column="pstate"/>
+        </association>
+	</resultMap>
+	
+	<select id="queryPaperDetailById" parameterType="string" resultMap="paperDetailMap">
+	   select p.*,pd.*
+	   from paper p 
+	   join paperdetail pd
+	   on p.pid = pd.pid
+	   where p.pid = #{0}
+	</select>
+	
+	<update id="updataPaperDetail" parameterType="PaperDetail">
+	   update paperdetail
+	   <set>
+		 <if test="paggregatescore != null">paggregatescore=#{paggregatescore},</if>
+		 <if test="ptime != null">ptime=#{ptime},</if>
+		 <if test="testdegree != null">testdegree=#{testdegree},</if>
+		 <if test="avescore != null">avescore=#{avescore}</if>
+	   </set>
+	   where pid=#{paper.pid}
+	</update>
+	
+	
+</mapper>

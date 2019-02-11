@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 全局配置 -->
+	<settings>
+		<!-- 设置懒加载为false 关闭懒加载 -->
+		<setting name="lazyLoadingEnabled" value="true"/>
+		<setting name="aggressiveLazyLoading" value="false"/>
+		<!-- 控制台日志 -->
+		<setting name="logImpl" value="STDOUT_LOGGING"/>
+		<!-- 开启二级缓存 -->
+		<setting name="cacheEnabled" value="true"/>
+	</settings>
+	<!-- 类别名 -->
+	<typeAliases>
+		 <package name="com.hl.entity"/>
+	</typeAliases>
+	<!-- 分页插件的配置 -->
+	<plugins>
+	    <plugin interceptor="com.github.pagehelper.PageHelper">
+	        <property name="dialect" value="mysql"/>
+	        <property name="offsetAsPageNum" value="false"/>
+	        <property name="rowBoundsWithCount" value="false"/>
+	        <property name="pageSizeZero" value="true"/>
+	        <property name="reasonable" value="false"/>
+	        <property name="supportMethodsArguments" value="false"/>
+	        <property name="returnPageInfo" value="none"/>
+	    </plugin>
+	</plugins>
+	<!-- 扫描映射文件 -->
+	<mappers>
+		<!-- 
+		<mapper resource="com/sxt/dao/UserDao.xml"/>
+		<mapper class="com.sxt.mapper.UserMapper"/>
+		 -->
+		<package name="com.hl.mapper"/>
+	</mappers>
+	
+</configuration>

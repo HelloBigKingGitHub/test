@@ -1,0 +1,182 @@
+/*网页页头的样式*/
+body{
+	background: #f2f2f2;
+	color: #666;
+    line-height: 1.2;
+}
+header{
+	background: #ffffff;
+}
+
+.page-header{
+	background: #ffffff;
+	margin-top: 10px;
+
+
+}
+
+.time{
+	border:1px solid #d2d2d2;
+	border-radius: 2px;
+}
+
+.time_bg{
+	margin: 0px;
+	padding: 0px;
+	height: 40px;
+
+}
+#ExamTime{
+	margin-left: 10px;
+	font-family: "微软雅黑";
+    font-size: 22px;
+    color: #333;
+    font-weight: bold;
+    line-height: 40px;
+}
+.subject{
+	margin: 5px;
+	padding: 5px;
+	font-family: "微软雅黑";
+    
+}
+/*给试卷定义样式*/
+.contextss{
+	background-color: #ffffff;
+	padding: 10px;
+}
+.test_title{
+	font-weight: normal;
+    font-size: 24px;
+    color: #056500;
+    font-family: "微软雅黑";
+    text-align: center;
+    padding-top: 25px;
+    width: 100%;
+}
+.test_message{
+	background-color: #f2f2f2;
+	margin: 10px;
+	padding: 5px;
+}
+.test_message p{
+	display: inline;
+	margin: 10px;
+	
+}
+.question{
+	padding: 10px;
+	margin: 10px;
+	background-color: #e5f1ff;
+	border:1px dashed #000;
+	border-radius:20px;
+}
+.test_answer div{
+	margin: 20px;
+	display: inline;
+
+}
+/*答题卡样式*/
+#low_right { 
+	position: fixed; 
+	width: 180px; 
+	height: 250px; 
+	background: #fff; 
+	bottom: 200px; 
+	right: 0px; 
+	text-align: center; 
+	margin: 10px; 
+}
+#low_right h4{
+	background-color: rgb(221, 221, 221);
+	padding: 10px;
+	margin-top: 0px;
+	font-family: inherit;
+    font-weight: 500;
+    line-height: 1.1;
+    color: inherit;
+}
+.cbnWrap{
+	padding: 5px 15px 15px 15px;
+    max-height: 100px;
+    overflow-y: scroll;
+} 
+.ISpan {
+    display: inline-block;
+    height: 18px;
+    min-width: 18px;
+    padding: 0px 3px;
+    vertical-align: middle;
+    text-align: center;
+    line-height: 18px;
+    margin-right: 3px;
+    position: relative;
+    margin-bottom: 5px;
+    top: 2px;
+    cursor: pointer;
+    background-color: rgb(255, 255, 255);
+    border:1px solid rgb(179, 179, 179);
+    color: #aeaeae;
+}
+.ISpan_finish{
+	display: inline-block;
+    height: 18px;
+    min-width: 18px;
+    padding: 0px 3px;
+    vertical-align: middle;
+    text-align: center;
+    line-height: 18px;
+    margin-right: 3px;
+    position: relative;
+    margin-bottom: 5px;
+    top: 2px;
+    cursor: pointer;
+    background-color: #286090;
+    border:1px solid rgb(179, 179, 179);
+    color: #aeaeae;	
+}
+/*试卷提交按钮*/
+#test_commit{
+	margin: 20px;
+	height: 30px;
+	line-height: 28px;
+	text-align: center;
+	position: relative;
+	bottom: -20px;
+    border:1px solid rgb(179, 179, 179);
+    border-radius: 20px;
+}
+#test_commit:hover{
+	cursor:pointer;
+	background-color: #286090;
+	color: #ffffff;
+}
+
+
+/*给你定义的表格元素设置样式*/
+dl {
+  width: 150px;
+}
+dt{
+	width: 26px;
+}
+dd{
+	width: 100px;
+}
+dt, dd {
+  font-size: 16px;
+  padding: 0;
+  margin: 0;
+  float: left;
+  height: 40px;
+  line-height: 40px;
+}
+#col2{
+	padding-left: 400px;
+}
+.green{
+    color: #019cd6;
+}
+.bold{
+ 	font-weight: bold;
+}
