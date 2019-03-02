@@ -19,6 +19,7 @@
 	<link href="css/log_reg.css" rel="stylesheet" type="text/css">
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/font-awesome.css" rel="stylesheet" type="text/css">
+	<link rel="icon" href="/EXAM/images/logo.png">
 	<script type="text/javascript" src="js/jquery-3.2.1.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="js/log_reg.js"></script>

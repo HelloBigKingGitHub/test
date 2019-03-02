@@ -43,7 +43,7 @@
 				</div>
 				<div class="col-sm-5">
 					<ul class="list-inline pull-right">
-						<li><a href="#" ><i class="fa fa-user"></i> My Account</a></li>
+						<li><a href="#" ><i class="fa fa-user"></i>${crruentUser.usertruename}</a></li>
 						<li><a href="#" ><i class="fa fa-heart-o"></i> Wishlist (0)</a></li>
 						<li><a href="#" ><i class="fa fa-file-o"></i> Compare (0)</a></li>
 						<li><a class="register" href="#" >Register</a></li>

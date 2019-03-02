@@ -45,8 +45,10 @@ public class ErrorSubjectServiceImpl implements ErrorSubjectService{
 		Page<Object> page = PageHelper.startPage(pageNum, pageSize, true);
 		List<ErrorSubject> list = listErrorSubject();
 		int pages = page.getPages();
+		long count = page.getTotal();
 		result.put("list", list);
 		result.put("pages", pages);
+		result.put("count", count);
 		return result;
 	}
 

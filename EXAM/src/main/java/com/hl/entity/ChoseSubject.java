@@ -8,6 +8,10 @@ import java.io.Serializable;
  *
  */
 public class ChoseSubject extends Subject{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String sa;
 	private String sb;
 	private String sc;

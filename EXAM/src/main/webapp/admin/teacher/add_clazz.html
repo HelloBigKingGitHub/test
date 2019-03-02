@@ -1,0 +1,94 @@
+<html><head>
+  <meta charset="utf-8">
+  <title>添加班级</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="/EXAM/admin/layui/css/layui.css" media="all">
+ </head>
+<body >
+
+  <form class="layui-form"  style="padding: 20px 30px 0 0;">
+    <div class="layui-form-item">
+      <label class="layui-form-label">班级名称</label>
+      <div class="layui-input-inline">
+        <input type="text" name="classname" lay-verify="required" placeholder="请输入班级名称" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">最大人数</label>
+      <div class="layui-input-inline">
+        <input type="text" name="maxclasspeople" lay-verify="required\number" placeholder="请输入人数" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">班级描述</label>
+      <div class="layui-input-inline">
+        <textarea name="classdesrible" lay-verify="required" style="width: 400px; height: 150px;" autocomplete="off" class="layui-textarea"></textarea>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">班级类型</label>
+      <div class="layui-input-inline">
+        <select name="classtype" lay-verify="required">
+          <option value="">请选择标签</option>
+          <option value="普通班">普通班</option>
+          <option value="实验班">实验班</option>
+          <option value="特训班">特训班</option>
+          <option value="就业班">就业班</option>
+        </select><div class="layui-unselect layui-form-select"><div class="layui-select-title"><input type="text" placeholder="请选择标签" value="" readonly="" class="layui-input layui-unselect"><i class="layui-edge"></i></div><dl class="layui-anim layui-anim-upbit"><dd lay-value="" class="layui-select-tips">请选择标签</dd><dd lay-value="美食" class="">美食</dd><dd lay-value="新闻" class="">新闻</dd><dd lay-value="八卦" class="">八卦</dd><dd lay-value="体育" class="">体育</dd><dd lay-value="音乐" class="">音乐</dd></dl></div>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">班级状态</label>
+      <div class="layui-input-inline">
+        <input type="checkbox" lay-verify="required" lay-filter="status" name="classstate" lay-skin="switch" lay-text="开班|禁用"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>待修改</em><i></i></div>
+      </div>
+    </div>
+    <div class="layui-form-item ">
+      <div class="layui-input-block">
+	    <button class="layui-btn layui-btn-radius layui-btn-warm" lay-submit="" lay-filter="addClazz_submit">立即提交</button>  
+	    <button type="reset" class="layui-btn layui-btn-radius layui-btn-danger">重置内容</button>
+	  </div>
+    </div>
+  </form>
+
+  <script src="/EXAM/admin/layui/layui.js"></script>  
+  <script>
+    layui.use('form',function(){
+    	var form = layui.form;
+    	var $ = layui.jquery;
+    	var layer = layui.layer;
+    	form.on('submit(addClazz_submit)', function(data){
+    		  //console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+    		  //console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+    		  //console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+    		   var sendData = JSON.stringify(data.field);
+    		  $.ajax({
+    			  contentType:"application/json;charset=utf-8"
+    			  ,type:'POST'
+    			  ,url:'/EXAM/add_clazz.action'
+    			  ,dataType:'text'
+    			  ,data:sendData
+    			  ,success:function(result){
+    				  
+    				  layer.msg(result,{time:2000},function(){
+    					  
+    					  window.parent.location.reload();//修改成功后刷新父界面
+    					  
+    				  }); 
+    				  
+    			  }
+    			  
+    			  
+    		  });
+    		  
+    		  return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+    		});
+    	
+    	
+    });
+
+  </script>
+  </body>
+</html>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hl.mapper.ClazzMapper">
+	
+	<select id="listClazzByTeacherid" parameterType="int" resultType="Clazz">
+	  select * from clazz c
+	  where c.classteacherid = #{teacherid}
+	</select>
+	
+	<insert id="insertClazz" parameterType="Clazz">
+	  insert into clazz(classname , classteacherid ,maxpeoplenum,classdesrible,classtype,classstate) 
+	  values(#{classname},#{classteacherid},#{maxpeoplenum},#{classdesrible},#{classtype},#{classstate})
+	</insert>
+	
+	<select id="listStudentOfClazzByClassid" parameterType="int" resultType="Userinfo">
+	   select s.* from sysuser s
+	   join user_clazz uc
+	   on uc.studentid = s.userid
+	   where uc.classid = #{classid}
+	</select>
+	
+</mapper>

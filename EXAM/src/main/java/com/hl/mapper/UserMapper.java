@@ -8,7 +8,7 @@ import com.hl.entity.Userinfo;
 
 /**
  * 使用的时mybatis的接口代理开发
- * @author admin
+ * @author hl
  *
  */
 public interface UserMapper {

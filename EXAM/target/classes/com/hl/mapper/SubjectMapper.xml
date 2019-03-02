@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hl.mapper.SubjectMapper">
+
+	<select id="listChoseSubject" resultType="ChoseSubject">
+	    select * from subject
+	
+	</select>
+	
+	<select id="listChoseSubjectLikeScontent" parameterType="string" resultType="ChoseSubject">
+		<bind name="pattern" value=" '%'+keyword+'%'"/>
+		select * from subject s
+		where s.scontent like #{pattern}
+	
+	</select>
+
+	<insert id="insertSubject" parameterType="ChoseSubject">
+		insert into subject(scontent,sa,sb,sc,sd,skey,sstate,testcount) 
+		values(#{scontent},#{sa},#{sb},#{sc},#{sd},#{skey},#{sstate},#{testcount});
+	</insert>
+	
+</mapper>

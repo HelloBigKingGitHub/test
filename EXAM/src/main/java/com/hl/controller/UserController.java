@@ -31,6 +31,8 @@ import com.hl.service.UserService;
 import com.hl.util.imgcode.CodeUtil;
 import com.hl.util.sms.IndustrySMS;
 
+import net.sf.json.JSONObject;
+
 @Controller
 /**
  * 处理用户登录注册的控制器
@@ -201,6 +203,17 @@ public class UserController {
 		
 	}
 	
+	/**
+	 * 获取当前用户对象
+	 * @return json字符串
+	 */
+	@RequestMapping(value="get_crruent_user.action",produces= {"text/html;charset=utf-8"})
+	public @ResponseBody String getCrruentUser(HttpSession session) {
+		Userinfo crruentUser = (Userinfo) session.getAttribute("crruentUser");
+		JSONObject result = new JSONObject();
+		result.put("crruentUser", crruentUser);
+		return result.toString();
+	}
 	
 	//md5测试加密有效
 	public static void main(String[] args) {

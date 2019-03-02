@@ -176,7 +176,9 @@ $(function(){
           		 $("#log_reg_Modal").modal("show");
 			     break;
 			   case "0":
-				   window.location.href="http://localhost:8080/EXAM/jsp/user/user_index.jsp";
+				  var href = window.location.href;
+				  var baseUrl = href.split("//")[0]+"//"+href.split("//")[1].split("/")[0]+"/"+href.split("//")[1].split("/")[1];
+				  window.location.href = baseUrl+"/index.jsp";//PC网页式跳转
 			     break;
 			   case "1":
 				 $(".modal-body").text("此用户不存在，请您确认账号后再进行登录。");
