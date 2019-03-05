@@ -1,6 +1,7 @@
 package com.hl.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import com.hl.entity.Clazz;
 import com.hl.entity.Userinfo;
@@ -28,9 +29,9 @@ public interface ClazzMapper {
 	
 
 	/**
-	 * 根据班级id查询出所有该班级的学生
+	 * 根据班级id或者相关的学生信息查询出所有该班级的学生
 	 * @param classid
 	 * @return
 	 */
-	List<Userinfo> listStudentOfClazzByClassid(Integer classid);
+	List<Userinfo> listStudentOfClazzByClassid(Map<String,Object> select);
 }

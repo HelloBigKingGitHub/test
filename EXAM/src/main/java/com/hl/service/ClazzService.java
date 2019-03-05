@@ -42,6 +42,6 @@ public interface ClazzService {
 	 * @param limit 分页大小
 	 * @return 包含分页信息的map集合
 	 */
-	Map<String, Object> listStudentOfClazzByClassid(String classidStr, String pageStr, String limitStr);
+	Map<String, Object> listStudentOfClazzByClassid(String classidStr, String pageStr, String limitStr, String studentname,String studenttel);
 
 }

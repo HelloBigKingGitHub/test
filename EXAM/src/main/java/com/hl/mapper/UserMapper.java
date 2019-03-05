@@ -32,4 +32,10 @@ public interface UserMapper {
 	 */
 	int insertUserinfo(Userinfo userinfo);
 
+	/**
+	 * 查询出用户表中所有的学生信息
+	 * @return
+	 */
+	List<Userinfo> listStudent();
+
 }

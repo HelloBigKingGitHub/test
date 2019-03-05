@@ -12,11 +12,21 @@
 	  values(#{classname},#{classteacherid},#{maxpeoplenum},#{classdesrible},#{classtype},#{classstate})
 	</insert>
 	
-	<select id="listStudentOfClazzByClassid" parameterType="int" resultType="Userinfo">
+	<select id="listStudentOfClazzByClassid"   parameterType="Map" resultType="Userinfo">
 	   select s.* from sysuser s
 	   join user_clazz uc
 	   on uc.studentid = s.userid
 	   where uc.classid = #{classid}
+	   <if test="studentname!=null">
+	   	 <if test="!''.equals(studentname)">
+	       and s.usertruename like CONCAT('%',#{studentname},'%') 
+	   	 </if>
+	   </if>
+	   <if test="studenttel!=null">
+		 <if test="!''.equals(studenttel)">
+		   and s.usertel = #{studenttel}
+		 </if>
+	   </if>
 	</select>
 	
 </mapper>

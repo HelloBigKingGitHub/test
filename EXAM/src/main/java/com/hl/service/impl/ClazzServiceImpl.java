@@ -61,7 +61,7 @@ public class ClazzServiceImpl implements ClazzService{
 	}
 
 	@Override
-	public Map<String, Object> listStudentOfClazzByClassid(String classidStr, String pageStr, String limitStr) {
+	public Map<String, Object> listStudentOfClazzByClassid(String classidStr, String pageStr, String limitStr,String studentname,String studenttel) {
 		if(classidStr==null||"".equals(classidStr)) {
 			return null;
 		}
@@ -69,8 +69,12 @@ public class ClazzServiceImpl implements ClazzService{
 		Integer pageNum = Integer.parseInt(pageStr);
 		Integer pageSize = Integer.parseInt(limitStr);
 		Map<String,Object> result = new HashMap<>();
+		Map<String,Object> select = new HashMap<>(); //将查询条件封装进一个map中
+		select.put("classid", classid);
+		select.put("studentname", studentname!=null?studentname.trim():(studentname = ""));
+		select.put("studenttel", studenttel!=null?studenttel.trim():(studenttel = ""));
 		Page<Object> page = PageHelper.startPage(pageNum, pageSize, true);
-		List<Userinfo> list = clazzMapper.listStudentOfClazzByClassid(classid);
+		List<Userinfo> list = clazzMapper.listStudentOfClazzByClassid(select);
 		int pages = page.getPages();
 		long count = page.getTotal();
 		result.put("list", list);

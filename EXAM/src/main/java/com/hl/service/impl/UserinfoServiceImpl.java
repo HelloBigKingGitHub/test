@@ -36,6 +36,7 @@ public class UserinfoServiceImpl implements UserService{
 		
 	}
 	
+	
 
 	@Override
 	public boolean userRegister(Userinfo userinfo) {
@@ -52,6 +53,22 @@ public class UserinfoServiceImpl implements UserService{
           return mapper.userIsExist(userinfo);
 	}
 
+	@Override
+	public Map<String, Object> listStudent(String pageStr, String limitStr) {
+		Integer pageNum = Integer.parseInt(pageStr);
+		Integer pageSize = Integer.parseInt(limitStr);
+		Map<String,Object> result = new HashMap<>();
+		Page<Object> page = PageHelper.startPage(pageNum, pageSize, true);
+		List<Userinfo> list = mapper.listStudent();
+		int pages = page.getPages();
+		long count = page.getTotal();
+		result.put("list", list);
+		result.put("pages", pages);
+		result.put("count", count);
+		return result;
+	}
+
+	
 
 
 }

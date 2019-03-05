@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>试卷组编页面</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="/EXAM/admin/layui/css/layui.css">
+<!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+
+<style type="text/css">
+#low_right {
+	position: fixed;
+	width: 180px;
+	height: 250px;
+	background: #fff;
+	bottom: 200px;
+	right: 0px;
+	text-align: center;
+	margin: 10px;
+	-webkit-box-shadow: #666 0px 0px 10px;
+	-moz-box-shadow: #666 0px 0px 10px;
+	box-shadow: #666 0px 0px 10px;
+	background: #ffffff;
+	z-index:891;
+}
+
+#low_right h4 {
+	background-color: rgb(221, 221, 221);
+	padding: 10px;
+	margin-top: 0px;
+	font-family: inherit;
+	font-weight: 500;
+	line-height: 1.1;
+	color: inherit;
+}
+
+#low_right h4:hover{
+	cursor:move;
+}
+
+.cbnWrap {
+	padding: 5px 15px 15px 15px;
+	height: 150px;
+	max-height: 150px;
+	overflow-y: scroll;
+}
+</style>
+</head>
+<body>
+
+	<div id="choseFun">
+		<fieldset class="layui-elem-field layui-field-title"
+			style="margin-top: 30px;">
+			<legend>选择编题方式</legend>
+		</fieldset>
+		<form class="layui-form">
+			<div class="layui-inline">
+				<label class="layui-form-label">选题方式</label>
+				<div class="layui-input-inline" style="width: 100px;">
+					<input type="checkbox" name="zzz" lay-skin="switch"
+						lay-text="题库选题|手动编题" lay-filter="choseFun">
+				</div>
+			</div>
+
+		</form>
+	</div>
+
+	<div id="byQuestionBank" class="layui-hide">
+		<fieldset class="layui-elem-field layui-field-title"
+			style="margin-top: 30px;">
+			<legend>在题库中选题</legend>
+		</fieldset>
+		<div class="demoTable">
+			题干包含的关键字：
+			<div class="layui-inline">
+				<input class="layui-input" name="id" id="demoReload"
+					autocomplete="off">
+			</div>
+			<button class="layui-btn" data-type="reload">搜索</button>
+		</div>
+
+
+		<table class="layui-hide" id="test" lay-filter="test"></table>
+
+		<script type="text/html" id="toolbarDemo">
+  			<div class="layui-btn-container">
+    			<button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+    			<button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
+    			<button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
+    			<button class="layui-btn layui-btn-sm" lay-event="addSubject">添加题目</button>
+  			</div>
+		</script>
+
+		<script type="text/html" id="barDemo">
+  			<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+  			<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+		</script>
+	</div>
+
+
+	<div id="byManual" class="">
+		<fieldset class="layui-elem-field layui-field-title"
+			style="margin-top: 30px;">
+			<legend>手动编题</legend>
+		</fieldset>
+		<form class="layui-form " id="addSubjectForm" style="width: 700px">
+
+			<div class="layui-form-item layui-form-text">
+				<label class="layui-form-label">题干内容</label>
+				<div class="layui-input-block">
+					<textarea placeholder="请输入内容" class="layui-textarea"
+						name="scontent"></textarea>
+				</div>
+			</div>
+
+
+			<div class="layui-form-item">
+				<label class="layui-form-label">试题状态</label>
+				<div class="layui-input-block">
+					<input type="radio" name="sstate" value="0" title="禁用"> <input
+						type="radio" name="sstate" value="1" title="开启" checked>
+				</div>
+			</div>
+
+			<div class="layui-form-item">
+				<label class="layui-form-label">选项A</label>
+				<div class="layui-input-block">
+					<input type="text" name="sa" lay-verify="title" autocomplete="off"
+						placeholder="请输入标题" class="layui-input">
+				</div>
+			</div>
+
+			<div class="layui-form-item">
+				<label class="layui-form-label">选项B</label>
+				<div class="layui-input-block">
+					<input type="text" name="sb" lay-verify="title" autocomplete="off"
+						placeholder="请输入标题" class="layui-input">
+				</div>
+			</div>
+
+			<div class="layui-form-item">
+				<label class="layui-form-label">选项C</label>
+				<div class="layui-input-block">
+					<input type="text" name="sc" lay-verify="title" autocomplete="off"
+						placeholder="请输入标题" class="layui-input">
+				</div>
+			</div>
+
+			<div class="layui-form-item">
+				<label class="layui-form-label">选项D</label>
+				<div class="layui-input-block">
+					<input type="text" name="sd" lay-verify="title" autocomplete="off"
+						placeholder="请输入标题" class="layui-input">
+				</div>
+			</div>
+
+			<div class="layui-form-item">
+				<div class="layui-inline">
+					<label class="layui-form-label">正确答案</label>
+					<div class="layui-input-inline">
+						<select name="skey" lay-verify="required" lay-search="">
+							<option value="A">A</option>
+							<option value="B">B</option>
+							<option value="C">C</option>
+							<option value="D">D</option>
+						</select>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="layui-form-item">
+				<div class="layui-input-block">
+					<button class="layui-btn" lay-submit="" lay-filter="add_subject">添加</button>
+					<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+				</div>
+			</div>
+
+		</form>
+
+	</div>
+
+	<!-- 试卷左侧的试题篮-->
+	<div id="low_right" class="layui-box" >
+		<h4>选题篮</h4>
+		<div class="cbnWrap">
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+
+		</div>
+		<div id="paper_ preview"
+			class="layui-btn layui-btn-radius layui-btn-normal">试卷预览</div>
+	</div>
+
+
+	<script src="/EXAM/admin/layui/layui.js"></script>
+
+	<script type="text/javascript">
+		layui.use([ 'form', 'table' ], function() {
+			var form = layui.form;
+			var table = layui.table;
+			var $ = layui.jquery;
+			form.on('switch(choseFun)', function(data) {
+				var flag = data.elem.checked;
+				if (flag) { //判断是通过哪种方式进行选题
+					$('#byQuestionBank').removeClass('layui-hide');
+					$('#byManual').addClass('layui-hide');
+				} else {
+					$('#byQuestionBank').addClass('layui-hide');
+					$('#byManual').removeClass('layui-hide');
+				}
+			});
+
+			table.render({
+				elem : '#test',
+				url : '/EXAM/list_subject_page.action',
+				toolbar : '#toolbarDemo',
+				title : '试题列表',
+				height : 500,
+				cols : [ [ {
+					type : 'checkbox',
+					fixed : 'left'
+				}, {
+					field : 'sid',
+					title : '题目',
+					width : 100,
+					sort : true,
+					fixed : true
+				}, {
+					field : 'scontent',
+					title : '题干内容',
+					width : 300
+				}, {
+					field : 'sa',
+					title : '选项A',
+					width : 200
+				}, {
+					field : 'sb',
+					title : '选项B',
+					width : 200
+				}, {
+					field : 'sc',
+					title : '选项C',
+					width : 200
+				}, {
+					field : 'sd',
+					title : '选项D',
+					width : 200
+				}, {
+					field : 'skey',
+					title : '正确答案',
+					width : 80
+				}, {
+					field : 'sstate',
+					title : '题目状态',
+					width : 80
+				}, {
+					fixed : 'right',
+					title : '操作',
+					toolbar : '#barDemo',
+					width : 150
+				} ] ],
+				page : true,
+				id : 'testReload'
+			});
+
+			//头工具栏事件
+			table.on('toolbar(test)', function(obj) {
+				var checkStatus = table.checkStatus(obj.config.id);
+				switch (obj.event) {
+				case 'getCheckData':
+					var data = checkStatus.data;
+					layer.alert(JSON.stringify(data));
+					break;
+				case 'getCheckLength':
+					var data = checkStatus.data;
+					layer.msg('选中了：' + data.length + ' 个');
+					break;
+				case 'isAll':
+					layer.msg(checkStatus.isAll ? '全选' : '未全选');
+					break;
+				case 'addSubject':
+					$('#testForm').removeClass('layui-hide');
+					index = layer.open({
+						type : 1,
+						title : '测试内容',
+						content : $('#testForm') //弹出框内容
+						,
+						shade : [ 0.5, '#393D49' ] //遮罩层
+						,
+						area : '500px' //宽高值
+						,
+						anim : 6
+					//动画效果（抖动）
+
+					})
+
+					break;
+				}
+				;
+			});
+
+			//监听行工具事件
+			table.on('tool(test)', function(obj) {
+				var data = obj.data;
+				//console.log(obj)
+				if (obj.event === 'del') {
+					layer.confirm('真的删除行么', function(index) {
+						obj.del();
+						layer.close(index);
+					});
+				} else if (obj.event === 'edit') {
+					layer.prompt({
+						formType : 2,
+						value : data.email
+					}, function(value, index) {
+						obj.update({
+							email : value
+						});
+						layer.close(index);
+					});
+				}
+			});
+			/*给搜索框进行设置*/
+			var $ = layui.$, active = {
+				reload : function() {
+					var demoReload = $('#demoReload');
+					//alert(demoReload.val())
+					//执行重载
+					table.reload('testReload', {
+						page : {
+							curr : 1
+						//重新从第 1 页开始
+						},
+						where : {
+							//key: {
+							scontent : demoReload.val()
+						//}
+						}
+					});
+
+				}
+			};
+
+			$('.demoTable .layui-btn').on('click', function() {
+				var type = $(this).data('type');
+				active[type] ? active[type].call(this) : '';
+			});
+			
+			/************给试题篮设置拖动效果*******************/
+			var sub_x = 0;
+			var sub_y = 0;
+			var isDialogTitle = false;
+			$('#low_right >h4').on('mousedown',function(event){
+				
+				var m_x = event.pageX;
+				var m_y = event.pageY;
+				var e_y = $(this).offset().top;
+				var e_x = $(this).offset().left;
+				sub_x = m_x - e_x;
+				sub_y = m_y - e_y;
+				isDialogTitle = true;  //只有按下了标题才能拖动
+				
+				
+			});
+			$('body').on('mousemove',function(event){
+				if(isDialogTitle){
+					var m_x = event.pageX;
+					var m_y = event.pageY;
+					$('#low_right').offset({ top: m_y - sub_y, left: m_x - sub_x});
+				}
+			});
+		
+			$('#low_right >h4').on('mouseup',function(event){
+				isDialogTitle = false;  //只有按下了标题才能拖动
+			});
+			
+		});
+	</script>
+</body>
+</html>

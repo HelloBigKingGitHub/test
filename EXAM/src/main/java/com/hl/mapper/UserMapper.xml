@@ -12,4 +12,8 @@
 		insert into sysuser(usertel,userpwd) values(#{usertel},#{userpwd});
 	</insert>
 	
+	<select id="listStudent" resultType="Userinfo" >
+	   select * from sysuser u where u.roleid = 1
+	</select>
+	
 </mapper>

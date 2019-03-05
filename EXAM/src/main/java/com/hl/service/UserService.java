@@ -38,4 +38,12 @@ public interface UserService {
      */
 	Userinfo userLogin(Userinfo userinfo);
 
+	/**
+	 * 分页查询出用户信息中所有的学生记录
+	 * @param page
+	 * @param limit
+	 * @return
+	 */
+	Map<String, Object> listStudent(String page, String limit);
+
 }

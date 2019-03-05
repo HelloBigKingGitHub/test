@@ -203,6 +203,14 @@ public class UserController {
 		
 	}
 	
+	@RequestMapping("logout.action")
+	public String logout(HttpSession session) { //判断下当前用户是否存在
+		if(session.getAttribute("crruentUser")!=null) {
+			session.removeAttribute("crruentUser");	
+		}
+		return "/EXAM/log_reg.jsp";
+	}
+	
 	/**
 	 * 获取当前用户对象
 	 * @return json字符串

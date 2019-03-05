@@ -79,9 +79,9 @@ public class ClazzController {
 	}
 	
 	@RequestMapping(value="list_student_of_clazz_by_classid.action",produces= {"text/html;charset=utf-8"})
-	public @ResponseBody String listStudentOfClazzByClassid(String classidStr,String page,String limit) {
+	public @ResponseBody String listStudentOfClazzByClassid(String classidStr,String page,String limit,String studentname,String studenttel) {
 		
-		HashMap <String,Object>map = (HashMap<String, Object>) clazzService.listStudentOfClazzByClassid(classidStr, page, limit);
+		HashMap <String,Object>map = (HashMap<String, Object>) clazzService.listStudentOfClazzByClassid(classidStr, page, limit,studentname,studenttel);
 		return TableUtil.tableRander(Userinfo.class, map, "list");
 	}
 	
