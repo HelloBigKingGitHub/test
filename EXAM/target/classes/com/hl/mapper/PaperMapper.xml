@@ -5,6 +5,23 @@
 		select * from paper; 
 	</select>
 	
+	<select id="listPaperBySelect" resultMap="paperDetailMap" parameterType="Map">
+	   select p.*,pd.*                                            
+	   from paper p 
+	   join paperdetail pd
+	   on p.pid = pd.pid
+	   where 1 = 1
+	   <if test="papername!= null and !''.equals(papername)">
+	   and p.pname like CONCAT('%',#{papername},'%') 
+	   </if>
+	   <if test="teacherid != null">
+	   and p.teacherid = #{teacherid}
+	   </if>
+	   <if test="paperid != null">
+	   and p.pid = #{paperid}
+	   </if>
+	</select>
+	
 	<resultMap id="subjectMap" type="com.hl.entity.ChoseSubject">
 		<id column="sid" jdbcType="INTEGER" property="sid"/>
 		<result column="scontent" jdbcType="VARCHAR" property="scontent"/>
@@ -37,6 +54,7 @@
              <id property="pid" column="pid"/>
              <result property="pname" column="pname"/>
              <result property="pstate" column="pstate"/>
+             <result property="teacherid" column="teacherid"/>
         </association>
 	</resultMap>
 	
@@ -59,5 +77,17 @@
 	   where pid=#{paper.pid}
 	</update>
 	
+	<insert id="insertPaper" parameterType="Paper" useGeneratedKeys="true" keyProperty="pid" >
+	   insert into paper (pname,teacherid) values(#{pname},#{teacherid})
+	
+	</insert>
+	
+	<insert id="insertPaperDetail">
+	   insert into paperdetail (paggregatescore,ptime,pid) values(#{paggregatescore},#{ptime},#{paper.pid})
+	</insert>
+	
+	<insert id="insertPaperSubject" parameterType="Map">
+	  insert into paper_subject (pid,sid) values(#{pid} ,#{sid})
+	</insert>
 	
 </mapper>

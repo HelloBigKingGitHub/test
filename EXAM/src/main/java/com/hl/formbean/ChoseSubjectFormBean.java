@@ -6,6 +6,13 @@ package com.hl.formbean;
  *
  */
 public class ChoseSubjectFormBean {
+	private String sid;
+	public String getSid() {
+		return sid;
+	}
+	public void setSid(String sid) {
+		this.sid = sid;
+	}
 	private String scontent; 
 	private String sa;
 	private String sb;
@@ -57,9 +64,10 @@ public class ChoseSubjectFormBean {
 	}
 	@Override
 	public String toString() {
-		return "ChoseSubjectFormBean [scontent=" + scontent + ", sa=" + sa + ", sb=" + sb + ", sc=" + sc + ", sd=" + sd
-				+ ", skey=" + skey + ", sstate=" + sstate + "]";
+		return "ChoseSubjectFormBean [sid=" + sid + ", scontent=" + scontent + ", sa=" + sa + ", sb=" + sb + ", sc="
+				+ sc + ", sd=" + sd + ", skey=" + skey + ", sstate=" + sstate + "]";
 	}
+	
 	
 	
 

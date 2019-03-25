@@ -5,15 +5,28 @@
 		select * from sysuser 
 	</select>
 	<select id="userIsExist" parameterType="userinfo" resultType="userinfo">
-		select * from sysuser u where u.usertel = #{usertel}
+		select u.* from sysuser u where u.usertel = #{usertel}
 	</select>
 	
 	<insert id="insertUserinfo" parameterType="userinfo">
 		insert into sysuser(usertel,userpwd) values(#{usertel},#{userpwd});
 	</insert>
 	
-	<select id="listStudent" resultType="Userinfo" >
-	   select * from sysuser u where u.roleid = 1
+	<select id="listUserinfoByRoleId" resultType="Userinfo" parameterType="int">
+	   select * from sysuser u where u.roleid = #{roleid}
 	</select>
+	
+	<update id="updateUsertruename" parameterType="Userinfo">
+	   update sysuser set usertruename = #{usertruename} 
+	   where userid = #{userid}
+	</update>
+	
+	<update id="updateUserpwd" parameterType="Userinfo">
+	   update sysuser set userpwd = #{userpwd} 
+	   where userid = #{userid}
+	</update>
+	
+	
+	
 	
 </mapper>

@@ -1,10 +1,12 @@
 package com.hl.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import com.hl.entity.ChoseSubject;
 import com.hl.entity.Paper;
 import com.hl.entity.PaperDetail;
+import com.hl.entity.Userinfo;
 
 /**
  * 对试卷进行操作的到层
@@ -38,6 +40,35 @@ public interface PaperMapper {
 	 * @return
 	 */
 	int updataPaperDetail (PaperDetail paperDetail);
+
+	/**
+	 * 根据条件进行查询，mapper.xml用到sql拼接
+	 * @param select
+	 * @return
+	 */
+	List<Userinfo> listPaperBySelect(Map<String, Object> select);
+
+	/**
+	 * 想数据库中paper表中插入一条数据，并返回该记录的id值
+	 * @param paper
+	 * @return 操作数
+	 */
+	int insertPaper(Paper paper);
+
+	/**
+	 * 向数据库paperdetail表中插入一条记录
+	 * @param paperDetail
+	 * @return 操作数
+	 */
+	int insertPaperDetail(PaperDetail paperDetail);
+
+	/**
+	 * 向paper_subject表中插入数据
+	 * @param pid
+	 * @param sid
+	 * @return 操作数
+	 */
+	int insertPaperSubject(Map<String,Integer> pidSid);
 	
 	
 

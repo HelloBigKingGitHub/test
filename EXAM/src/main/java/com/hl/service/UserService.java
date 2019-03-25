@@ -3,7 +3,9 @@ package com.hl.service;
 import java.util.List;
 import java.util.Map;
 
+import com.hl.entity.UserDetail;
 import com.hl.entity.Userinfo;
+import com.hl.formbean.UserSetBean;
 
 /**
  * 业务层逻辑
@@ -45,5 +47,33 @@ public interface UserService {
 	 * @return
 	 */
 	Map<String, Object> listStudent(String page, String limit);
+
+	/**
+	 * 查询出用户信息中所有的老师记录
+	 * @param page
+	 * @param limit
+	 * @return
+	 */
+	List<Userinfo> listTeacher();
+	
+
+	/**
+	 * 更新用户的真实姓名
+	 * @param user
+	 * @return
+	 */
+	boolean updateUsertruename(Userinfo user);
+
+	
+	/**
+	 * 根据新老密码进行密码重置
+	 * @param nowpass
+	 * @param pass
+	 * @param user
+	 * @return 重置后的密码
+	 */
+	String resetUserPassword(String nowpass, String pass,Userinfo user);
+	
+	
 
 }

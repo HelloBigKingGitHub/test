@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>试题页面</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="/EXAM/admin/layui/css/layui.css">
+  <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+</head>
+<body>
+	
+	<!--  修改表格数据 -->
+	<form class="layui-form "  id="testForm">
+	
+	<div class="layui-form-item ">
+	    <label class="layui-form-label">试题编号</label>
+	    <div class="layui-input-block">
+	      <input readonly="readonly" type="text" name="sid" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input layui-disabled">
+	    </div>
+	  </div>
+	
+	  <div class="layui-form-item layui-form-text">
+	    <label class="layui-form-label">题干内容</label>
+	    <div class="layui-input-block">
+	      <textarea placeholder="请输入内容" class="layui-textarea" name="scontent"></textarea>
+	    </div>
+	  </div>
+	  
+	
+	
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">选项A</label>
+	    <div class="layui-input-block">
+	      <input type="text" name="sa" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+	    </div>
+	  </div>
+	  
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">选项B</label>
+	    <div class="layui-input-block">
+	      <input type="text" name="sb" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+	    </div>
+	  </div>
+	  
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">选项C</label>
+	    <div class="layui-input-block">
+	      <input type="text" name="sc" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+	    </div>
+	  </div>
+	
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">选项D</label>
+	    <div class="layui-input-block">
+	      <input type="text" name="sd" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+	    </div>
+	  </div>
+
+	 <div class="layui-form-item">
+	    <div class="layui-inline">
+	      <label class="layui-form-label">正确答案</label>
+	      <div class="layui-input-inline">
+	        <select name="skey" lay-verify="required" lay-search="">
+	          <option value="A">A</option>
+	          <option value="B">B</option>
+	          <option value="C">C</option>
+	          <option value="D">D</option>
+	        </select>
+	      </div>
+	    </div>
+	  </div>
+
+	  <div class="layui-form-item">
+	    <div class="layui-input-block">
+	      <button class="layui-btn" lay-submit="" lay-filter="updata_subject">确认修改</button>
+	    </div>
+	  </div>
+	  
+	</form>
+<script src="/EXAM/admin/layui/layui.js"></script> 
+<script src="/EXAM/js/jquery-3.2.1.js"></script> 
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 --> 
+ 
+<script>
+
+function child (data){
+	$('input[name="sid"]').val(data.sid);
+	$('textarea[name="scontent"]').val(data.scontent);
+	$('input[name="sa"]').val(data.sa);
+	$('input[name="sb"]').val(data.sb);
+	$('input[name="sc"]').val(data.sc);
+	$('input[name="sd"]').val(data.sd);
+	var skey = data.skey;
+	
+	$('select[name="skey"]').find("option:contains('"+skey+"')").attr("selected",true);
+	
+	layui.use('form', function(){
+		  var form = layui.form;
+		  var layer = layui.layer;
+		  var $ = layui.jquery;
+		  form.render(); //跟新渲染
+		  
+		form.on('submit(updata_subject)',function(data){
+			var sendData = JSON.stringify(data.field);
+			 $.ajax({//使用ajax发送请求
+				   contentType:"application/json;charset=utf-8"
+				  ,type:"POST"
+				  ,data:sendData
+				  ,dataTyep:"json"
+				  ,url:"/EXAM/updata_subject.action"
+				  ,success:function(result){
+					  if(result == '更新成功'){
+						  layer.msg(result,{time:2000},function(){
+	    					  
+	    					  window.parent.location.reload();//修改成功后刷新父界面
+	    					  
+	    				  }); 
+					  }else{
+						  layer.msg(result);
+					  }
+					  
+				  }
+			  });
+			  return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+			
+		})  
+		  
+	});
+	
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

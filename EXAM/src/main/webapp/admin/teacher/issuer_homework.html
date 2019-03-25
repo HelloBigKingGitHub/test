@@ -67,13 +67,13 @@
 
 	<script type="text/html" id="toolbarDemo">
       <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="sendMsgOfClass">发送班级信息</button>
+        <button class="layui-btn layui-btn-sm" lay-event="sendMsgOfClass">发布班级公告</button>
         <button class="layui-btn layui-btn-sm" lay-event="uploadFileOfClass">上传班级文件</button>
       </div>
 	</script>
 
 	<script type="text/html" id="barDemo">
-      <a class="layui-btn layui-btn-xs" lay-event="detailMessage">详细信息</a>
+      <a class="layui-btn layui-btn-xs" lay-event="sendMessage">发送信息</a>
       <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">踢出班级</a>
 	</script>
 	
@@ -101,16 +101,41 @@
 		<div class="layui-form-item h_format layui-hide">
 			<label class="layui-form-label">作业类型</label>
 			<div class="layui-input-block">
-				<select name="h_format" lay-verify="required">
+				<select name="h_format"  lay-filter="formatSelect">
 					<option value=""></option>
-					<option value="0">考试</option>
-					<option value="1">观看视频</option>
+					<option value="考试">考试</option>
+					<option value="观看视频">观看视频</option>
 					
 				</select>
 			</div>
 		</div>
+
+		<div class="layui-form-item  layui-hide h_paper">
+			<div class="layui-inline">
+				<label class="layui-form-label">试卷列表</label>
+				<div class="layui-input-inline">
+					<select name="pname" id="papername" 
+						lay-search="" lay-filter="paperSelect">
+						<option value="">直接选择或搜索选择</option>
+					</select>
+				</div>
+			</div>
+		</div>
 		
-		<div class="layui-form-item layui-form-text downline_desc layui-hide">
+		<div class="layui-form-item  layui-hide h_video">
+			<div class="layui-inline">
+				<label class="layui-form-label">课程列表</label>
+				<div class="layui-input-inline">
+					<select name="vname" id="videoname" 
+						lay-search="" lay-filter="videoSelect">
+						<option value="">直接选择或搜索选择</option>
+					</select>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="layui-form-item layui-form-text downline_desc ">
 			<label class="layui-form-label">线下作业说明</label>
 			<div class="layui-input-block">
 				<textarea name="downline_desc" placeholder="请输入内容" class="layui-textarea"></textarea>
@@ -197,17 +222,15 @@
 	    var checkStatus = table.checkStatus(obj.config.id);
 	    switch(obj.event){
 	      case 'sendMsgOfClass':  //发送班级信息
-	        var data = checkStatus.data;
-	        var classid = data.classid;
+	        
 	        layer.open({
 	        	type: 2
-	            ,content: ['/EXAM/admin/message/sendMessage.html','no']
-	            ,area: ['450px', '500px']
+	            ,content: ['/EXAM/admin/message/sendMessage.html?classid='+classid,'no']
+	            ,area: ['450px', '550px']
 	        });
 	      break;
 	      case 'uploadFileOfClass':  //上传班级文件
-	        var data = checkStatus.data;
-	        layer.msg('选中了：'+ data.length + ' 个');
+	        
 	      break;
 	    };
 	  });
@@ -221,14 +244,14 @@
 	        obj.del();
 	        layer.close(index);
 	      });
-	    } else if(obj.event === 'detailMessage'){  //获取学员的详细信息
-	      var href = window.location.href;
+	    } else if(obj.event === 'sendMessage'){  //获取学员的详细信息
 	      var userid = data.userid;
-	      var classid = $('#classname option:selected').val();
-	      var baseUrl = href.split("//")[0]+"//"+href.split("//")[1].split("/")[0]+"/"+href.split("//")[1].split("/")[1];
-		 
-		  window.location.href = baseUrl+"/admin/teacher/student_detail_message.html?userid="+userid+"&classid="+classid;
-	      layer.msg(userid);
+	      layer.open({
+	        	type: 2
+	            ,content: ['/EXAM/admin/message/sendMessage.html?userid='+userid,'no']
+	            ,area: ['450px', '550px']
+	        });
+	    
 	    }
 	  });
 	  /*给搜索框进行设置*/
@@ -246,8 +269,6 @@
 			    curr: 1 //重新从第 1 页开始
 			  }
 			});
-		  
-		  
 		  
 	  });
 	  
@@ -267,6 +288,43 @@
 		  }
 		});  
 	 
+	  form.on('select(formatSelect)',function(data){
+		  var data = data.value;
+		  if(data==0){ //考试
+			  $('.h_paper').removeClass('layui-hide');
+			  $('.h_video').addClass('layui-hide');
+		  }else{//视频
+			  $('.h_video').removeClass('layui-hide');
+			  $('.h_paper').addClass('layui-hide');
+		  }
+		  
+		  
+	  });
+	  /**********通过一部请求得到该老师的试卷列表和视频课程列表***********/
+	 
+	  /**********************给发布作业的表单按钮添加事件***************************/
+	  form.on('submit(formDemo)',function(data){
+		  //console.info(data.field); //{h_title: "阿萨德", h_format: "", pname: "", vname: "", downline_desc: "啊撒打算大所大"}
+	  	  var data = data.field;
+	  	  data.classid = classid;
+	  	  data.issuerid = $('#crruentUserid', parent.document).text();
+		  var sendData = JSON.stringify(data);
+		  console.info(sendData);
+	  	  $.ajax({
+	  		contentType:"application/json;charset=utf-8",
+	  		data:sendData,
+	  		type:'post',
+	  		dataType:'json',
+	  		url:'/EXAM/issuer_homework_for_class.action',
+	  		success:function(result){
+	  			layer.alert(result.msg,{time:2000},function(){
+	  				//layer.closeAll(); 
+	  			});
+	  		}
+	  		  
+	  	  });
+	  	  return false;
+	  })
 	});
   </script>
 </body>

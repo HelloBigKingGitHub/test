@@ -52,6 +52,7 @@ public class TableUtil {
 				String propertyName = field.getName();
 				if(!(propertyName.equals("serialVersionUID"))){
 					if(propertyName.indexOf("state")<0) {
+						//propertyName.indexOf("state")<0;
 						String methodName = "get"+ propertyName.substring(0, 1).toUpperCase()+propertyName.substring(1);
 						try {
 							Method method = claxx.getMethod(methodName, null);
@@ -64,7 +65,7 @@ public class TableUtil {
 						String methodName = "get"+ propertyName.substring(0, 1).toUpperCase()+propertyName.substring(1);
 						try {
 							Method method = claxx.getMethod(methodName, null);
-							Integer state = (Integer)method.invoke(object, null);
+							Integer state = (Integer)method.invoke(object);
 							json.put(propertyName, state==1?"启用":"禁用");
 							
 						} catch (NoSuchMethodException | SecurityException | IllegalAccessException

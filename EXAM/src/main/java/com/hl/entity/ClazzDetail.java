@@ -25,7 +25,7 @@ public class ClazzDetail implements Serializable{
 	public void setTeacher(Userinfo teacher) {
 		this.teacher = teacher;
 	}
-	public List<Userinfo> getStudents() {
+	public List<Userinfo> getStudents() { 
 		return students;
 	}
 	public void setStudents(List<Userinfo> students) {

@@ -1,9 +1,12 @@
 
 package com.hl.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +14,9 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.hl.entity.Clazz;
+import com.hl.entity.ClazzDetail;
+import com.hl.entity.ClazzFile;
+import com.hl.entity.Homework;
 import com.hl.entity.Userinfo;
 import com.hl.mapper.ClazzMapper;
 import com.hl.service.ClazzService;
@@ -82,8 +88,54 @@ public class ClazzServiceImpl implements ClazzService{
 		result.put("count", count);
 		return result;
 	}
-	
-	
-	
+
+	@Override
+	public int addStudent(String classid, String studentid) {
+		Integer clazz = null;
+		Integer student = null;
+		if(classid!=null&&!("".equals(classid))) {
+			clazz = Integer.parseInt(classid);
+		}
+		if(studentid!=null&&!("".equals(studentid))) {
+			student = Integer.parseInt(studentid);
+		}
+		if(studentInClass(classid,studentid)!=null) {//表示记录已经存在了
+			return -1;
+		}
+		return clazzMapper.addStudent(clazz,student);
+	}
+
+	@Override
+	public Userinfo studentInClass(String classid, String studentid) {
+		Integer clazz = null;
+		Integer student = null;
+		if(classid!=null&&!("".equals(classid))) {
+			clazz = Integer.parseInt(classid);
+		}
+		if(studentid!=null&&!("".equals(studentid))) {
+			student = Integer.parseInt(studentid);
+		}
+		return clazzMapper.getStudent(clazz,student);
+	}
+
+	@Override
+	public ClazzDetail getClassDetail(String classid) {
+		if(classid == null || "".equals(classid)) {
+			return null;
+		}
+		Integer id = Integer.parseInt(classid);
+		ClazzDetail classDetail = clazzMapper.getClassDetail(id); //该方法底层使用了多表查询五张表，有些list中数据重复需要去重。
+		
+		{ //去重逻辑 使用set接受，然后再转化为list即可。实体类需要重写equals和hashCode方法
+			Set<Homework> hashSetHomework = new HashSet<Homework>(classDetail.getHomeworks());
+			Set<Userinfo> hashSetUserinfo = new HashSet<Userinfo>(classDetail.getStudents());
+			Set<ClazzFile> hashSetClazzFile = new HashSet<ClazzFile>(classDetail.getClazzFiles());
+			classDetail.setClazzFiles(new ArrayList<ClazzFile>(hashSetClazzFile));
+			classDetail.setHomeworks(new ArrayList<Homework>(hashSetHomework));
+			classDetail.setStudents(new ArrayList<Userinfo>(hashSetUserinfo));
+		}
+		
+		return classDetail;
+	}
 
 }

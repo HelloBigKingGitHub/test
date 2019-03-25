@@ -29,6 +29,7 @@
 			<tx:method name="delete*" rollback-for="Exception"/>
 			<tx:method name="add*" rollback-for="Exception"/>
 			<tx:method name="insert*"  rollback-for="Exception"/>
+			<tx:method name="send*"  rollback-for="Exception"/>
 		</tx:attributes>
 	</tx:advice>
 	

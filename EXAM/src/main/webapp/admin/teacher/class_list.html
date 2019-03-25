@@ -17,6 +17,7 @@
 	  </div>
 	  <button class="layui-btn" data-type="reload">搜索</button>
 	</div>
+	
  
  
 	<table class="layui-hide" id="test" lay-filter="test"></table>
@@ -100,15 +101,7 @@ layui.use('table', function(){
         layer.close(index);
       });
     } else if(obj.event === 'analyse'){
-      layer.prompt({
-        formType: 2
-        ,value: data.email
-      }, function(value, index){
-        obj.update({
-          email: value
-        });
-        layer.close(index);
-      });
+      window.location.href='/EXAM/admin/teacher/class_detail.html?classid='+data.classid;
     }
   });
   /*给搜索框进行设置*/

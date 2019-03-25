@@ -13,10 +13,75 @@
 		where s.scontent like #{pattern}
 	
 	</select>
+	<select id="getChoseSubjectById" resultType="ChoseSubject" parameterType="int">
+       select s.scontent, s.sa, s.sb, s.sc, s.sd from subject s 
+       where s.sid = #{sid}  
+	</select>
+	
+	<select id="getSubjectDetail" parameterType="_int" resultMap="subjectDetailMap">
+	    select s.testcount , p.pid, p.pname 
+	    from subject s 
+	    join paper_subject ps
+	    on s.sid = ps.sid
+	    join paper p 
+	    on ps.pid = p.pid
+	    where s.sid = #{sid}
+	    
+	</select>
+	
+	
 
 	<insert id="insertSubject" parameterType="ChoseSubject">
 		insert into subject(scontent,sa,sb,sc,sd,skey,sstate,testcount) 
 		values(#{scontent},#{sa},#{sb},#{sc},#{sd},#{skey},#{sstate},#{testcount});
 	</insert>
+	
+	<insert id="insertSubjectAndGetSid" useGeneratedKeys="true" keyProperty="sid" parameterType="ChoseSubject">
+		insert into subject(scontent,sa,sb,sc,sd,skey,sstate,testcount) 
+		values(#{scontent},#{sa},#{sb},#{sc},#{sd},#{skey},#{sstate},#{testcount});
+	</insert>
+	
+	<update id="updataSubject" parameterType="ChoseSubject">
+	    update subject 
+	    <set>
+	      sid = #{sid}
+	    </set>
+	    
+	    <if test="scontent != null and !''.equals(scontent)">
+	      , scontent = #{scontent}
+	    </if>
+	    
+	    <if test="sa != null and !''.equals(sa)">
+	      , sa = #{sa}
+	    </if>
+	    
+	    <if test="sb != null and !''.equals(sb)">
+	      , sb = #{sb}
+	    </if>
+	    
+	    <if test="sc != null and !''.equals(sc)">
+	      , sc = #{sc}
+	    </if>
+	    
+	    <if test="sd != null and !''.equals(sd)">
+	      , sd = #{sd}
+	    </if>
+	    
+	    <if test="skey != null and !''.equals(skey)">
+	      , skey = #{skey}
+	    </if>
+	    
+	    <where>
+	      sid = #{sid}
+	    </where>
+	</update>
+	
+	<resultMap type="SubjectDetail" id="subjectDetailMap">
+	    <result column="testcount"  property="testcount"/>
+		<collection property="papers" ofType="Paper">
+		  <id column="pid" property="pid"/>
+          <result column="pname" property="pname"/>
+		</collection>
+	</resultMap>
 	
 </mapper>

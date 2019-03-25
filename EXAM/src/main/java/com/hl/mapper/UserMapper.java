@@ -4,6 +4,7 @@ package com.hl.mapper;
 
 import java.util.List;
 
+import com.hl.entity.UserDetail;
 import com.hl.entity.Userinfo;
 
 /**
@@ -34,8 +35,26 @@ public interface UserMapper {
 
 	/**
 	 * 查询出用户表中所有的学生信息
+	 * @return 
+	 * @param userinfo
+	 */
+	List<Userinfo> listUserinfoByRoleId(Integer roleid);
+	
+	
+
+	/**
+	 * 更新用户的真实姓名
+	 * @param user
 	 * @return
 	 */
-	List<Userinfo> listStudent();
+	int updateUsertruename(Userinfo user);
+
+	/**
+	 * 更新用户的密码
+	 * @param user
+	 * @return
+	 */
+	int updateUserpwd(Userinfo user);
+	
 
 }

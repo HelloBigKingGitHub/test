@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hl.mapper.MessageMapper">
+	
+	<insert id="insertMessage" parameterType="Message" useGeneratedKeys="true" keyColumn="messageid">
+	  insert into message (sendid,receiveid,mtitle,msg,mtype,mtime)
+	  values(#{sendUser.userid},#{receiveUser.userid},#{mtitle},#{msg},#{mtype},#{mtime})
+	</insert>
+	
+	<select id="getMessageBySendUser" resultMap="messageMap" parameterType="Userinfo">
+	   select * from message m 
+	   where m.sendid = #{userid}
+	
+	</select>
+	
+	<select id="getMessageByReceiveUser" resultMap="messageMap" parameterType="Userinfo">
+	   select * from message m 
+	   where m.receiveid = #{userid}
+	</select>
+	
+	<select id="getMessageByMessageid" resultMap="messageMap" parameterType="int">
+	   select * from message m 
+	   where m.messageid = #{0}
+	</select>
+	
+	<update id="updateMessageMstate" >
+	   update message m set m.mstate = #{1}
+	   where m.messageid = #{0}
+	</update>
+	
+	<select id="exsitNotReadedMessage" resultType="_int" parameterType="userinfo">
+	   select count(messageid) 
+	   from message m
+	   where m.receiveid = #{userid} 
+	   and m.mstate = 0
+	</select>
+	
+	<resultMap type="Message" id="messageMap">
+	  <id property="messageid" column="messageid" />
+	  <result property="mtitle" column="mtitle" />
+	  <result property="msg" column="msg" />
+	  <result property="mtype" column="mtype" />
+	  <result property="mtime" column="mtime" />
+	  <result property="mstate" column="mstate" />
+	  <association property="sendUser" javaType="Userinfo">
+	     <id property="userid" column="sendid" />
+	  </association>
+	  <association property="receiveUser" javaType="Userinfo">
+	    <id property="userid" column="receiveid" />
+	  </association>
+	</resultMap>
+	
+	
+</mapper>

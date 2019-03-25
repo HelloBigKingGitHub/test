@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <title>layout 后台大布局 - Layui</title>
+  <title> 一考教育教师端后台</title>
   <link rel="stylesheet" href="layui/css/layui.css">
   <link rel="icon" href="/EXAM/images/logo.png">
   <style type="text/css">
@@ -36,23 +36,23 @@
     </ul>
     <ul class="layui-nav layui-layout-right">
       <li class="layui-nav-item" >
-         <a href="javascript:;">
+         <a href="/EXAM/admin/message/index.html" target="option">
             <i class="layui-icon layui-icon-notice"></i>  
             <!-- 如果有新消息，则显示小圆点 -->
-            <span class="layui-badge-dot"></span>
+            <span class="layui-badge-dot" id="dot"></span>
          </a>
       </li>
 
       <li class="layui-nav-item">
         <a href="javascript:;" >
-          <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+          <img  id = "currentUserIcon" src="http://t.cn/RCzsdCq" class="layui-nav-img">
           <span id="crruentUser">贤心</span>
           <span class="layui-hide" id="crruentUserid"></span>
         </a>
         <dl class="layui-nav-child">
           <dd><a href="/EXAM/admin/personalpage.html" target="option"><i class="layui-icon layui-icon-user"></i> 个人中心</a></dd>
           <dd><a href="/EXAM/admin/set.html" target="option"><i class="layui-icon layui-icon-set-sm"></i> 基本设置</a></dd>
-          <dd><a href="/EXAM/logout.action"><i class="layui-icon layui-icon-close"></i> 退出登录</a></dd>
+          <dd><a href="javascript:0;" id="logout"><i class="layui-icon layui-icon-close"></i> 退出登录</a></dd>
         </dl>
       </li>
     </ul>
@@ -79,6 +79,7 @@
             <dd><a href="/EXAM/admin/teacher/error_subject.html" target="option">错题列表</a></dd>
             <dd><a href="/EXAM/admin/teacher/paper_list.html" target="option">试卷列表</a></dd>
             <dd><a href="/EXAM/admin/teacher/edit_paper.html" target="option">组编试卷</a></dd>
+            <dd><a href="/EXAM/admin/teacher/check_paper_list.html" target="option">审查试卷</a></dd>
             <dd><a href="/EXAM/admin/teacher/paper_data_analysis.html" target="option">数据分析</a></dd>
           </dl>
         </li>
@@ -95,9 +96,9 @@
     </div>
   </div>
   
-  <div class="layui-body">
+  <div class="layui-body"> 
     <!-- 内容主体区域 -->
-    <iframe id="option" name="option" src="/EXAM/404.html" style="overflow: visible;"  frameborder="no" width="100%" height="100%"></iframe>
+    <iframe id="option" name="option" src="/EXAM/admin/personalpage.html" style="overflow: visible;"  frameborder="no" width="100%" height="100%"></iframe>
 
   </div>
   
@@ -120,8 +121,47 @@ layui.use('element', function(){
 		  $('#crruentUser').text(result.crruentUser.usertruename);
 		  $('#crruentUserid').text(result.crruentUser.userid);
 	  }
-	  
   });
+
+  $.ajax({//异步获取用户的头像信息
+	  url:'/EXAM/get_current_user_icon.action',
+	  dataType:'json',
+	  type:'post',
+	  success:function(result){
+		  icon = '/' + result.iconUrl;
+		  $('#currentUserIcon').attr('src',icon);
+		  
+	  }
+  });
+  
+  
+  $.ajax({//异步获取当前用户是否有未阅读的短信，控制短信红点的显示和影藏
+	  url:'/EXAM/exist_not_readed_message.action',
+	  type:'get',
+	  dataType:'json',
+	  success:function(result){
+		  if(result.exist){
+			  $('#dot').removeClass('layui-hide');
+		  }else{
+			  $('#dot').addClass('layui-hide');
+		  }
+	  }
+  });
+  
+  $('#logout').on('click',function(){ //退出登录操作
+		$.ajax({
+			url : "/EXAM/UserController/logout.action",
+			dataType : "json",
+			type : "GET",
+			success : function(result) {
+				if(result.msg=='退出成功'){
+					var href = window.location.href;
+					var baseUrl = href.split("//")[0]+"//"+href.split("//")[1].split("/")[0]+"/"+href.split("//")[1].split("/")[1];
+					window.location.href = baseUrl+"/log_reg.jsp";
+				}
+			}
+		})
+	});
   
 });
 </script>

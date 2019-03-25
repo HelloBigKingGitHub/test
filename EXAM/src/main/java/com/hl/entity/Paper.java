@@ -8,9 +8,17 @@ import java.io.Serializable;
  *
  */
 public class Paper implements Serializable{
+
 	private Integer pid; //试卷编号
 	private String pname;//试卷名称
 	private Integer pstate;//试卷的状态 0表示禁用 1表示启用
+	private Integer teacherid; //组编老师编号
+	public Integer getTeacherid() {
+		return teacherid;
+	}
+	public void setTeacherid(Integer teacherid) {
+		this.teacherid = teacherid;
+	}
 	private PaperDetail pdetail;//试卷的详细信息（为一个对象，实行数据库表的一对一）
 	
 	public Integer getPid() {
@@ -39,8 +47,9 @@ public class Paper implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "Paper [pid=" + pid + ", pname=" + pname + ", pstate=" + pstate + "]";
-	}	
+		return "Paper [pid=" + pid + ", pname=" + pname + ", pstate=" + pstate + ", teacherid=" + teacherid
+				 + "]";
+	}
 	
 
 }

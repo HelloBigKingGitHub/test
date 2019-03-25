@@ -11,14 +11,90 @@
 	media="all">
 </head>
 <body>
+
+    <form class="layui-form">
+		<div class="layui-form-item">
+			<div class="layui-inline">
+				<label class="layui-form-label">消息主题</label>
+				<div class="layui-input-inline">
+					<input type="text" name="mtitle" placeholder="请输入"
+						autocomplete="off" class="layui-input" id="mtitle">
+				</div>
+			</div>
+		</div>
+	</form>
 	<textarea id="demo" style="display: none;"></textarea> 	
 	
-	<button class="layui-btn layui-btn-lg layui-btn-radius layui-btn-normal layui-btn-fluid">发送</button>
+	<button class="layui-btn layui-btn-lg layui-btn-radius layui-btn-normal layui-btn-fluid" id="send">发送</button>
 	<script src="/EXAM/admin/layui/layui.js"></script>
 	<script>
-	layui.use('layedit', function(){
-	  var layedit = layui.layedit;
+	layui.use(['layedit','form','layer'], function(){
+	  var layedit = layui.layedit
+	  ,layer = layui.layer
+	  ,$ = layui.jquery;
 	  var index = layedit.build('demo'); //建立编辑器
+	  
+	  var url = window.location.href;
+	  var useridOrClassid = url.split("?")[1].split("=")[0];
+	  //alert(useridOrClassid);
+	  if(useridOrClassid == 'userid'){  //如果传过来的参数是userid，则调用发送信息给user的action
+		  var userid = url.split("?")[1].split("=")[1];
+		  
+		  $('#send').on('click',function(){
+			  var sendmsg = layedit.getContent(index); //获取富文本内容
+			  var mtitle = $('#mtitle').val();
+			  console.info(sendmsg);
+			  console.info(mtitle);
+			  $.ajax({  //通过异步的方式发送信息
+				  url:'/EXAM/send_message.action',
+				  data:{"receiveid":userid,"mtitle":mtitle,"msg":sendmsg},
+				  type:'POST',
+				  dataType:'json',
+				  success:function(result){
+					  if(result.isok){
+						  layer.msg("发送成功",{time:2000},function(){
+							  
+							  window.location.reload();//刷新
+							 
+						  })
+					  }else{
+						  layer.msg("发送失败");
+					  }
+				  }
+				  
+				  
+			  });
+		  })
+	  }else{  //调用发送信息给班级的action
+		  var classid = url.split("?")[1].split("=")[1];
+	      console.info(classid);
+		  $('#send').on('click',function(){
+			  var sendmsg = layedit.getContent(index); //获取富文本内容
+			  var mtitle = $('#mtitle').val();
+			  console.info(sendmsg);
+			  console.info(mtitle);
+			  $.ajax({  //通过异步的方式发送信息
+				  url:'/EXAM/issuer_class_announcement.action',
+				  data:{"classid":classid,"catitle":mtitle,"camsg":sendmsg},
+				  type:'POST',
+				  dataType:'json',
+				  success:function(result){
+					  if(result.isok){
+						  layer.msg("发布成功",{time:2000},function(){
+							  
+							  window.location.reload();//刷新
+							 
+						  })
+					  }else{
+						  layer.msg("发布失败");
+					  }
+				  }
+				  
+				  
+			  });
+		  })
+	  }
+	  
 	});
 	</script>
 </body>

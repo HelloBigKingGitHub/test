@@ -33,6 +33,18 @@
 						autocomplete="off" class="layui-input">
 				</div>
 			</div>
+
+			<div class="layui-inline">
+				<label class="layui-form-label">操作班级</label>
+				<div class="layui-input-inline">
+					<select name="classname" id="classname" lay-verify="required"
+						lay-search="" lay-filter="clazzSelect">
+						<option value="">直接选择或搜索选择</option>
+
+					</select>
+				</div>
+			</div>
+
 			<div class="layui-inline">
 				<button class="layui-btn layuiadmin-btn-order" lay-submit
 					lay-filter="LAY-app-order-search">
@@ -53,7 +65,7 @@
   </div>
 </script>
 
-	<script type="text/html" id="barDemo">
+<script type="text/html" id="barDemo">
   <a class="layui-btn layui-btn-xs" lay-event="analyse">学生详情</a>
   <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="addToClass">加入班级</a>
 </script>
@@ -63,7 +75,7 @@
 	<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 
 	<script>
-layui.use('table', function(){
+layui.use(['table','form'], function(){
   var table = layui.table;
   var layer = layui.layer;
   var $ = layui.jquery; 
@@ -89,7 +101,7 @@ layui.use('table', function(){
   });
   
   //头工具栏事件
-  table.on('toolbar(test)', function(obj){
+  table.on('toolbar(student_list)', function(obj){
     var checkStatus = table.checkStatus(obj.config.id);
     switch(obj.event){
       case 'getCheckData':
@@ -111,24 +123,32 @@ layui.use('table', function(){
   });
   
   //监听行工具事件
-  table.on('tool(test)', function(obj){
+  table.on('tool(student_list)', function(obj){
     var data = obj.data;
     console.log(obj)
-    if(obj.event === 'del'){
-      layer.confirm('真的删除行么', function(index){
-        obj.del();
-        layer.close(index);
-      });
+    if(obj.event === 'addToClass'){
+      var studentid = data.userid;
+      var classid = $('#classname option:selected').val();
+      if(classid==''){
+    	  layer.msg('请先选择班级');
+      }else{
+    	  $.ajax({ //异步请求吧学生添加到指定班级中
+    		  url:'/EXAM/add_student_to_class.action',
+    		  type:'POST',
+    		  dataType:'json',
+    		  data:{'studentid':studentid,'classid':classid},
+    		  success:function(result){
+    			  layer.msg(result.msg,{time:2000},function(){
+    				  //location.reload();
+    			  });
+    		  }
+    		  
+    	  });
+      }
+      
     } else if(obj.event === 'analyse'){
-      layer.prompt({
-        formType: 2
-        ,value: data.email
-      }, function(value, index){
-        obj.update({
-          email: value
-        });
-        layer.close(index);
-      });
+    	//alert('analyse');
+    	window.location.href='/EXAM/admin/teacher/student_detail.html?userid='+data.userid+'&classid=';
     }
   });
   /*给搜索框进行设置*/
@@ -154,6 +174,35 @@ layui.use('table', function(){
 		  $('.demoTable .layui-btn').on('click', function(){
 		    var type = $(this).data('type');
 		    active[type] ? active[type].call(this) : '';
+		  });
+		  
+		  var crruentUserid = $('#crruentUserid', parent.document).text(); //获取当前用户id（既是老师的id）
+		  /*******获取该老师的所有课程，然后把数据渲染到搜索选择框中********/
+		  $.ajax({
+			  type:'post'
+			  ,data:{'teacheridStr':crruentUserid}
+			  ,dataType:'json'
+			  ,url:'/EXAM/list_clazz_by_teacher_for_select.action'
+			  ,success:function(result){
+				  if(result.code == 1){
+					  layer.msg(result.msg,{time:200});
+					  
+				  }else{
+					  list = result.clazzList;
+					    //console.info(list);
+					    var clazz = null;
+					    var text = '';
+					    for (var i = 0; i < list.length; i++) {
+					    	clazz = list[i];
+					    	//console.info(course);
+					    	text = '<option value="'+clazz.classid+'">'+clazz.classname+'</option>'
+					    	//console.info(text);
+					    	$('#classname').append(text);
+					    	
+						}
+					    layui.form.render('select');
+				  }
+			  }	  
 		  });
 });
 </script>

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.hl.entity.Clazz;
+import com.hl.entity.ClazzDetail;
+import com.hl.entity.Userinfo;
 
 /**
  * 对课程的服务层
@@ -43,5 +45,32 @@ public interface ClazzService {
 	 * @return 包含分页信息的map集合
 	 */
 	Map<String, Object> listStudentOfClazzByClassid(String classidStr, String pageStr, String limitStr, String studentname,String studenttel);
+
+	/**
+	 * 往班级中添加学生
+	 * @param classid
+	 * @param studentid
+	 * @return
+	 */
+	int addStudent(String classid, String studentid);
+	
+	/**
+	 * 判断学生是否在这个班级中
+	 * @param classid
+	 * @param studentid
+	 * @return 返回着个学生的全部信息
+	 */
+	Userinfo studentInClass(String classid, String studentid);
+
+	/**
+	 * 根据班级编号查询班级详细信息
+	 * @param classid
+	 * @return
+	 */
+	ClazzDetail getClassDetail(String classid);
+
+
+
+	
 
 }

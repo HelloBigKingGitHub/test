@@ -4,6 +4,7 @@ package com.hl.service.impl;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hl.BaseTest;
 import com.hl.entity.Clazz;
+import com.hl.entity.ClazzDetail;
+import com.hl.entity.Homework;
 import com.hl.entity.Userinfo;
 import com.hl.service.ClazzService;
 
@@ -59,6 +62,25 @@ public class ClazzServiceImplTest extends BaseTest{
 	public void tesetTableRander() {
 		String result = tableRander(Clazz.class,"6","1","10");
 		System.out.println(result);
+	}
+	
+	@Test
+	public void testAddStudent() {
+		int result = cs.addStudent("3", "7");
+		System.out.println(result);
+	}
+	@Test
+	public void testGetClassDetail() {
+		
+		ClazzDetail classDetail = cs.getClassDetail("1");
+		System.out.println(classDetail.getClazzFiles());
+		System.out.println(classDetail.getHomeworks());
+		System.out.println(classDetail.getStudents());
+		System.out.println(classDetail.getTeacher());
+		/*HashSet<Homework> hashSet = new HashSet<Homework>(classDetail.getHomeworks());
+		System.out.println(hashSet);
+		HashSet<Userinfo> hashSet1 = new HashSet<Userinfo>(classDetail.getStudents());
+		System.out.println(hashSet1);*/
 	}
 	
 	

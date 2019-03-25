@@ -1,9 +1,13 @@
 package com.hl.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.hl.entity.Paper;
 import com.hl.entity.PaperDetail;
+import com.hl.entity.Userinfo;
+import com.hl.formbean.PaperFormBean;
 
 /**
  * 有关试卷的service层接口
@@ -23,5 +27,26 @@ public interface PaperService {
 	 * @return
 	 */
 	boolean updataPaperDetail(PaperDetail paperDetail);
+	
+
+	/**
+	 * 根据条件分页查询出所有的试卷
+	 * @param page
+	 * @param limit
+	 * @param teacherid
+	 * @param papername
+	 * @param paperid
+	 * @return
+	 */
+	Map<String, Object> listPaper(String page, String limit, String teacherid, String papername, String paperid);
+
+	/**
+	 * 添加试卷
+	 * @param paper
+	 * @return
+	 */
+	boolean addPaper(PaperFormBean paperFormBean, Userinfo currentUser)throws Exception;
+
+	
 
 }

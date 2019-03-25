@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hl.mapper.PaperCheckMapper">
+
+	<insert id="insertPaperCheck" parameterType="PaperCheck">
+	   insert into paper_check (paperid,checkteacherid,checkcontent) values(#{paper.pid},#{checkteacher.userid},#{checkcontent})
+	
+	</insert>
+	
+	<select id="listCheckPaperByTeacherId" resultMap="paperDetailMap" parameterType="int"> 
+	   select p.*,pd.* from 
+	     (select * from paper_check pc where pc.checkteacherid = #{0})
+	   as pc
+	   inner join paper p
+	   on p.pid = pc.paperid
+	   inner join paperdetail pd
+	   on p.pid = pd.pid
+	</select>
+	
+	<resultMap type="com.hl.entity.PaperDetail" id="paperDetailMap">
+	     <id property="pdid" column="pdid"/>
+         <result property="paggregatescore" column="paggregatescore"/>
+         <result property="ptime" column="ptime"/>
+         <result property="testdegree" column="testdegree"/>
+         <result property="avescore" column="avescore"/>
+         <result property="paggregatescore" column="paggregatescore"/>
+         <association property="paper" javaType="com.hl.entity.Paper">
+             <id property="pid" column="pid"/>
+             <result property="pname" column="pname"/>
+             <result property="pstate" column="pstate"/>
+             <result property="teacherid" column="teacherid"/>
+        </association>
+	</resultMap>
+	
+</mapper>

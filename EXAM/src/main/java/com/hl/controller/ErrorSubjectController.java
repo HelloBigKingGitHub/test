@@ -52,7 +52,7 @@ public class ErrorSubjectController {
 	@RequestMapping(value="list_error_subject_page_2.action",produces = {"text/html;charset=utf-8"})
 	//produces = {"text/html;charset=utf-8"}解决中文乱码
 	public @ResponseBody String listErrorSubjectPage(String page,String limit,String esid) {
-		if(esid==null) {
+		if(esid==null || "".equals(esid)) {
 			return tableRender(page, limit);
 		}else {
 			return tableReload(esid);

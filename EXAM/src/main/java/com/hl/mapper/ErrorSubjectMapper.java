@@ -36,4 +36,11 @@ public interface ErrorSubjectMapper {
 	 */
 	Set<Userinfo> queryUserOfErrorSubject(Subject subject);
 
+	/**
+	 * 根据试题的编号查询出所有错题
+	 * @param id
+	 * @return
+	 */
+	int getErrorCountBySid(Integer id);
+
 }

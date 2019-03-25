@@ -47,6 +47,13 @@
 	max-height: 150px;
 	overflow-y: scroll;
 }
+.cbnWrap div{
+   width: 20px;
+   height: 20px;
+   padding: 2px;
+   margin: 5px;
+   
+}
 </style>
 </head>
 <body>
@@ -87,16 +94,15 @@
 
 		<script type="text/html" id="toolbarDemo">
   			<div class="layui-btn-container">
-    			<button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+    			<button class="layui-btn layui-btn-sm" lay-event="getCheckData">组编选中试题</button>
     			<button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
-    			<button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
-    			<button class="layui-btn layui-btn-sm" lay-event="addSubject">添加题目</button>
+    			<button class="layui-btn layui-btn-sm" lay-event="delCheck">移除选中试题</button>
   			</div>
 		</script>
 
 		<script type="text/html" id="barDemo">
-  			<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-  			<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+  			<a class="layui-btn layui-btn-xs" lay-event="edit">组编</a>
+  			<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">移除</a>
 		</script>
 	</div>
 
@@ -186,22 +192,15 @@
 	<!-- 试卷左侧的试题篮-->
 	<div id="low_right" class="layui-box" >
 		<h4>选题篮</h4>
-		<div class="cbnWrap">
-			<div>1</div>
-			<div>1</div>
-			<div>1</div>
-			<div>1</div>
-			<div>1</div>
-			<div>1</div>
-			<div>1</div>
-			<div>1</div>
-			<div>1</div>
-			<div>1</div>
-			<div>1</div>
-
+		<div class="cbnWrap" >
+			
+			
+		
 		</div>
-		<div id="paper_ preview"
-			class="layui-btn layui-btn-radius layui-btn-normal">试卷预览</div>
+		<div class="demoTable">
+		<button id="paper_ preview"
+			class="layui-btn layui-btn-radius layui-btn-normal" data-type="preview">试卷预览</button>
+	    </div>
 	</div>
 
 
@@ -222,6 +221,28 @@
 					$('#byManual').removeClass('layui-hide');
 				}
 			});
+			
+			form.on('submit(add_subject)',function(data){ //给添加按钮绑定事件
+				 console.log(data.field); 
+				  var sendData = JSON.stringify(data.field);
+				  $.ajax({//使用ajax发送请求
+					   contentType:"application/json;charset=utf-8"
+					  ,type:"POST"
+					  ,data:sendData
+					  ,dataTyep:"json"
+					  ,url:"/EXAM/add_subject_and_get_sid.action"  //插入试题记录并且得到本次插入的id号
+					  ,success:function(result){
+						  if(result > 0){ //添加成功，修改试题篮，并且
+							  console.info('sid='+result);
+							  txt = '<div class="layui-circle layui-bg-orange layui-inline" name="subjectid'+result+'">'+result+'</div>';
+							  $('.cbnWrap').append(txt);
+							  
+						  }
+					  }
+				  });
+				  return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+			});
+			
 
 			table.render({
 				elem : '#test',
@@ -282,31 +303,32 @@
 				switch (obj.event) {
 				case 'getCheckData':
 					var data = checkStatus.data;
-					layer.alert(JSON.stringify(data));
+					//layer.alert(JSON.stringify(data));
+					//var subjectlist = JSON.stringify(data);
+					var subject = null;
+					var txt = null;
+					for (var i = 0; i < data.length; i++) {
+						subject = data[i];
+						//console.info(subject.sid);
+						txt = '<div class="layui-circle layui-bg-blue layui-inline" name="subjectid'+subject.sid+'">'+subject.sid+'</div>';
+						$('.cbnWrap').append(txt);
+					}
 					break;
 				case 'getCheckLength':
 					var data = checkStatus.data;
 					layer.msg('选中了：' + data.length + ' 个');
 					break;
-				case 'isAll':
-					layer.msg(checkStatus.isAll ? '全选' : '未全选');
-					break;
-				case 'addSubject':
-					$('#testForm').removeClass('layui-hide');
-					index = layer.open({
-						type : 1,
-						title : '测试内容',
-						content : $('#testForm') //弹出框内容
-						,
-						shade : [ 0.5, '#393D49' ] //遮罩层
-						,
-						area : '500px' //宽高值
-						,
-						anim : 6
-					//动画效果（抖动）
-
-					})
-
+				case 'delCheck':
+					var data = checkStatus.data;
+					var subject = null;
+					var txt = null;
+					for (var i = 0; i < data.length; i++) {
+						subject = data[i];
+						//console.info(subject.sid);
+						var filter = 'div[name="subjectid'+subject.sid+'"]';
+						$(filter).remove();
+						
+					}
 					break;
 				}
 				;
@@ -314,27 +336,18 @@
 
 			//监听行工具事件
 			table.on('tool(test)', function(obj) {
-				var data = obj.data;
+				var subject = obj.data;
 				//console.log(obj)
 				if (obj.event === 'del') {
-					layer.confirm('真的删除行么', function(index) {
-						obj.del();
-						layer.close(index);
-					});
+					var filter = 'div[name="subjectid'+subject.sid+'"]';
+					$(filter).remove();
 				} else if (obj.event === 'edit') {
-					layer.prompt({
-						formType : 2,
-						value : data.email
-					}, function(value, index) {
-						obj.update({
-							email : value
-						});
-						layer.close(index);
-					});
+					txt = '<div class="layui-circle layui-bg-blue layui-inline" name="subjectid'+subject.sid+'">'+subject.sid+'</div>';
+					$('.cbnWrap').append(txt);
 				}
 			});
 			/*给搜索框进行设置*/
-			var $ = layui.$, active = {
+			var $ = layui.$, layer = layui.layer,active = {
 				reload : function() {
 					var demoReload = $('#demoReload');
 					//alert(demoReload.val())
@@ -352,12 +365,42 @@
 					});
 
 				}
+			  ,preview : function(){  //预览试卷
+				  //alert('预览试卷');
+				  var subjectidList = [];
+				  var sid = 0;
+				  $('.cbnWrap > div').each(function(){
+					    sid = $(this).text();
+					    subjectidList.push(sid)
+					  });
+				  
+				  //alert(subjectidList.length);
+				  if(subjectidList.length ==0){
+					  layer.msg('您还没有选定试题！！');
+				  }else{
+					  layer.open({
+						  type: 2
+				          ,content: ['/EXAM/admin/teacher/paper_preview.html','yes']
+				          ,area: ['700px', '500px']
+				          ,shade: 0.4
+				          ,id: 'paper_preview' //设定一个id，防止重复弹出
+				          ,moveType: 1 //拖拽模式，0或者1
+				          ,success:function(layero, index){
+					          var iframe = window['layui-layer-iframe' + index];
+					          iframe.child(subjectidList);
+				          }
+					  });
+				  }
+			  }
 			};
 
 			$('.demoTable .layui-btn').on('click', function() {
 				var type = $(this).data('type');
 				active[type] ? active[type].call(this) : '';
 			});
+			
+			
+			
 			
 			/************给试题篮设置拖动效果*******************/
 			var sub_x = 0;

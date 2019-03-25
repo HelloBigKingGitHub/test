@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hl.mapper.UserDetailMapper">
+	
+	<select id="getUserDetail" resultMap="userDetailMap" parameterType="UserDetail">
+	  select ud.*,u.usertruename,u.usertel 
+	  from userdetail ud
+	  inner join sysuser u
+	  on ud.userid = u.userid
+	  where ud.userid = #{user.userid}
+	</select>
+	<resultMap type="UserDetail" id="userDetailMap">
+	  <id property="udid" column="udid" />
+	  <result property="sex" column="sex" />
+	  <result property="motto" column="motto" />
+	  <result property="follow" column="follow" />
+	  <result property="icon" column="icon" />
+	  <result property="email" column="email" />
+	  <result property="ucity" column="ucity" />
+	  <association property="user" javaType="Userinfo">
+	    <id property="userid" column="userid" />
+	    <result property="usertruename" column="usertruename" />
+	    <result property="usertel" column="usertel" />
+	  </association>
+	</resultMap>
+	
+	<insert id="insertUserDetail" parameterType="UserDetail">
+	  insert into userdetail(userid,sex,motto,email,ucity)
+	  values(#{user.userid},#{sex},#{motto},#{email},#{ucity})
+	</insert>
+	
+	<update id="updateUserDetail" parameterType="UserDetail">
+	  update userdetail set
+	  sex = #{sex},
+	  motto = #{motto},
+	  email = #{email},
+	  ucity = #{ucity}
+	  where userid = #{user.userid}
+	
+	</update>
+	<update id="updateUserDetailIcon" parameterType="UserDetail">
+	  update userdetail set
+	  icon = #{icon}
+	  where userid = #{user.userid}
+	</update>
+	
+	<select id="getUserIcon" parameterType="Userinfo" resultType="string">
+	  select ud.icon from userdetail ud
+	  where ud.userid = #{userid}
+	</select>
+	
+</mapper>

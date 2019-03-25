@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.hl.entity.ChoseSubject;
+import com.hl.entity.SubjectDetail;
 
 /**
  * 题目的代理接口
@@ -32,6 +33,36 @@ public interface SubjectMapper {
 	 * @param choseSubject
 	 * @return 操作数
 	 */
-	int insertSubject(ChoseSubject choseSubject); 
+	int insertSubject(ChoseSubject choseSubject);
+	
+	/**
+	 * 增加一条新的题目
+	 * @param choseSubject
+	 * @return sid
+	 */
+	int insertSubjectAndGetSid(ChoseSubject choseSubject); 
+
+	/**
+	 * 跟新试题信息
+	 * @param choseSubject
+	 * @return 操作数
+	 */
+	int updataSubject(ChoseSubject choseSubject);
+
+	/**
+	 * 根据试题编号查询出试题的详细信息
+	 * @param sid
+	 * @return SubjectDetail
+	 */
+	SubjectDetail getSubjectDetail(Integer sid);
+
+	/**
+	 * 通过id编号查询出选择题的信息
+	 * @param sid
+	 * @return ChoseSubject
+	 */
+	ChoseSubject getChoseSubjectById( Integer sid);
+
+	
 
 }

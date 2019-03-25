@@ -29,4 +29,67 @@
 	   </if>
 	</select>
 	
+	<select id="getStudent" resultType="Userinfo">
+	   select u.* from sysuser u
+	   join user_clazz uc
+	   on uc.studentid = u.userid
+	   where uc.classid = #{0}
+	   and uc.studentid = #{1}
+	</select>
+	
+	<insert id="addStudent" >
+	   insert into user_clazz (classid,studentid) 
+	   values(#{0},#{1})
+	</insert>
+	
+	<select id="getClassDetail" parameterType="int" resultMap="ClazzDetailMap">
+	  select cf.title cftitle,c.classid, c.classteacherid,f.*,teacher.*,
+	  h.homeworkid homeworkid,h.title htitle,
+	  student.userid suserid,student.usertruename susertruename,student.usertel susertel
+	  from (select c.classid ,c.classteacherid from clazz c where c.classid = #{0} ) c
+	  inner join sysuser teacher
+	  on teacher.userid = c.classteacherid
+	  inner join user_clazz  uc
+	  on uc.classid = c.classid
+	  inner join sysuser student
+	  on uc.studentid = student.userid
+	  left join clazz_file cf
+	  on cf.classid = c.classid
+	  left join file f
+	  on f.fileid = cf.fileid
+	  left join clazz_homework ch 
+	  on ch.classid = c.classid
+	  left join homework h
+	  on ch.hid = h.homeworkid
+	</select>
+	
+	<resultMap type="com.hl.entity.ClazzDetail" id="ClazzDetailMap">
+	  <association property="teacher" javaType="com.hl.entity.Userinfo">
+	  	<result property="userid" column="userid" />
+	  	<result property="usretruename" column="usretruename" />
+	  	<result property="usertel" column="usertel" />
+	  </association>
+	  
+	  <collection property="students" ofType="com.hl.entity.Userinfo">
+	    <result property="userid" column="suserid" />
+	  	<result property="usretruename" column="susretruename" />
+	  	<result property="usertel" column="susertel" />
+	  </collection>
+	  
+	  <collection property="homeworks" ofType="com.hl.entity.Homework">
+	    <result property="homeworkid" column="homeworkid" />
+	    <result property="title" column="htitle" />
+	  </collection>
+	  
+	  <collection property="ClazzFiles" ofType="com.hl.entity.ClazzFile" >
+	    <result property="title" column="cftitle" />
+	    <association property="file" javaType="com.hl.entity.File">
+	      <result property="fileid" column="fileid" />
+	      <result property="filename" column="filename" />
+	      <result property="uploadpath" column="uploadpath" />
+	      <result property="type" column="type" />
+	    </association>
+	  </collection>
+	</resultMap>
+	
 </mapper>

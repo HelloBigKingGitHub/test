@@ -1,5 +1,6 @@
 package com.hl.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,8 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.hl.entity.ChoseSubject;
-import com.hl.formbean.ChoseSubjectFormBean;
+import com.hl.entity.SubjectDetail;
+import com.hl.mapper.ErrorSubjectMapper;
 import com.hl.mapper.SubjectMapper;
 import com.hl.service.SubjectService;
 
@@ -18,6 +20,9 @@ import com.hl.service.SubjectService;
 public class SubjectServiceImpl implements SubjectService{
 	@Autowired
 	private SubjectMapper subjectMapper;
+	
+	@Autowired
+	private ErrorSubjectMapper errorSubjectMapper;
 
 	@Override
 	public List<ChoseSubject> listChoseSubject() {
@@ -53,8 +58,54 @@ public class SubjectServiceImpl implements SubjectService{
 	
 	@Override
 	public boolean insertChoseSubject(ChoseSubject choseSubject) {
-		
 		return subjectMapper.insertSubject(choseSubject)>0;
+	}
+
+	
+
+	@Override
+	public boolean updataChoseSubject(ChoseSubject choseSubject) {
+		return subjectMapper.updataSubject(choseSubject)>0;
+	}
+
+
+	@Override
+	public SubjectDetail getSubjectDetail(String sid) {
+		if(sid!=null && !("".equals(sid))) {
+			Integer id = Integer.parseInt(sid);
+			System.out.println(id);
+			SubjectDetail sd =  subjectMapper.getSubjectDetail(id);
+			//SubjectDetail sd = new SubjectDetail();
+			int errorcount = errorSubjectMapper.getErrorCountBySid(id);
+			sd.setErrorcount(errorcount);
+		
+			return sd;
+		}
+		
+		return null;
+		
+	}
+
+	
+
+	@Override
+	public int insertSubjectAndGetSid(ChoseSubject choseSubject) {
+		
+		return  subjectMapper.insertSubjectAndGetSid(choseSubject);
+	}
+
+
+	@Override
+	public List<ChoseSubject> listChoseSubjectByIds(List<String> subjectidList) {
+		
+		List<ChoseSubject> list = new ArrayList<>();
+		ChoseSubject choseSubject = new ChoseSubject();
+		for (String string : subjectidList) {//controller层进行了数据合理化判断，所以直接遍历
+			Integer sid = Integer.parseInt(string);
+			choseSubject = subjectMapper.getChoseSubjectById(sid);
+			list.add(choseSubject);
+		}
+		return list;
 	}
 
 

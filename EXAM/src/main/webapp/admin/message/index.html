@@ -17,10 +17,10 @@
   <div class="layui-fluid" id="LAY-app-message">
     <div class="layui-card">
       <div class="layui-tab layui-tab-brief">
-        <ul class="layui-tab-title">
-          <li class="layui-this">全部消息</li>
-          <li>通知<span class="layui-badge">6</span></li>
-          <li>私信</li>
+        <ul class="layui-tab-title mtypes">
+          <li class="layui-this" data-type="all">全部消息</li>
+          <li data-type="notice">通知</li>
+          <li data-type="direct">私信</li>
         </ul>
         <div class="layui-tab-content">
         
@@ -30,8 +30,9 @@
               <button class="layui-btn layui-btn-primary layui-btn-sm" data-type="all" data-events="ready">标记已读</button>
               <button class="layui-btn layui-btn-primary layui-btn-sm" data-type="all" data-events="readyAll">全部已读</button>
             </div>
+            <div>内容1</div>
             
-            <table id="LAY-app-message-all" lay-filter="LAY-app-message-all"></table>
+            <table id="message-all" lay-filter="message-all"></table>
           </div>
           <div class="layui-tab-item">
           
@@ -41,7 +42,8 @@
               <button class="layui-btn layui-btn-primary layui-btn-sm" data-type="notice" data-events="readyAll">全部已读</button>
             </div>
             
-            <table id="LAY-app-message-notice" lay-filter="LAY-app-message-notice"></table>
+            <div>学生申请加入班级的申请信息</div>
+            <table id="message-notice" lay-filter="message-notice"></table>
           </div>
           <div class="layui-tab-item">
           
@@ -51,16 +53,57 @@
               <button class="layui-btn layui-btn-primary layui-btn-sm" data-type="direct" data-events="readyAll">全部已读</button>
             </div>
             
-            <table id="LAY-app-message-direct" lay-filter="LAY-app-message-direct"></table>
+            <div>内容3</div>
+            <table id="message-direct" lay-filter="message-direct"></table>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <script src="/EXAM/admin/layui/layui.js"></script>  
-  <script>
-  
-  </script>
+	<script src="/EXAM/admin/layui/layui.js"></script>
+	<script>
+		layui.use([ 'table', 'element' ], function() {
+			//动态获取相应表格的数据
+			var $ = layui.jquery;
+			var table = layui.table;
+			
+			table.render({
+    			elem: '#message-all'
+    			,url:'/EXAM/list_all_receive_message.action' //分页查询出所有的接受信息
+    			//,toolbar: '#toolbarDemo'
+    			,title: '接受全部信息列表'
+    			//,where: {teacheridStr: crruentUserid} //传递额外的数据给后台 
+    			,height: 510
+    			,cols: [[
+       				{type: 'checkbox', fixed: 'left'}
+       				,{field:'messageid', title: '信息编号', hide:true}//设置一个隐藏列
+      				,{field:'mtitle', title: '标题内容'}
+      				,{field:'mtime', title: '时间', width:200, sort: true}
+    			]]
+    			,skin: 'line' //行边框风格
+    			//,even: true //开启隔行背景
+    			,page: true
+    			,id: 'message-all-reload'
+ 			 });
+			
+			table.on('row(message-all)', function(obj){
+				  //console.log(obj.tr) //得到当前行元素对象
+				  data = obj.data; //得到当前行数据
+				  var messageid = data.messageid;
+				  window.location.href='/EXAM/admin/message/detail.html?messageid='+messageid;
+			
+				});
+
+			$('.mtypes >li').on('click', function() { //给消息类型选项绑定事件
+				//alert('click');
+				$('.mtypes >li').removeClass('layui-this');
+				$(this).addClass('layui-this');
+
+			});
+		});
+
+		
+	</script>
 </body>
 </html>

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.hl.entity.ChoseSubject;
+import com.hl.entity.SubjectDetail;
 
 /**
  * 试题的业务层接口
@@ -42,5 +43,35 @@ public interface SubjectService {
 	 * @return
 	 */
 	boolean insertChoseSubject(ChoseSubject choseSubject);
+
+	/**
+	 * 跟新题目内容
+	 * @param choseSubject
+	 * @return
+	 */
+	boolean updataChoseSubject(ChoseSubject choseSubject);
+
+	/**
+	 * 根据试题id的到试题的详细信息
+	 * @param sid
+	 * @return
+	 */
+	SubjectDetail getSubjectDetail(String sid);
+	
+	/**
+	 * 通过编号集合批量的查询出试题信息（题干，和选项即可，不需要跟多的列）
+	 * @param sid
+	 * @return
+	 */
+	List<ChoseSubject> listChoseSubjectByIds(List<String> subjectidList);
+
+	/**
+	 * 添加试题信息并得到试题的sid
+	 * @param choseSubject
+	 * @return sid
+	 */
+	int insertSubjectAndGetSid(ChoseSubject choseSubject);
+
+	
 
 }

@@ -13,35 +13,69 @@
 
   <div class="layui-fluid" id="LAY-app-message-detail">
     <div class="layui-card layuiAdmin-msg-detail">
-      <script type="text/html" template lay-url="{{ layui.setter.base }}json/message/detail.js?id={{ layui.router().search.id }}">
         <div class="layui-card-header">
-          <h1>{{ d.data.title }}</h1>
+          <h1 id="messagetitle">{{ d.data.title }}</h1>
           <p>
-            <span>{{ layui.util.timeAgo(d.data.time) }}</span>
+            <span id="messagetime">{{ layui.util.timeAgo(d.data.time) }}</span>
           </p>
         </div>
         <div class="layui-card-body layui-text">
-          <div class="layadmin-text">
-            {{ d.data.content }}
+          <div class="layadmin-text" >
+            <div id="messagecontent" >{{ d.data.content }}</div>
+            
             <blockquote class="layui-elem-quote">
-              注：这里读取的是静态的模拟接口，实际应用时，您可以在该页面源代码中，修改成以下任意一种方式
+              注：信息功能模块暂时只支持简单的文字信息,并不支持富文本操作。静态更新
               <ul>
-                <li>将 <em>lay-url=""</em> 改成你的真实接口，系统会自动识别该动态模板，直接前端渲染。</li>
-                <li>剔除 script 动态模板标签，改成服务端渲染。</li>
+                <li>简单消息展示页面</li>
+                <li>版权所有</li>
               </ul>
             </blockquote>
           </div>
           
           <div style="padding-top: 30px;">
-            <a href="javascript:;" layadmin-event="back" class="layui-btn layui-btn-primary layui-btn-sm">返回上级</a>
+            <a href="javascript:;"  onclick="history.back()" class="layui-btn layui-btn-primary layui-btn-sm">返回上级</a>
           </div>
         </div>
-      </script>
     </div>
   </div>
 
 <script src="/EXAM/admin/layui/layui.js"></script>  
   <script>
+    layui.use('element',function(){
+    	var $ = layui.jquery;
+    	var url = window.location.search ;
+   	    var messageid = url.split("&")[0].split("=")[1]; //班级编号，全局变量
+    	$.ajax({
+    		url:'/EXAM/get_message_by_messageid.action',
+    		data:{'messageid':messageid},
+    		type:'POST',
+    		dataType:'json',
+    		success:function(result){
+    			var message = result.message;
+    			//console.info(message);
+    			$('#messagetitle').text(message.mtitle);
+    			$('#messagetime').text(message.mtime);
+    			$('#messagecontent').text(message.msg);
+    			
+    			$.ajax({//异步获取当前用户是否有未阅读的短信，控制短信红点的显示和影藏(细节控制没读一次数据就要判断一次)
+    	    		  url:'/EXAM/exist_not_readed_message.action',
+    	    		  type:'get',
+    	    		  dataType:'json',
+    	    		  success:function(result){
+    	    			  if(result.exist){
+    	    				  $('#dot',parent.document).removeClass('layui-hide');
+    	    			  }else{
+    	    				  $('#dot',parent.document).addClass('layui-hide');
+    	    			  }
+    	    		  }
+    	    	  });
+    		}
+    		
+    	});
+   	    
+    	
+    	
+    });
 
   </script>
 </body>

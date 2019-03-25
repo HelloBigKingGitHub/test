@@ -42,4 +42,9 @@
 	    where es.sid = #{sid};
 	
 	</select>
+	
+	<select id="getErrorCountBySid" parameterType="int" resultType="_int">
+	  select count(esid) from errorsubject
+	  where sid = #{id}
+	</select>
 </mapper>
