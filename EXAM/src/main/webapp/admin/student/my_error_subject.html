@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>错题页面</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="/EXAM/admin/layui/css/layui.css">
+  <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+</head>
+<body>
+	<div class="demoTable" style="margin: 20px">
+	  根据题干检索：
+	  <div class="layui-inline">
+	    <input class="layui-input" name="id" id="demoReload" autocomplete="off">
+	  </div>
+	  <button class="layui-btn" data-type="reload">搜索</button>
+	</div>
+	<fieldset class="layui-elem-field layui-field-title"
+		style="margin-top: 20px;">
+		<legend>卡片面板</legend>
+	</fieldset>
+
+	<div style="padding: 20px; background-color: #F2F2F2;">
+		<div class="layui-row layui-col-space15 top">
+			
+			
+		</div>
+		
+		<div class="layui-row layui-col-space15 down">
+			
+			
+		</div>
+		
+	</div>
+	<!-- 分页标签 -->
+	<div style="margin: 50px; margin-top: 10px" id="page"></div>
+
+
+
+
+	<script src="/EXAM/admin/layui/layui.js"></script> 
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 --> 
+ 
+<script>
+layui.use(['table','element','laypage'], function(){
+	  var table = layui.table;
+	  var layer = layui.layer;
+	  var $ = layui.jquery; 
+	  var element = layui.element;
+	  var layer = layui.layer;
+	  var laypage = layui.laypage;
+	  function page(scontent){
+		  $.ajax({  
+				 type:'post',
+				 data:{'page':'1','limit':'4','scontent':scontent},
+				 dataType:'json',
+				 url:'/EXAM/user_get_error_subject.action',
+				 success:function(result){
+					 laypage.render({
+						    elem: 'page'
+						    ,limit:4
+						    ,count: result.count //数据总数
+						    ,jump: function(obj){ //分页回调函数
+						    	
+						    	$('.down').html(''); //先清空上次分页的信息
+						    	$('.top').html('');
+						    	
+						    	 var page = obj.curr ;   //console.log(obj.curr); 得到当前页，以便向服务端请求对应页的数据。
+						    	 var limit = obj.limit;  //console.log(obj.limit); //得到每页显示的条数
+						    	 $.ajax({               //异步请求分页信息
+									 type:'post',
+									 data:{'page':page,'limit':limit,'scontent':scontent},
+									 dataType:'json',
+									 url:'/EXAM/user_get_error_subject.action',
+									 success:function(result){
+										 //console.info(result);
+										 var errorSubjects = result.errorSubjectList;
+										 console.info(errorSubjects);
+										 var length = errorSubjects.length;
+										 for (var i = 0; i < length; i++) {
+											 var errorSubject = errorSubjects[i];
+											 var subject = errorSubject.subject;
+											 console.info(subject);
+											 var text = '<div class="layui-col-md6">'+
+														'	<div class="layui-card">'+
+														'		<div class="layui-card-header layui-elip">'+subject.scontent+'</div>'+
+														'		<div class="layui-card-body">'+
+														'			<div>'+
+														'				<p class="chioce_a">A.'+subject.sa+'</p>'+
+														'				<p class="chioce_b">B.'+subject.sb+'</p>'+
+														'				<p class="chioce_c">C.'+subject.sc+'</p>'+
+														'				<p class="chioce_d">D.'+subject.sd+'</p>'+
+														'			</div>'+
+														'			<div class="layui-bg-red">'+
+													  	'				<p>错误选项：'+errorSubject.ekey+'</p>'+
+														'			</div>'+
+														'		</div>'+
+														'       <button style="margin:10px" data-esid="'+errorSubject.esid+'"class="layui-btn layui-btn-normal layui-btn-sm layui-btn-radius del_error_subject" data-type="del_error_subject" ><i class="layui-icon layui-icon-delete"></i></button>'+
+														'       <button style="margin:10px" data-sid="'+subject.sid+'"class="layui-btn layui-btn-normal layui-btn-sm layui-btn-radius detail_error_subject" data-type="detail_error_subject" >详情</button>'+
+														'	</div>'+
+														'</div>'
+										        if(i%2==0){
+										             $('.top').append(text);
+										        }else{
+										        	 $('.down').append(text);
+										        }
+										 }
+										 element.init();//更新面板内容
+										 $('.detail_error_subject').on('click',function(){//显示错题的详细信息
+										    	var data = $(this).data('sid');
+										    	// alert(data)
+										    	layer.open({
+										    		type: 2
+										            ,content: ['/EXAM/admin/student/subject_detail.html','yes']
+										            ,area: ['700px', '500px']
+										            ,shade: 0.4
+										            ,id: 'LAY_layuipro8' //设定一个id，防止重复弹出
+										            ,moveType: 1 //拖拽模式，0或者1
+										            ,success:function(layero, index){
+										            //var body = layer.getChildFrame('body', index);
+										            var iframe = window['layui-layer-iframe' + index];
+										            // 向子页面的全局函数child传参
+										            iframe.child(data);
+										            var body = layer.getChildFrame('body', index);
+										            //console.info(body.html());
+										            }
+										    		
+										    	}); 
+										 });
+										 
+										 $('.del_error_subject').on('click',function(){ // 删除错题
+											 var esid = $(this).data('esid');
+											 $.ajax({
+												 url:'/EXAM/user_delete_error_subject.action',
+												 data:{'esid':esid},
+												 type:'get',
+												 dateType:'json',
+												 success:function(result){
+													 layer.msg(result,{time:2000},function(){
+														 window.reload();
+													 });
+												 }
+											 });
+											 
+										 });
+										 $('.layui-elip').on('click', function(){ //显示溢出的试题题干内容
+											  var scontent = $(this).text()
+											  var that = this;
+											  layer.tips(scontent, that,
+													  {
+												       closeBtn:2,
+												       time:10000,
+												       tips:[1,'#c00']
+													  }); 
+									    });
+									 }
+						    	 });
+						    }
+						  }); 
+				 }
+				 
+			 }); 
+	  }
+	  
+   page('');
+  /*给搜索框进行设置*/
+  var $ = layui.$, active = {
+		    reload: function(){
+		      var demoReload = $('#demoReload');
+		      page(demoReload.val());
+		    }
+		    
+		  };
+		  
+		  $('.layui-btn').on('click', function(){
+		    var type = $(this).data('type');
+		    active[type] ? active[type].call(this) : '';
+		  });
+});
+</script>
+
+</body>
+</html>

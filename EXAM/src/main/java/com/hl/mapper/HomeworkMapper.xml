@@ -12,4 +12,21 @@
 	  values(#{0},#{1})
 	</insert>
 	
+	<select id="getHomeworkFromClass" parameterType="int" resultType="Homework">
+	  select h.* from homework h
+	  inner join clazz_homework ch 
+	  on ch.hid = h.homeworkid
+	  inner join user_clazz uc
+	  on uc.classid = ch.classid
+	  where uc.studentid = #{0}
+	  
+	</select>
+	
+	<select id="getHomeworkFromStudent" parameterType="int" resultType="Homework">
+	  select h.* from homework h
+	  inner join user_homework uh 
+	  on uh.hid = h.homeworkid
+	  where uh.finishuserid = #{0}
+	</select>
+	
 </mapper>

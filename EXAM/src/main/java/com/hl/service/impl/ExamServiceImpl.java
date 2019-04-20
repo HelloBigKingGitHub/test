@@ -18,6 +18,7 @@ import com.hl.service.ErrorSubjectService;
 import com.hl.service.ExamService;
 import com.hl.service.PaperService;
 import com.hl.service.ScoreService;
+import com.hl.service.SubjectService;
 
 @Service
 public class ExamServiceImpl implements ExamService{
@@ -28,6 +29,8 @@ public class ExamServiceImpl implements ExamService{
 	private ErrorSubjectService errorSubjectService;
 	@Autowired
 	private ScoreService scoreService;
+	@Autowired
+	private SubjectService subjectService;
 	@Autowired
 	private PaperService paperService;
 
@@ -51,7 +54,7 @@ public class ExamServiceImpl implements ExamService{
 		String pid = (String)answerMap.get("pid");
 		Userinfo crruentUser = (Userinfo)answerMap.get("crruentUser");
 		Integer userid = crruentUser.getUserid();
-		//1.获得当前试卷的所有问题并且对答案进行对比 ，将题目的测试次数进行修改（+1）
+		//1.获得当前试卷的所有问题并且对答案进行对比 
 		Map<PaperDetail, List<ChoseSubject>> map = startTest(pid); //内部调用startTest方法得到试卷的全部题目
 		Set<PaperDetail> keySet = map.keySet();
 		List<ChoseSubject> list = null;
@@ -60,8 +63,13 @@ public class ExamServiceImpl implements ExamService{
 			paperDetail = paperDetailTemp;
 		}
 		//2.将错误的题目构成错题集（errorsubject）,遍历集合list，挨个比较答案
+		int oldTestCount = 0;
 		for (ChoseSubject choseSubject : list) {
 			String answer = (String)answerMap.get(choseSubject.getSid()+"");
+			//将题目的测试次数进行修改（+1）
+			oldTestCount = choseSubject.getTestcount();
+			choseSubject.setTestcount(oldTestCount + 1);
+			subjectService.updataChoseSubject(choseSubject);
 			if(answer!=null&&answer.equals(choseSubject.getSkey())) {
 				right++;
 			}else {
@@ -72,8 +80,8 @@ public class ExamServiceImpl implements ExamService{
 				errorSubject.setUserid(userid);
 				//调用错题的服务层 增加一条错题信息
 				ErrorSubject errorSubjectTemp;
-				errorSubjectTemp = errorSubjectService.ErrorSubjectIsExist(errorSubject);
-				if(errorSubjectTemp==null) {//判断该错题信息不存在，如果不存在才往错题信息中添加记录
+				//errorSubjectTemp = errorSubjectService.ErrorSubjectIsExist(errorSubject,crruentUser);
+				if(true||errorSubjectTemp==null) {//判断该错题信息不存在，如果不存在才往错题信息中添加记录
 					flag1 = errorSubjectService.addErrorSubject(errorSubject);					
 				}
 			}

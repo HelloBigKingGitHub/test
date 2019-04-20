@@ -15,6 +15,7 @@ import com.hl.entity.SubjectDetail;
 import com.hl.mapper.ErrorSubjectMapper;
 import com.hl.mapper.SubjectMapper;
 import com.hl.service.SubjectService;
+import com.hl.util.string.StringUtil;
 
 @Service
 public class SubjectServiceImpl implements SubjectService{
@@ -106,6 +107,16 @@ public class SubjectServiceImpl implements SubjectService{
 			list.add(choseSubject);
 		}
 		return list;
+	}
+
+
+	@Override
+	public ChoseSubject getChoseSubjectBySid(String sid) {
+		if(!StringUtil.isInteger(sid)) {
+			return new ChoseSubject();
+		}
+		int sidInt = Integer.parseInt(sid);
+		return subjectMapper.getChoseSubjectById(sidInt);
 	}
 
 

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>班级公告展示页面</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="/EXAM/admin/layui/css/layui.css" media="all">
+  <link rel="stylesheet" href="/EXAM/admin/style/admin.css" media="all">
+</head>
+<body>
+
+  <div class="layui-fluid" id="LAY-app-message">
+    <div class="layui-card">
+      <div class="layui-tab layui-tab-brief">
+        <ul class="layui-tab-title mtypes">
+          <li class="layui-this" data-type="all">公告</li>
+          <li data-type="notice">通知</li>
+          <li data-type="direct">私信</li>
+        </ul>
+        <div class="layui-tab-content">
+        
+          <div class="layui-tab-item layui-show">
+            <div class="LAY-app-message-btns" style="margin-bottom: 10px;">
+              <button class="layui-btn layui-btn-primary layui-btn-sm" data-type="all" data-events="del">删除</button>
+              <button class="layui-btn layui-btn-primary layui-btn-sm" data-type="all" data-events="ready">标记已读</button>
+              <button class="layui-btn layui-btn-primary layui-btn-sm" data-type="all" data-events="readyAll">全部已读</button>
+            </div>
+            <div>内容1</div>
+            
+            <table id="class_announcement" lay-filter="class_announcement"></table>
+          </div>
+          <div class="layui-tab-item">
+          
+            <div class="LAY-app-message-btns" style="margin-bottom: 10px;">
+              <button class="layui-btn layui-btn-primary layui-btn-sm" data-type="notice" data-events="del">删除</button>
+              <button class="layui-btn layui-btn-primary layui-btn-sm" data-type="notice" data-events="ready">标记已读</button>
+              <button class="layui-btn layui-btn-primary layui-btn-sm" data-type="notice" data-events="readyAll">全部已读</button>
+            </div>
+            
+            <div>信息二</div>
+            <table id="message-notice" lay-filter="message-notice"></table>
+          </div>
+          <div class="layui-tab-item">
+          
+            <div class="LAY-app-message-btns" style="margin-bottom: 10px;">
+              <button class="layui-btn layui-btn-primary layui-btn-sm" data-type="direct" data-events="del">删除</button>
+              <button class="layui-btn layui-btn-primary layui-btn-sm" data-type="direct" data-events="ready">标记已读</button>
+              <button class="layui-btn layui-btn-primary layui-btn-sm" data-type="direct" data-events="readyAll">全部已读</button>
+            </div>
+            
+            <div>信息三</div>
+            <table id="message-direct" lay-filter="message-direct"></table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+	<script src="/EXAM/admin/layui/layui.js"></script>
+	<script>
+		layui.use([ 'table', 'element' ], function() {
+			//动态获取相应表格的数据
+			var $ = layui.jquery;
+			var table = layui.table;
+			var layer = layui.layer;
+			
+			table.render({
+    			elem: '#class_announcement'
+    			,url:'/EXAM/get_class_announcement_of_student.action' //分页查询出所有班级公告
+    			//,toolbar: '#toolbarDemo'
+    			,title: '接受全部信息列表'
+    			//,where: {teacheridStr: crruentUserid} //传递额外的数据给后台 
+    			,height: 510
+    			,cols: [[
+       				{type: 'checkbox', fixed: 'left'}
+       				,{field:'caid', title: '公告编号', hide:true}//设置一个隐藏列
+       				,{field:'classid', title: '班级编号', hide:true}//设置一个隐藏列
+       				,{field:'camsg', title: '公告内容', hide:true}//设置一个隐藏列
+      				,{field:'catitle', title: '公告标题'}
+      				,{field:'classname', title: '公告班级'}
+      				,{field:'catime', title: '发布时间', width:200, sort: true}
+    			]]
+    			,skin: 'line' //行边框风格
+    			//,even: true //开启隔行背景
+    			,page: true
+    			,id: 'class_announcement-reload'
+ 			 });
+			
+			table.on('row(class_announcement)', function(obj){
+				  //console.log(obj.tr) //得到当前行元素对象
+				  data = obj.data; //得到当前行数据
+				  var camsg = data.camsg;
+				  layer.open({
+					  title: '公告内容'
+					  ,content: camsg
+					});     
+			
+				});
+
+			$('.mtypes >li').on('click', function() { //给消息类型选项绑定事件
+				//alert('click');
+				$('.mtypes >li').removeClass('layui-this');
+				$(this).addClass('layui-this');
+
+			});
+		});
+
+		
+	</script>
+</body>
+</html>

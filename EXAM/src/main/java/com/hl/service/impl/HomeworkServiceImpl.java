@@ -1,9 +1,17 @@
 package com.hl.service.impl;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.hl.entity.Homework;
+import com.hl.entity.Message;
+import com.hl.entity.Userinfo;
 import com.hl.formbean.HomeworkFormBean;
 import com.hl.mapper.HomeworkMapper;
 import com.hl.service.HomeworkService;
@@ -58,6 +66,48 @@ public class HomeworkServiceImpl implements HomeworkService{
 		homework.setTitle(homeworkFormBean.getH_title());
 		homework.setIssuerid(Integer.parseInt(homeworkFormBean.getIssuerid()));
 		return homework;
+	}
+
+
+
+
+	@Override
+	public Map<String, Object> getHomeworkFromClass(String pageStr, String limitStr, Userinfo user) {
+		if(user.getUserid()==null||pageStr==null||limitStr==null) {
+			return null;
+		}
+		Integer pageNum = Integer.parseInt(pageStr);
+		Integer pageSize = Integer.parseInt(limitStr);
+		Map<String,Object> result = new HashMap<>();
+		Page<Object> page = PageHelper.startPage(pageNum, pageSize, true);
+		List<Message> homeworks = homeworkMapper.getHomeworkFromClass(user.getUserid());
+		int pages = page.getPages();
+		long count = page.getTotal();
+		result.put("list", homeworks);
+		result.put("pages", pages);
+		result.put("count", count);
+		return result;
+	}
+
+
+
+
+	@Override
+	public Map<String, Object> getHomeworkFromStudent(String pageStr, String limitStr, Userinfo user) {
+		if(user.getUserid()==null||pageStr==null||limitStr==null) {
+			return null;
+		}
+		Integer pageNum = Integer.parseInt(pageStr);
+		Integer pageSize = Integer.parseInt(limitStr);
+		Map<String,Object> result = new HashMap<>();
+		Page<Object> page = PageHelper.startPage(pageNum, pageSize, true);
+		List<Homework> homeworks = homeworkMapper.getHomeworkFromStudent(user.getUserid());
+		int pages = page.getPages();
+		long count = page.getTotal();
+		result.put("list", homeworks);
+		result.put("pages", pages);
+		result.put("count", count);
+		return result;
 	}
 	
 	

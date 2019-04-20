@@ -8,5 +8,16 @@
 	
 	</insert>
 	
+	<select id="getClassAnnouncementOfUser" parameterType="int" resultType="ClazzAnnouncement">
+	  select ca.*,c.classname from clazz_announcement ca
+	  inner join clazz c
+	  on ca.classid = c.classid
+	  inner join user_clazz uc
+	  on uc.classid = c.classid
+	  where uc.studentid = #{0}
+	  order by ca.catime
+	
+	</select>
+	
 	
 </mapper>

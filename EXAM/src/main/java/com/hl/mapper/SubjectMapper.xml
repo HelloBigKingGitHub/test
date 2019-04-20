@@ -44,7 +44,8 @@
 	<update id="updataSubject" parameterType="ChoseSubject">
 	    update subject 
 	    <set>
-	      sid = #{sid}
+	      sid = #{sid},
+	      testcount = #{testcount} 
 	    </set>
 	    
 	    <if test="scontent != null and !''.equals(scontent)">

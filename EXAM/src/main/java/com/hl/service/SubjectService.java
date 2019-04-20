@@ -72,6 +72,16 @@ public interface SubjectService {
 	 */
 	int insertSubjectAndGetSid(ChoseSubject choseSubject);
 
+	/**
+	 * 
+	 * <p>Title: getChoseSubjectBySid</p>  
+	 * <p>Description: 根据试题id查询相应的试题</p> 
+	 * <p>data:2019年4月16日 下午10:42:07 </p> 
+	 * @param sid
+	 * @return
+	 */
+	ChoseSubject getChoseSubjectBySid(String sid);
+
 	
 
 }

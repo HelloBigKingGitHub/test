@@ -123,6 +123,17 @@ public class SubjectController {
 		return result.toString();
 	}
 	
+	@RequestMapping(value="show_subject_by_sid.action",produces= {"text/html;charset=utf-8"})
+	@ResponseBody
+	public String showSubjectBySid(String sid) {
+		JSONObject result = new JSONObject();
+		ChoseSubject choseSubject = new ChoseSubject();
+		choseSubject = subjectService.getChoseSubjectBySid(sid);
+		result.put("subject", choseSubject);
+		return result.toString();
+		
+	}
+	
 	
 	/**
 	 * 表单数据和数据库数据实体类转化

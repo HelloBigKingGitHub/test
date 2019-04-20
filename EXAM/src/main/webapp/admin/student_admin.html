@@ -2,172 +2,175 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>用户中心</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="keywords" content="个人中心">
-  <meta name="description" content="个人中心">
+  <title> 一考教育学生端</title>
+  <link rel="stylesheet" href="layui/css/layui.css">
   <link rel="icon" href="/EXAM/images/logo.png">
-  <link rel="stylesheet" href="/EXAM/admin/layui/css/layui.css">
-  <link rel="stylesheet" href="/EXAM/css/global.css">
+  <style type="text/css">
+  	::-webkit-scrollbar{
+		display:none;
+	}
+  </style>
 </head>
-<body>
-
-<div class="fly-header layui-bg-black">
-  <div class="layui-container">
-    <a class="fly-logo" href="/">
-      <img src="/EXAM/images/logo1.png" alt="yikao" style="height: 50px;margin: 0px;">
-    </a>
-    <ul class="layui-nav fly-nav layui-hide-xs">
-      <li class="layui-nav-item layui-this">
-        <a href="/"><i class="iconfont icon-jiaoliu"></i>交流</a>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+  <div class="layui-header">
+    <div class="layui-logo">学生系统</div>
+    <!-- 头部区域（可配合layui已有的水平导航） -->
+    <ul class="layui-nav layui-layout-left">
+      <li class="layui-nav-item layadmin-flexible" >
+        <a href="javascript:;" layadmin-event="flexible" title="侧边伸缩">
+          <i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
+        </a>
       </li>
-      <li class="layui-nav-item">
-        <a href="../case/case.html"><i class="iconfont icon-iconmingxinganli"></i>案例</a>
-      </li>
-      <li class="layui-nav-item">
-        <a href="http://www.layui.com/" target="_blank"><i class="iconfont icon-ui"></i>框架</a>
-      </li>
-    </ul>
     
-    <ul class="layui-nav fly-nav-user">
-      <!-- 登入后的状态 -->
+      
+      <li class="layui-nav-item "><a href="/"><i class="layui-icon layui-icon-dialogue"></i> 交流</a></li>
+	  <li class="layui-nav-item"><a href=""><i class="layui-icon layui-icon-form"></i> 案例</a></li>
+	  <li class="layui-nav-item"><a href="http://www.layui.com/" ><i class="layui-icon layui-icon-util"></i> 框架</a></li>
+      
+    </ul>
+    <ul class="layui-nav layui-layout-right">
+      <li class="layui-nav-item" >
+         <a href="/EXAM/admin/message/index.html" target="option">
+            <i class="layui-icon layui-icon-notice"></i>  
+            <!-- 如果有新消息，则显示小圆点 -->
+            <span class="layui-badge-dot" id="dot"></span>
+         </a>
+      </li>
+
       <li class="layui-nav-item">
-        <a class="fly-nav-avatar" href="javascript:;">
-          <cite class="layui-hide-xs">贤心</cite>
-          <i class="iconfont icon-renzheng layui-hide-xs" title="认证信息：layui 作者"></i>
-          <i class="layui-badge fly-badge-vip layui-hide-xs">VIP3</i>
-          <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg">
+        <a href="javascript:;" >
+          <img  id = "currentUserIcon" src="http://t.cn/RCzsdCq" class="layui-nav-img">
+          <span id="crruentUser">贤心</span>
+          <span class="layui-hide" id="crruentUserid"></span>
         </a>
         <dl class="layui-nav-child">
-          <dd><a href="../user/set.html"><i class="layui-icon">&#xe620;</i>基本设置</a></dd>
-          <dd><a href="../user/message.html"><i class="iconfont icon-tongzhi" style="top: 4px;"></i>我的消息</a></dd>
-          <dd><a href="../user/home.html"><i class="layui-icon" style="margin-left: 2px; font-size: 22px;">&#xe68e;</i>我的主页</a></dd>
-          <hr style="margin: 5px 0;">
-          <dd><a href="" style="text-align: center;">退出</a></dd>
+          <dd><a href="/EXAM/admin/personalpage.html" target="option"><i class="layui-icon layui-icon-user"></i> 个人中心</a></dd>
+          <dd><a href="/EXAM/admin/set.html" target="option"><i class="layui-icon layui-icon-set-sm"></i> 基本设置</a></dd>
+          <dd><a href="javascript:0;" id="logout"><i class="layui-icon layui-icon-close"></i> 退出登录</a></dd>
         </dl>
       </li>
     </ul>
   </div>
-</div>
-
-<div class="layui-container fly-marginTop fly-user-main">
-  <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="user">
   
-    <li class="layui-nav-item">
-       <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"> 
-    </li>
-	
-	<li class="layui-nav-item">
-      <a href="home.html">
-        <i class="layui-icon">&#xe609;</i>
-        我的主页
-      </a>
-    </li>
-    <li class="layui-nav-item layui-this">
-      <a href="index.html">
-        <i class="layui-icon">&#xe612;</i>
-        用户中心
-      </a>
-    </li>
-    <li class="layui-nav-item">
-      <a href="set.html">
-        <i class="layui-icon">&#xe620;</i>
-        基本设置
-      </a>
-    </li>
-    <li class="layui-nav-item">
-      <a href="message.html">
-        <i class="layui-icon">&#xe611;</i>
-        我的消息
-      </a>
-    </li>
-  </ul>
-
-  <div class="site-tree-mobile layui-hide">
-    <i class="layui-icon">&#xe602;</i>
-  </div>
-  <div class="site-mobile-shade"></div>
-  
-  <div class="site-tree-mobile layui-hide">
-    <i class="layui-icon">&#xe602;</i>
-  </div>
-  <div class="site-mobile-shade"></div>
-  
-  
-  <div class="fly-panel fly-panel-user" pad20>
-    <!--
-    <div class="fly-msg" style="margin-top: 15px;">
-      您的邮箱尚未验证，这比较影响您的帐号安全，<a href="activate.html">立即去激活？</a>
-    </div>
-    -->
-    <div class="layui-tab layui-tab-brief" lay-filter="user">
-      <ul class="layui-tab-title" id="LAY_mine">
-        <li data-type="mine-jie" lay-id="index" class="layui-this">我发的帖（<span>89</span>）</li>
-        <li data-type="collection" data-url="/collection/find/" lay-id="collection">我收藏的帖（<span>16</span>）</li>
+  <div class="layui-side layui-bg-black">
+    <div class="layui-side-scroll">
+      <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+      <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+      
+        <li class="layui-nav-item layui-nav-itemed">
+          <img class="layui-circle" style="padding-left: 30px;padding-right: 30px; width: 120px; height: 120px"
+             src="/EXAM/images/1.jpg">
+        </li>
+        
+        <li class="layui-nav-item layui-nav-itemed">
+          <a class="" href="/EXAM/admin/student/student_home.html" target="option"><i class="layui-icon layui-icon-home"></i> 个人主页 </a>
+          
+        </li>
+      
+        <li class="layui-nav-item layui-nav-itemed">
+          <a class="" href="javascript:;"><i class="layui-icon layui-icon-group"></i> 班级中心</a>
+          <dl class="layui-nav-child">
+            <dd><a href="/EXAM/admin/student/class_list.html" target="option">班级列表</a></dd>
+            <dd><a href="/EXAM/admin/student/my_class.html" target="option">我的班级</a></dd>
+            <dd><a href="/EXAM/admin/student/class_announcement.html" target="option">班级公告</a></dd>
+            <dd><a href="/EXAM/admin/student/my_homework.html" target="option">作业查询</a></dd>
+          </dl>
+        </li>
+       
+        <li class="layui-nav-item">
+          <a href="javascript:;"><i class="layui-icon layui-icon-read"></i> 考试中心</a>
+          <dl class="layui-nav-child">
+            <dd><a href="/EXAM/admin/student/paper_list.html" target="option">试卷列表</a></dd>
+            <dd><a href="/EXAM/admin/student/my_score.html" target="option">成绩查询</a></dd>
+            <dd><a href="/EXAM/admin/student/my_error_subject.html" target="option">错题集</a></dd>
+            <dd><a href="/EXAM/admin/student/my_collect.html" target="option">我的收藏</a></dd>
+            <dd><a href="/EXAM/admin/student/data_count.html" target="option">数据统计</a></dd>
+          </dl>
+        </li>
+        <li class="layui-nav-item">
+          <a href="javascript:;"><i class="layui-icon layui-icon-play"></i> 课程中心</a>
+          <dl class="layui-nav-child">
+            <dd><a href="javascript:;">视频网课列表</a></dd>
+            <dd><a href="javascript:;">我的课程</a></dd>
+            <dd><a href="javascript:;">历史记录</a></dd>
+            <dd><a href="">超链接</a></dd>
+          </dl>
+        </li>
+        
       </ul>
-      <div class="layui-tab-content" style="padding: 20px 0;">
-        <div class="layui-tab-item layui-show">
-          <ul class="mine-view jie-row">
-            <li>
-              <a class="jie-title" href="../jie/detail.html" target="_blank">基于 layui 的极简社区页面模版</a>
-              <i>2017/3/14 上午8:30:00</i>
-              <a class="mine-edit" href="/jie/edit/8116">编辑</a>
-              <em>661阅/10答</em>
-            </li>
-            <li>
-              <a class="jie-title" href="../jie/detail.html" target="_blank">基于 layui 的极简社区页面模版</a>
-              <i>2017/3/14 上午8:30:00</i>
-              <a class="mine-edit" href="/jie/edit/8116">编辑</a>
-              <em>661阅/10答</em>
-            </li>
-            <li>
-              <a class="jie-title" href="../jie/detail.html" target="_blank">基于 layui 的极简社区页面模版</a>
-              <i>2017/3/14 上午8:30:00</i>
-              <a class="mine-edit" href="/jie/edit/8116">编辑</a>
-              <em>661阅/10答</em>
-            </li>
-          </ul>
-          <div id="LAY_page"></div>
-        </div>
-        <div class="layui-tab-item">
-          <ul class="mine-view jie-row">
-            <li>
-              <a class="jie-title" href="../jie/detail.html" target="_blank">基于 layui 的极简社区页面模版</a>
-              <i>收藏于23小时前</i>  </li>
-          </ul>
-          <div id="LAY_page1"></div>
-        </div>
-      </div>
     </div>
   </div>
-</div>
+  
+  <div class="layui-body"> 
+    <!-- 内容主体区域 -->
+    <iframe id="option" name="option" src="/EXAM/admin/personalpage.html" style="overflow: visible;"  frameborder="no" width="100%" height="100%"></iframe>
 
-<div class="fly-footer">
-  <p><a href="http://fly.layui.com/" target="_blank">Fly社区</a> 2017 &copy; <a href="http://www.layui.com/" target="_blank">layui.com 出品</a></p>
-  <p>
-    <a href="http://fly.layui.com/jie/3147/" target="_blank">付费计划</a>
-    <a href="http://www.layui.com/template/fly/" target="_blank">获取Fly社区模版</a>
-    <a href="http://fly.layui.com/jie/2461/" target="_blank">微信公众号</a>
-  </p>
+  </div>
+  
+  <div class="layui-footer">
+    <!-- 底部固定区域 -->
+    ©一考教学教师系统- 底部固定区域
+  </div>
 </div>
-
-<script src="../../res/layui/layui.js"></script>
+<script src="layui/layui.js"></script>
 <script>
-layui.cache.page = 'user';
-layui.cache.user = {
-  username: '游客'
-  ,uid: -1
-  ,avatar: '../../res/images/avatar/00.jpg'
-  ,experience: 83
-  ,sex: '男'
-};
-layui.config({
-  version: "3.0.0"
-  ,base: '../../res/mods/'
-}).extend({
-  fly: 'index'
-}).use('fly');
-</script>
+//JavaScript代码区域
+layui.use('element', function(){
+  var element = layui.element;
+  $ = layui.$;
+  $.ajax({//异步的方式获取后端当前用户的信息
+	   url:"/EXAM/get_crruent_user.action"
+	  ,dataType:"json"
+	  ,type:"GET"
+	  ,success:function(result){
+		  $('#crruentUser').text(result.crruentUser.usertruename);
+		  $('#crruentUserid').text(result.crruentUser.userid);
+	  }
+  });
 
+  $.ajax({//异步获取用户的头像信息
+	  url:'/EXAM/get_current_user_icon.action',
+	  dataType:'json',
+	  type:'post',
+	  success:function(result){
+		  icon = '/' + result.iconUrl;
+		  $('#currentUserIcon').attr('src',icon);
+		  
+	  }
+  });
+  
+  
+  $.ajax({//异步获取当前用户是否有未阅读的短信，控制短信红点的显示和影藏
+	  url:'/EXAM/exist_not_readed_message.action',
+	  type:'get',
+	  dataType:'json',
+	  success:function(result){
+		  if(result.exist){
+			  $('#dot').removeClass('layui-hide');
+		  }else{
+			  $('#dot').addClass('layui-hide');
+		  }
+	  }
+  });
+  
+  $('#logout').on('click',function(){ //退出登录操作
+		$.ajax({
+			url : "/EXAM/UserController/logout.action",
+			dataType : "json",
+			type : "GET",
+			success : function(result) {
+				if(result.msg=='退出成功'){
+					var href = window.location.href;
+					var baseUrl = href.split("//")[0]+"//"+href.split("//")[1].split("/")[0]+"/"+href.split("//")[1].split("/")[1];
+					window.location.href = baseUrl+"/log_reg.jsp";
+				}
+			}
+		})
+	});
+  
+});
+</script>
 </body>
 </html>

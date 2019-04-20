@@ -1,8 +1,7 @@
 package com.hl.entity;
-
 import java.io.Serializable;
 import java.sql.Date;
-import java.text.SimpleDateFormat;
+import com.hl.util.date.SimpleDateFormatUtil;
 
 /**
  * 
@@ -18,20 +17,12 @@ public class ClazzAnnouncement implements Serializable{
 	 */
 	private static final long serialVersionUID = -8366848663681607221L;
 	
-	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	
 	private Integer caid;
 	private Integer classid;
+	private String classname;
 	private Date catime;
 	private String catitle;
 	private String camsg;
-	@Override
-	public String toString() {
-		return "ClazzAnnouncement [caid=" + caid + ", classid=" + classid + ", catime=" + catime + ", catitle="
-				+ catitle + ", camsg=" + camsg + "]";
-	}
-	
-	
 	public Integer getCaid() {
 		return caid;
 	}
@@ -44,8 +35,9 @@ public class ClazzAnnouncement implements Serializable{
 	public void setClassid(Integer classid) {
 		this.classid = classid;
 	}
-	public String  getCatime() {
-		return sdf.format(catime);
+	public String  getCatime() {//json数据类型对sql.date的不支持性，进行字符创转型。
+		
+		return SimpleDateFormatUtil.getInstance().format(catime);
 	}
 	public void setCatime(Date catime) {
 		this.catime = catime;
@@ -62,5 +54,17 @@ public class ClazzAnnouncement implements Serializable{
 	public void setCamsg(String camsg) {
 		this.camsg = camsg;
 	}
+	public String getClassname() {
+		return classname;
+	}
+	public void setClassname(String classname) {
+		this.classname = classname;
+	}
+	@Override
+	public String toString() {
+		return "ClazzAnnouncement [caid=" + caid + ", classid=" + classid + ", classname=" + classname + ", catime="
+				+ catime + ", catitle=" + catitle + ", camsg=" + camsg + "]";
+	}
+	
 	
 }

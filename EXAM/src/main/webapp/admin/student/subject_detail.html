@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>试题详细页面</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="/EXAM/admin/layui/css/layui.css">
+<link rel="stylesheet" href="/EXAM/admin/style/admin.css" media="all">
+<!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+</head>
+<body>
+	<fieldset class="layui-elem-field layui-field-title"
+		style="margin-top: 30px;">
+		<legend>试题的详细信息：</legend>
+	</fieldset>
+	<!-- 试题的测试次数，错误次数，错题率，难度 -->
+	<div class="layui-col-md6">
+		<div class="layui-card">
+			<div class="layui-card-header">试题详情</div>
+			<div class="layui-card-body">
+				<ul class="layui-row layui-col-space10 layui-this">
+					<li class="layui-col-xs6"><a class="layadmin-backlog-body">
+							<h3>测试次数</h3>
+							<p>
+								<cite id="testcount">66</cite>
+							</p>
+					</a></li>
+					<li class="layui-col-xs6"><a class="layadmin-backlog-body">
+							<h3>错误次数</h3>
+							<p>
+								<cite id="errorcount">12</cite>
+							</p>
+					</a></li>
+					<li class="layui-col-xs6"><a class="layadmin-backlog-body">
+							<h3>错题率</h3>
+							<p>
+								<cite id="ec_tc">12</cite>
+							</p>
+					</a></li>
+
+					<li class="layui-col-xs6"><a class="layadmin-backlog-body">
+							<h3>难度</h3>
+							<p>
+								<cite id="hard"></cite>
+							</p>
+					</a></li>
+				</ul>
+				<hr class="layui-bg-gray">
+				<h3>引用过该试题的试卷列表：</h3>
+				<ul id="papers">
+				  
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<script src="/EXAM/admin/layui/layui.js"></script>
+	<script src="/EXAM/js/jquery-3.2.1.js"></script>
+	<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+
+	<script>
+	function child (data){
+		
+		var sid = data;
+		//alert(sid);
+		console.info(sid);
+		$.ajax({
+			data:{'sid':sid},
+			dataType:'json',
+			type:'POST',
+			url:'/EXAM/get_subject_detail.action',
+			success:function(result){
+				if(result.msg == 'isok'){ //给html元素设置值
+					var testcount = result.sd.testcount;
+				    var errorcount = result.sd.errorcount;
+					$('#testcount').text(testcount);
+					$('#errorcount').text(errorcount);
+					var etl = errorcount / testcount;
+					//alert(etl);
+					$('#ec_tc').text(etl);
+					var val = 0;
+					var val = Math.floor(etl * 10);
+					layui.use('rate', function(){
+					    var rate = layui.rate; 
+					    //渲染
+					    var ins1 = rate.render({
+					      elem: '#hard'  //绑定元素
+					      ,value:val
+					      ,length:10
+					      ,readonly:true //表示只读
+					    });
+					});
+					
+					var p = null;
+					var txt = null;
+					var papers = result.sd.papers;
+					//console.info(papers);
+					var link = '';
+					for (var i = 0; i < papers.length; i++) {
+						p = papers[i];
+						txt = '<li><a data-pid="'+p.pid+'" target="option">'+p.pname+'</a></li>';
+						console.info(txt);
+						$('#papers').append(txt);
+					}
+					
+					$("#papers > li >a").on("click",function(){
+						//alert("onclick");
+						var pid = $(this).attr("data-pid");
+						//alert(pid);
+						//通过ajax想后端发起请求
+						$.ajax({
+							contentType:"application/json;charset=utf-8",
+							type:"GET",
+							url:"/EXAM/test_start.action",
+							data:{"pid":pid},
+						    dataType:"TEXT",
+						    success:function(result){
+						    	//alert(result);
+						    	window.parent.location.href="/EXAM"+result;
+						    }
+						});
+					});
+					
+				} 
+				
+			}
+			
+		});
+	}
+		
+	</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

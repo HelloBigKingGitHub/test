@@ -3,6 +3,8 @@ package com.hl.mapper;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.hl.entity.ErrorSubject;
 import com.hl.entity.Subject;
 import com.hl.entity.Userinfo;
@@ -42,5 +44,26 @@ public interface ErrorSubjectMapper {
 	 * @return
 	 */
 	int getErrorCountBySid(Integer id);
+
+	/**
+	 * 
+	 * <p>Title: listErrorSubjectByUserid</p>  
+	 * <p>Description:根据用户id和试题题干查询错题信息 </p> 
+	 * <p>data:2019年4月14日 下午4:39:35 </p> 
+	 * @param userid
+	 * @param scontent
+	 * @return
+	 */
+	List<ErrorSubject> listErrorSubjectByUserid(@Param(value="userid")int userid,  @Param("scontent")String scontent);
+
+	/**
+	 * <p>Title: updateErrorSubjectLogicDelete</p>  
+	 * <p>Description: 修改试题的逻辑删除状态（0：存在  1：删除）</p> 
+	 * <p>data:2019年4月14日 下午10:26:53 </p> 
+	 * @param userid
+	 * @param esidInt
+	 * @return
+	 */
+	boolean updateErrorSubjectLogicDelete(int userid, int esidInt);
 
 }

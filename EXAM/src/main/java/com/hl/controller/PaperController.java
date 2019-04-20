@@ -2,8 +2,9 @@ package com.hl.controller;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import javax.interceptor.AroundTimeout;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hl.entity.ChoseSubject;
 import com.hl.entity.PaperDetail;
+import com.hl.entity.ScoreDetail;
 import com.hl.entity.Userinfo;
 import com.hl.formbean.PaperFormBean;
+import com.hl.service.ExamService;
 import com.hl.service.PaperCheckService;
 import com.hl.service.PaperService;
+import com.hl.service.ScoreService;
 import com.hl.service.SubjectService;
 import com.hl.util.ui.TableUtil;
 
@@ -35,10 +39,16 @@ public class PaperController {
 	private PaperService service;
 	
 	@Autowired
+	private ExamService examService;
+	
+	@Autowired
 	private PaperCheckService paperCheckService;
 	
 	@Autowired
 	private SubjectService subjectService;
+	
+	@Autowired
+	private ScoreService scoreService;
 	
 	/**
 	 * 相应前端查看所有的试卷的方法
@@ -68,7 +78,7 @@ public class PaperController {
 	
 	
 	/**
-	 * 预览试卷
+	 * 老师组编试卷时预览试卷
 	 */
 	@RequestMapping(value="paper_preview.action",produces= {"text/html;charset=utf-8"})
 	public @ResponseBody String paperPreview( @RequestBody List<String> subjectidList) {
@@ -79,6 +89,25 @@ public class PaperController {
 			return result.toString();
 		}
 		return null;
+	}
+	
+	
+	/**
+	 * 学生查看试卷时进行试卷预览（试卷查看功能）
+	 * @param pid
+	 * @return
+	 */
+	@RequestMapping(value="student_preview_paper.action",produces= {"text/html;charset=utf-8"})
+	@ResponseBody
+	public String studentPreview(String pid) {
+		JSONObject result = new JSONObject();
+		Map<PaperDetail, List<ChoseSubject>> map = examService.startTest(pid);
+		Set<PaperDetail> keySet = map.keySet();
+		for (PaperDetail paperDetail : keySet) {
+			result.put("paperDetail", paperDetail);
+			result.put("choseSubjects", map.get(paperDetail));
+		}
+		return result.toString();
 	}
 	
 	/**
@@ -111,6 +140,19 @@ public class PaperController {
 		HashMap <String,Object>map = (HashMap<String, Object>) paperCheckService.listCheckPaperByTeacherId( page, limit,teacherid);
 		return TableUtil.tableRander(PaperDetail.class, map, "list");
 		
+	}
+	
+	/**
+	 * 得到当前用户的全部成绩
+	 * @param teacherid
+	 * @return
+	 */
+	@RequestMapping(value="get_score_of_user.action",produces= {"text/html;charset=utf-8"})
+	@ResponseBody
+	public String getScoreOfUsre(String page, String limit, String pid, String ptitle, String teacherid, HttpSession session) {
+		Userinfo  user = (Userinfo) session.getAttribute("crruentUser"); //得到当前用户。应为是当前用户创建的试卷
+		Map <String,Object>map = scoreService.listScoreByUser( page, limit,user,pid,ptitle,teacherid);
+		return TableUtil.tableRander(ScoreDetail.class, map, "list");
 	}
 
 	

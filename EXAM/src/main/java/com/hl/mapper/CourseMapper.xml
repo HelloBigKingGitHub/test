@@ -8,5 +8,30 @@
 	     c.teacherid = #{teacherid}
 	   </where>
 	</select>
+	<insert id="insertCourse" parameterType="Course" useGeneratedKeys="true" keyProperty="courseid">
+	   insert into course(coursename,teacherid,coursedetail,starttime,endtime) 
+	   values (#{coursename},#{teacherid},#{coursedetail},#{starttime},#{endtime})
+	</insert>
+	
+	<insert id="insertCourseFile" >
+	   insert into course_file (cid,fid)
+	   values(#{courseid},#{fileid})
+	</insert>
+	
+	<select id="listCourseByTeacheridAndCoursename" resultType="Course" >
+	   select *
+	   from course c
+	   <where>
+	     c.teacherid = #{userid}
+	     <if test="coursename != null and !''.equals(coursename)">
+	       and c.coursename like concat('%',coursename,'%')
+	     </if>
+	   </where>
+	</select>
+	
+	<delete id="deleteCourseByCourseid" parameterType="_int">
+	 delete from course
+	 where courseid = #{0}
+	</delete>
 	
 </mapper>

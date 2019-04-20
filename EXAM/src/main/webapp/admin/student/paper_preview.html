@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>试卷组编页面</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="/EXAM/admin/layui/css/layui.css">
+<!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+
+<style type="text/css">
+
+.subject{
+	padding: 20px;
+
+}
+.subject{
+	padding: 10px;
+	background-color: #e5f1ff;
+	border:1px dashed #000;
+	border-radius:20px;
+}
+</style>
+</head>
+<body>
+
+	<!-- 试卷内容展示 -->
+	<fieldset class="layui-elem-field site-demo-button"
+		style="margin-top: 30px;">
+		<legend id="papername">试卷名称</legend>
+
+		<div id="paper" style="margin: 50px"></div>
+	</fieldset>
+
+	<div class="layui-form-item">
+		<div class="layui-input-block">
+			<button class="layui-btn" data-type="collect_paper" lay-filter="collect_paper">收藏试卷</button>
+		</div>
+	</div>
+
+
+
+	<script src="/EXAM/admin/layui/layui.js"></script>
+
+	<script type="text/javascript">
+
+	function child(data){
+		var subjects = data.choseSubjects;
+		var paperDetail = data.paperDetail;
+		layui.use('form',function(){
+			var layer = layui.layer;
+			var form = layui.form;
+			var $ = layui.jquery;
+			var subject = null;
+			for (var i = 0; i < subjects.length; i++) {
+				subject = subjects[i];
+				var str = 
+					'	<div class="subject ">'+
+					'		<div class="scontent ">'+
+					'			<h4 class="question_num ">'+(i+1)+'</h4>'+
+					'			<p >'+subject.scontent+'</p>'+
+					'		</div>'+
+					'		<div class="chose">'+
+					'			<p class="chioce_a">A.'+subject.sa+'</p>'+
+					'			<p class="chioce_b">B.'+subject.sb+'</p>'+
+					'			<p class="chioce_c">C.'+subject.sc+'</p>'+
+					'			<p class="chioce_d">D.'+subject.sd+'</p>'+
+					'		</div>'+
+					'	</div>'+
+					'   <button style="margin:10px" data-sid="'+subject.sid+'"class="layui-btn layui-btn-normal layui-btn-sm layui-btn-radius" data-type="collect_subject" lay-filter="collect_subject">收藏</button>'+
+					'	<hr class="layui-bg-orange">';
+				$('#paper').append(str);
+			}
+			//进行试卷标题的写入
+			//console.info(paperDetail);
+		
+			//给按钮绑定点击事件
+			$('#papername').text(paperDetail.paper.pname);
+			  var $ = layui.$, active = {
+			    collect_subject:function(){
+			    	console.info($(this).data('sid'));
+			    	var sid = $(this).data('sid');
+			    	console.info('收集试题');
+			    	$.ajax({ //异步请求收藏试题
+			    		url:'/EXAM/user_collect_subject.action',
+			    		data:{'sid':sid},
+			    		dataType:'json',
+			    		type:'get',
+			    		success:function(result){
+			    			layer.msg(result.msg);
+			    		}
+			    	});
+			    },
+			    collect_paper:function(){
+			    	console.info(paperDetail.paper.pid);
+			    	var pid = paperDetail.paper.pid;
+			    	console.info('收集试卷');
+			    	$.ajax({  //异步请求收藏试卷
+			    		url:'/EXAM/user_collect_paper.action',
+			    		data:{'pid':pid},
+			    		dataType:'json',
+			    		type:'get',
+			    		success:function(result){
+			    			layer.msg(result.msg);
+			    		}
+			    		
+			    	});
+			    	
+			    }
+			};
+					  
+			$('.layui-btn').on('click', function(){
+			  var type = $(this).data('type');
+			  active[type] ? active[type].call(this) : '';
+			});
+		});
+			
+	}
+		
+	</script>
+</body>
+</html>

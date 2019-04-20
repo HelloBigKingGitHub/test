@@ -48,6 +48,28 @@ public interface ErrorSubjectService {
 	 * @return 学生信息 集合
 	 */
 	Set<Userinfo> queryUserOfErrorSubject(Subject subject);
+
+	/**
+	 * <p>Title: userGetErrorSubject</p>  
+	 * <p>Description:分页查询出某个学生的所有错题信息 </p> 
+	 * <p>data:2019年4月14日 下午4:20:47 </p> 
+	 * @param limit
+	 * @param page
+	 * @param scontent
+	 * @param user
+	 * @return
+	 */
+	 Map<String,Object> getErrorSubjectByUser(String limit, String page, String scontent, Userinfo user);
+
+	 /**
+	  * <p>Title: userDeleteErrorSubject</p>  
+	  * <p>Description: 学生用户删除错题记录</p> 
+	  * <p>data:2019年4月14日 下午10:22:07 </p> 
+	  * @param user
+	  * @param esid
+	  * @return
+	  */
+	boolean userDeleteErrorSubject(Userinfo user, String esid);
 	
 
 }

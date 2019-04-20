@@ -1,6 +1,9 @@
 package com.hl.mapper;
 
+import java.util.List;
+
 import com.hl.entity.ClazzAnnouncement;
+import com.hl.entity.Message;
 
 /**
  * 
@@ -16,5 +19,12 @@ public interface ClazzAnnouncementMapper {
 	 * @return
 	 */
 	public int insertClazzAnnouncement(ClazzAnnouncement clazzAnnouncement);
+
+	/**
+	 * 得到用户的所有班级公告
+	 * @param userid
+	 * @return
+	 */
+	public List<Message> getClassAnnouncementOfUser(Integer userid);
 
 }

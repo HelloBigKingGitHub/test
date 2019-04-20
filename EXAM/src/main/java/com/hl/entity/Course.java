@@ -21,7 +21,7 @@ public class Course implements Serializable{
 	private String coursename;  //课程名字
 	private Integer teacherid; //老师编号
 	private String coursedetail; //课程详细信息描述
-	private Date strattime; //课程开始时间
+	private Date starttime; //课程开始时间
 	private Date endtime;  //课程介绍时间
 	public Integer getCourseid() {
 		return courseid;
@@ -47,16 +47,16 @@ public class Course implements Serializable{
 	public void setCoursedetail(String coursedetail) {
 		this.coursedetail = coursedetail;
 	}
-	public String getStrattime() {
+	public String getStarttime() {
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		return  df.format(strattime);
+		return  df.format(starttime);
 	}
-	public void setStrattime(Date strattime) {
-		this.strattime = strattime;
+	public void setStarttime(Date starttime) {
+		this.starttime = starttime;
 	}
 	public String getEndtime() {  
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd"); //进行格式化处理转化为字符串是应为包含sql.date数据的对象在json中的toString方法中会报错
-		return  df.format(strattime);
+		return  df.format(endtime);
 	}
 	public void setEndtime(Date endtime) {
 		this.endtime = endtime;
@@ -67,7 +67,7 @@ public class Course implements Serializable{
 	@Override
 	public String toString() {
 		return "Course [courseid=" + courseid + ", coursename=" + coursename + ", teacherid=" + teacherid
-				+ ", coursedetail=" + coursedetail + ", strattime=" + strattime.toString() + ", endtime=" + endtime.toString() + "]";
+				+ ", coursedetail=" + coursedetail + ", strattime=" + starttime.toString() + ", endtime=" + endtime.toString() + "]";
 	}
 	
 	

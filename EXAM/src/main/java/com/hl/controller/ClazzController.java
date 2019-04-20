@@ -3,7 +3,9 @@ package com.hl.controller;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +13,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hl.entity.Clazz;
+import com.hl.entity.ClazzAnnouncement;
 import com.hl.entity.ClazzDetail;
 import com.hl.entity.Userinfo;
 import com.hl.formbean.ClazzFormBean;
@@ -29,6 +33,7 @@ import net.sf.json.JSONObject;
  */
 
 @Controller
+
 public class ClazzController {
 	
 	@Autowired
@@ -45,7 +50,33 @@ public class ClazzController {
 	}
 	
 	/**
-	 * 为搜索选择框查询所有的课程信息
+	 * 根据班级名称进行查询出所有的班级记录
+	 * @param page
+	 * @param limit
+	 * @param classname
+	 * @return
+	 */
+	@RequestMapping(value="list_clazz_by_classname.action" ,produces = {"text/html;charset=utf-8"})
+	public @ResponseBody String listClazzByClassname(String page,String limit,String classname) {
+		
+		HashMap <String,Object>map = (HashMap<String, Object>) clazzService.listClazzByClassname(classname, page, limit);
+		return TableUtil.tableRander(Clazz.class, map, "list");
+	}
+	
+	/**
+	 * 查询当前用户加入的所有班级
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value="my_class.action" ,produces = {"text/html;charset=utf-8"})
+	public @ResponseBody String myClass(String page,String limit,String classname,HttpSession session) {
+		Userinfo user = (Userinfo) session.getAttribute("crruentUser"); 
+		HashMap <String,Object>map = (HashMap<String, Object>) clazzService.listClazzByStudent(user,classname,page, limit);
+		return TableUtil.tableRander(Clazz.class, map, "list");
+	}
+	
+	/**
+	 * 为搜索选择框查询所有的班级信息
 	 * @param page
 	 * @param limit
 	 * @param teacheridStr
@@ -109,7 +140,7 @@ public class ClazzController {
 		String msg = "";
 		int rs = clazzService.addStudent(classid,studentid);
 		if(rs == -1) {
-			msg = "该学生已经加入了该班级";
+			msg = "该学生已经加入了该班级,或者人数超标了。。";
 		}else if (rs==0) {
 			msg = "数据异常";
 		}else {
@@ -119,7 +150,73 @@ public class ClazzController {
 		return result.toString();
 	}
 	
-	@RequestMapping(value="get_class_detail.action" ,produces= {"text/html;charset=utf-8"})
+	/**
+	 * 学生申请加入班级
+	 * @param classid
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value="student_apply_to_class.action",produces = {"text/html;charset=utf-8"})
+	public @ResponseBody String studentApplyToClass(String classid , HttpSession session) {
+		
+		JSONObject result = new JSONObject();
+		String msg = "";
+		Userinfo user = (Userinfo) session.getAttribute("crruentUser"); 
+		boolean isok = clazzService.studentApplyToClass(classid , user);
+		if(isok) {
+			msg = "申请成功";
+		}else {
+			msg = "申请失败";
+		}
+		result.put("msg", msg);
+		return result.toString();
+	}
+	
+	/**
+	 * 删除学生
+	 * @param classid
+	 * @param studentid
+	 * @return
+	 */
+	@RequestMapping(value = "remove_student_from_class.action", produces = {"text/html;charset=utf-8"})
+	public  @ResponseBody String removeStudentFromClass(String classid, String studentid) {
+		JSONObject result = new JSONObject();
+		String msg = "";
+		boolean isok = clazzService.deleteStudent(classid,studentid);
+		if(isok) {
+			msg = "该学生已经移除了该班级";
+		}else {
+			msg = "后台异常";
+		}
+		
+		result.put("msg", msg);
+		return result.toString();
+	}
+	
+	/**
+	 * 学生主动退出班级
+	 * @param classid
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "student_quit_class.action", produces = {"text/html;charset=utf-8"})
+	public @ResponseBody String studentQuitClass(String classid, HttpSession session) {
+		JSONObject result = new JSONObject();
+		String msg = "";
+		Userinfo user = (Userinfo) session.getAttribute("crruentUser"); 
+		Integer studentid = user.getUserid();
+		boolean isok = clazzService.deleteStudent(classid,studentid+"");
+		if(isok) {
+			msg = "成功退出班级";
+		}else {
+			msg = "后台异常";
+		}
+		
+		result.put("msg", msg);
+		return result.toString();
+	}
+	
+	@RequestMapping(value = "get_class_detail.action" ,produces = {"text/html;charset=utf-8"})
 	public @ResponseBody String getClassDetail(String classid) {
 		String msg = "";
 		Integer code = 0;
@@ -144,7 +241,7 @@ public class ClazzController {
 	
 	
 	/**
-	 * 发布班级公告
+	 * 教师发布班级公告
 	 * @return
 	 */
 	@RequestMapping(value="issuer_class_announcement.action",produces= {"text/html;charset=utf-8"})
@@ -158,6 +255,45 @@ public class ClazzController {
 			msg = "发布失败";
 		}
 		result.put("isok", isok);
+		result.put("msg", msg);
+		return result.toString();
+	}
+	
+	/**
+	 * 学生得到班级公告信息（仅限学生已经加入的班级）
+	 * @return
+	 */
+	@RequestMapping(value="get_class_announcement_of_student.action",produces= {"text/html;charset=utf-8"})
+	public @ResponseBody String classAnnouncementOfStudent(String page, String limit,HttpSession session) {
+		Userinfo user = (Userinfo) session.getAttribute("crruentUser");
+		Map<String, Object> annoucement = clazzAnnountcementService.getAnnountcement(page,limit,user);
+		String result = TableUtil.tableRander(ClazzAnnouncement.class, annoucement, "list");
+		return result;
+	}
+	
+	
+	/**
+	 * 上传班级文件
+	 * @param file
+	 * @param request
+	 * @param session
+	 * @param classid
+	 * @return
+	 */
+	@RequestMapping(value="upload_file_of_class.action",produces= {"text/html;charset=utf-8"})
+	public @ResponseBody String uploadFileOfClass(MultipartFile file ,HttpServletRequest request,HttpSession session,String classid) {
+		JSONObject result = new JSONObject();
+		int code = 0;
+		String msg = "";
+		Userinfo currentUser = (Userinfo) session.getAttribute("crruentUser");
+		boolean isok = clazzService.uploadFile(file,request,currentUser,classid);
+		if(isok) {
+			msg = "上传成功";
+		}else {
+			msg = "上传失败";
+			code = 1;
+		}
+		result.put("code", code);
 		result.put("msg", msg);
 		return result.toString();
 	}

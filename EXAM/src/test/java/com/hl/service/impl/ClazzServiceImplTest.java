@@ -45,6 +45,32 @@ public class ClazzServiceImplTest extends BaseTest{
 	}
 	
 	@Test
+	public void testListClazzByClassname() {
+		String classname = "";
+		String pageNumStr = "1";
+		String pageSizeStr = "10";
+		Map<String ,Object>result = cs.listClazzByClassname(classname, pageNumStr, pageSizeStr);
+		List<Clazz>list = (List<Clazz>) result.get("list");
+		for (Clazz clazz : list) {
+			System.out.println(clazz);
+		}
+	}
+	
+	@Test
+	public void testListClazzByStudent() {
+		Userinfo user = new Userinfo();
+		user.setUserid(3);
+		String classname = "2";
+		String pageNumStr = "1";
+		String pageSizeStr = "10";
+		Map<String ,Object>result = cs.listClazzByStudent(user, classname, pageNumStr, pageSizeStr);
+		List<Clazz>list = (List<Clazz>) result.get("list");
+		for (Clazz clazz : list) {
+			System.out.println(clazz);
+		}
+	}
+	
+	@Test
 	public void testAddClazzForTeacher() {
 		
 		Clazz clazz = new Clazz();
@@ -69,6 +95,12 @@ public class ClazzServiceImplTest extends BaseTest{
 		int result = cs.addStudent("3", "7");
 		System.out.println(result);
 	}
+	
+	@Test
+	public void testDeleteStudent() {
+		cs.deleteStudent("3", "3");
+	}
+	
 	@Test
 	public void testGetClassDetail() {
 		

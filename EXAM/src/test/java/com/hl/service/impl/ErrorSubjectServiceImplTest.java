@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.hl.BaseTest;
 import com.hl.entity.ErrorSubject;
 import com.hl.entity.Subject;
+import com.hl.entity.Userinfo;
 import com.hl.service.ErrorSubjectService;
 
 public class ErrorSubjectServiceImplTest extends BaseTest {
@@ -61,4 +62,25 @@ public class ErrorSubjectServiceImplTest extends BaseTest {
 		subject.setSid(1);
 		System.out.println(errorSubjectServiceImpl.queryUserOfErrorSubject(subject));
 	}
+	
+	@Test
+	public void testGetErrorSubjectByUser(){
+		String limit = "10";
+		String page  = "1";
+		String scontent = "大";
+		Userinfo user = new Userinfo();
+		user.setUserid(6);
+		Map<String, Object> errorSubjectByUser = errorSubjectServiceImpl.getErrorSubjectByUser(limit, page, scontent, user);
+	    List<ErrorSubject> list = (List<ErrorSubject>)errorSubjectByUser.get("list");
+	    for (ErrorSubject errorSubject : list) {
+			
+	    	System.out.println(errorSubject);
+		}
+	    System.out.println("count="+errorSubjectByUser.get("count"));
+	    
+	}
+	
+	
+	
+	
 }

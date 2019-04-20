@@ -7,6 +7,15 @@
 	  where c.classteacherid = #{teacherid}
 	</select>
 	
+	<select id="listClazzByClassname" parameterType="string" resultType="Clazz">
+	  select * from clazz c
+	  where 1 = 1
+	  <if test="classname!=null and !''.equals(classname)" >
+	     and c.classname like concat('%',#{classname},'%')
+	    
+	  </if>
+	</select>
+	
 	<insert id="insertClazz" parameterType="Clazz">
 	  insert into clazz(classname , classteacherid ,maxpeoplenum,classdesrible,classtype,classstate) 
 	  values(#{classname},#{classteacherid},#{maxpeoplenum},#{classdesrible},#{classtype},#{classstate})
@@ -41,6 +50,11 @@
 	   insert into user_clazz (classid,studentid) 
 	   values(#{0},#{1})
 	</insert>
+	
+	<delete id="deleteStudent" >  
+        delete from user_clazz where classid = #{0} 
+        and studentid = #{1}
+	</delete>  
 	
 	<select id="getClassDetail" parameterType="int" resultMap="ClazzDetailMap">
 	  select cf.title cftitle,c.classid, c.classteacherid,f.*,teacher.*,
@@ -91,5 +105,32 @@
 	    </association>
 	  </collection>
 	</resultMap>
+	
+	<insert id="addFile" >
+	  insert into clazz_file (classid,fileid,title)
+	  values (#{0},#{1},#{2})	
+	</insert>
+	
+	<select id="getPeoplenum" parameterType="int" resultType="int">
+	   select c.peoplenum from clazz c
+	   where c.classid = #{0}
+	</select>
+	
+	<update id="updatePeoplenum" >
+	   update clazz c set c.peoplenum = #{1}
+	   where c.classid = #{0}
+	   and  c.maxpeoplenum >= #{1}
+	</update>
+	
+	<select id="listClazzByStudentId" parameterType="int" resultType="Clazz">
+	  select c.* from clazz c
+	  inner join user_clazz uc
+	  on c.classid = uc.classid
+	  where uc.studentid = #{studentid}
+	  <if test="classname!=null and !''.equals(classname)" >
+	     and c.classname like concat('%',#{classname},'%')
+	  </if>
+	  
+	</select>
 	
 </mapper>

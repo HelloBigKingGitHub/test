@@ -47,4 +47,21 @@
 	  select count(esid) from errorsubject
 	  where sid = #{id}
 	</select>
+	
+	<select id="listErrorSubjectByUserid" resultMap="errorSubjectMap" >
+	    select es.* ,s.* from errorsubject es 
+	    join  subject s
+	    on es.sid = s.sid
+	    where es.userid = #{userid}
+	    and es.logicdelete = 0
+	    <if test="scontent!= null and !''.equals(scontent)">
+	      and s.scontent like concat('%',#{scontent},'%')
+	    </if>
+	</select>
+	<update id="updateErrorSubjectLogicDelete" >
+	   update errorsubject
+	   set logicdelete = 1
+	   where userid = #{0}
+	   and esid = #{1}
+	</update>
 </mapper>

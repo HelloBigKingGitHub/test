@@ -1,0 +1,119 @@
+<html><head>
+  <meta charset="utf-8">
+  <title>添加课程</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="/EXAM/admin/layui/css/layui.css" media="all">
+ </head>
+<body >
+
+  <form class="layui-form"  style="padding: 20px 30px 0 0;" enctype="multipart/form-data">
+    <div class="layui-form-item">
+      <label class="layui-form-label">课程名称</label>
+      <div class="layui-input-inline">
+        <input type="text" name="coursename" lay-verify="required" placeholder="请输入班级名称" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-inline">
+      <label class="layui-form-label">开课时间</label>
+      <div class="layui-input-inline">
+        <input type="text" name="starttime" id="starttime" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    
+    <div class="layui-inline">
+      <label class="layui-form-label">节课时间</label>
+      <div class="layui-input-inline">
+        <input type="text" name="endtime" id="endtime" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    
+    <div class="layui-form-item">
+      <label class="layui-form-label">课程描述</label>
+      <div class="layui-input-inline">
+        <textarea name="coursedetail" lay-verify="required" style="margin-top:10px; width: 400px; height: 150px;" autocomplete="off" class="layui-textarea"></textarea>
+      </div>
+    </div>
+    
+    <div class="layui-form-item">
+      <label class="layui-form-label">课程icon</label>
+      <div class="layui-input-inline">
+         <input id="courseicon" type="file" name="file"/> 
+      </div>
+    </div>
+  
+  </form>
+
+
+
+	<div class="layui-input-block">
+		<button class="layui-btn layui-btn-radius layui-btn-warm" id="addCourse_submit">立即提交</button>
+	</div>
+
+	<script src="/EXAM/admin/layui/layui.js"></script>  
+  <script>
+    layui.use(['form','upload','laydate'],function(){
+    	var form = layui.form;
+    	var $ = layui.jquery;
+    	var layer = layui.layer;
+    	var upload = layui.upload;
+    	var laydate = layui.laydate;
+    	laydate.render({
+    	    elem: '#starttime'
+    	  });
+    	  laydate.render({
+    	    elem: '#endtime'
+    	  });
+    	
+    	
+    	$('#addCourse_submit').on('click',function(){
+    		  //获取表单中的各个元素
+    		  var coursename = $('input[name="coursename"]').val();
+    		  var coursedetail = $('textarea[name="coursedetail"]').val();
+    		  var starttime = $('input[name="starttime"]').val();
+    		  var endtime = $('input[name="endtime"]').val();
+    		  var file = $('#courseicon')[0].files[0];
+    		  /*  console.info(coursename);
+    		  console.info(coursedetail);
+    		  console.info(starttime);
+    		  console.info(endtime);
+    		  console.info(file); 
+    		  {'coursename':coursename,'coursedetail':coursedetail,'starttime':starttime,'endtime':endtime,'file':file}
+    		  */ 
+    		  var formData = new FormData();
+  			  formData.append('file', file);
+  			  formData.append('coursename', coursename);
+  			  formData.append('starttime', starttime);
+  			  formData.append('endtime', endtime);
+  			  formData.append('coursedetail', coursedetail);
+    		  $.ajax({
+    			  contentType: false
+    			  ,processData: false
+    			  ,type:'POST'
+    			  ,url:'/EXAM/add_course.action'
+    			  ,dataType:'json'
+    			  ,data:formData
+    			  ,success:function(result){
+    				  
+    				  layer.msg(result.msg,{time:2000},function(){
+    					  if(result.msg == '添加成功'){
+    						  window.location.reload();//修改成功后刷新父界面
+    					  }
+    					 
+    					  
+    				  }); 
+    				  
+    			  }
+    			  
+    			  
+    		  });
+    		  
+    		});
+    	
+    	
+    });
+
+  </script>
+  </body>
+</html>

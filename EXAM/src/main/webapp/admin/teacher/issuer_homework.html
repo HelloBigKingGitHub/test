@@ -61,6 +61,10 @@
 		</div>
 	</div>
 
+	
+		
+	<button style="margin-left:50px " type="button" class="layui-btn layui-hide" id="uploadClassFile"><i class="layui-icon "></i>上传班级文件</button>
+	
 
 
 	<table class="layui-hide" id="test" lay-filter="test"></table>
@@ -68,7 +72,6 @@
 	<script type="text/html" id="toolbarDemo">
       <div class="layui-btn-container">
         <button class="layui-btn layui-btn-sm" lay-event="sendMsgOfClass">发布班级公告</button>
-        <button class="layui-btn layui-btn-sm" lay-event="uploadFileOfClass">上传班级文件</button>
       </div>
 	</script>
 
@@ -154,11 +157,12 @@
 
 	<script src="/EXAM/admin/layui/layui.js"></script>
 	<script>
-  layui.use(['table','form'], function(){
+  layui.use(['table','form','upload'], function(){
 	  var form = layui.form;
 	  var table = layui.table;
 	  var layer = layui.layer;
 	  var $ = layui.jquery; 
+	  var upload = layui.upload;
 	  var crruentUserid = $('#crruentUserid', parent.document).text(); //获取当前用户id（既是老师的id）
 	  /*******获取该老师的所有课程，然后把数据渲染到搜索选择框中********/
 	  $.ajax({
@@ -190,13 +194,13 @@
 	  });
 	  /*****************************************************/
 	  var classid;
-	  /*****获取搜索选择框中课程的id然后查询出所有学生*************/
+	  /*****获取搜索选择框中班级的id然后查询出所有学生*************/
 	  form.on('select(clazzSelect)', function(data){
 		  //console.log(data.elem); //得到select原始DOM对象
 		  //console.log(data.value); //得到被选中的值
 		  //console.log(data.othis); //得到美化后的DOM对象
 		  classid = data.value;
-		 
+		 $('#uploadClassFile').removeClass('layui-hide');
 		  table.render({
 			    elem: '#test'
 			    ,url:'/EXAM/list_student_of_clazz_by_classid.action'
@@ -215,7 +219,24 @@
 			    ,page: true
 			    ,id: 'testReload'
 			  });
-	  });    
+		  
+		  // 得在下拉选择框选择或才能绑定上传文件事件（上传班级文件的按钮进行文件上传渲染）
+		  var uploadInst = upload.render({
+			    elem: '#uploadClassFile' //绑定元素
+			    ,url: '/EXAM/upload_file_of_class.action' //上传接口
+			    ,data:{'classid':classid}
+			    ,done: function(res){
+			      //上传完毕回调
+			      layer.msg('状态码'+res.code+res.msg);
+			    }
+			    ,error: function(){
+			      //请求异常回调
+			      layer.msg('上传失败');
+			    }
+			  });
+	  });
+	  
+	  
 	  
 	  //头工具栏事件
 	  table.on('toolbar(test)', function(obj){
@@ -229,9 +250,7 @@
 	            ,area: ['450px', '550px']
 	        });
 	      break;
-	      case 'uploadFileOfClass':  //上传班级文件
-	        
-	      break;
+	   
 	    };
 	  });
 	  
@@ -240,11 +259,31 @@
 	    var data = obj.data;
 	    //console.log(obj)
 	    if(obj.event === 'del'){
-	      layer.confirm('真的删除行么', function(index){  //将学员提出班级
-	        obj.del();
+	      layer.confirm('真的将该学员移出班级么', function(index){  //将学员提出班级
+	        
+	        console.info(data.userid);
+	        console.info(classid);
+	        $.ajax({ //异步调用后端请求，删除该班级的学生
+	        	url:'/EXAM/remove_student_from_class.action',
+	        	data:{'classid':classid,'studentid':data.userid},
+	        	dataType:'json',
+	        	type:'post',
+	        	success:function(result){
+	        		if(result.msg == '该学生已经移除了该班级'){
+	        			layer.msg('该学员以删除！！',{time:2000},function(){
+	        				obj.del();
+	        				
+	        			});
+	        			
+	        		}else{
+	        			layer.msg('删除失败');
+	        		}
+	        	}
+	        	
+	        });
 	        layer.close(index);
 	      });
-	    } else if(obj.event === 'sendMessage'){  //获取学员的详细信息
+	    } else if(obj.event === 'sendMessage'){  //发送信息给学生
 	      var userid = data.userid;
 	      layer.open({
 	        	type: 2

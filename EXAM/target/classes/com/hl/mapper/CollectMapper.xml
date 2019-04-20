@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hl.mapper.CollectMapper">
+	<insert id="insertCollect" >
+		insert into user_collect (userid, sid, pid, contenttype)
+		values(#{0},#{1},#{2},#{3})
+	
+	</insert>
+	<select id="collectIsExist" resultType="_int">
+	  select count(collectid) from user_collect
+	  where userid = #{0}
+	  and ((pid = #{1} and 0 != #{1})
+	  or (sid = #{2} and 0 != #{2}))
+	</select>
+	
+	<select id="listCollectByUserid" resultType="Collect" >
+	  select * from user_collect uc
+	  where uc.userid = #{userid}
+	  <if test="contentType!= null and !''.equals(contentType)">
+	   and uc.contentType = #{contentType}
+	   </if>
+	</select>
+	<delete id="deleteConlletByConllectid" parameterType="_int">
+	   delete from user_collect 
+	   where collectid = #{0}
+	</delete>
+</mapper>

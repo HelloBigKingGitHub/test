@@ -3,6 +3,8 @@ package com.hl.mapper;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.hl.entity.Clazz;
 import com.hl.entity.ClazzDetail;
 import com.hl.entity.Userinfo;
@@ -55,7 +57,54 @@ public interface ClazzMapper {
 	/**
 	 * 根据班级信息查询班级详细信息 操作的表有  clazz sysuser user_clazz clazz_homework clazz_file
 	 * @param classid
+	 * 
 	 * @return ClazzDetail
 	 */
 	ClazzDetail getClassDetail(Integer classid);
+
+	/**
+	 * 给班级添加文件
+	 * @param clazzid
+	 * @param fileid
+	 * @param title
+	 * @return
+	 */
+	int addFile(Integer clazzid, Integer fileid, String title);
+
+	/**
+	 * 往 user_clazz表中删除一条数据
+	 * @param classid
+	 * @param studentid
+	 * @return
+	 */
+	int deleteStudent(Integer classid, Integer studentid);
+	
+	/**
+	 * 跟新班级表中的班级人数字段
+	 * @param classid
+	 * @param newnum
+	 * @return
+	 */
+	int updatePeoplenum(Integer classid, Integer newnum);
+	
+	/**
+	 * 查询班级的现有人数
+	 * @param classid
+	 * @return
+	 */
+	int getPeoplenum(Integer classid);
+
+	/**
+	 * 通过班级名称进行模糊查询
+	 * @param classname
+	 * @return
+	 */
+	List<Clazz> listClazzByClassname( @Param(value = "classname") String classname);
+
+	/**
+	 * 通过用户id查询出该用户加入过的所有班级
+	 * @param studentId
+	 * @return
+	 */
+	List<Clazz> listClazzByStudentId(@Param(value="studentid")Integer studentId, @Param(value="classname")String classname);
 }

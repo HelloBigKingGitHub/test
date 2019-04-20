@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>收藏页面</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="/EXAM/admin/layui/css/layui.css">
+  <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+</head>
+<body>
+	<div class="demoTable" style="margin: 20px">
+	  
+	  <button class="layui-btn" data-type="subject_collect">只看试题</button>
+	  <button class="layui-btn" data-type="paper_collect">只看试卷</button>
+	  
+	</div>
+	
+	<table class="layui-hide" id="test" lay-filter="test"></table>
+ 
+<script type="text/html" id="toolbarDemo">
+  <div class="layui-btn-container">
+    <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+    <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
+  </div>
+</script>
+ 
+<script type="text/html" id="barDemo">
+  <a class="layui-btn layui-btn-xs" lay-event="collect_detail">查看详情</a>
+  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del_collect">移除收藏</a>
+</script>
+
+
+	<script src="/EXAM/admin/layui/layui.js"></script> 
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 --> 
+ 
+<script>
+layui.use(['table','element','laypage'], function(){
+	  var table = layui.table;
+	  var layer = layui.layer;
+	  var $ = layui.jquery; 
+	  var element = layui.element;
+	  var layer = layui.layer;
+	  var laypage = layui.laypage;
+	  
+	  table.render({
+		    elem: '#test'
+		    ,url:'/EXAM/user_get_collect.action'
+		    ,toolbar: '#toolbarDemo'
+		    ,title: '收藏表格'
+		    //,where: {teacheridStr: crruentUserid} //传递额外的数据给后台 
+		    ,height: 480
+		    ,cols: [[
+		    	 {type: 'checkbox', fixed: 'left'}
+			      ,{field:'collectid', title: '收藏id', width:100, sort: true, fixed: true}
+			      ,{field:'sid',title: '试题编号', width:100}
+			      ,{field:'pid', title: '试卷编号', width:100,edit:true}
+			      ,{field:'contentType',title: '收藏类型', width:200, sort: true}
+			      ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:200}
+		    ]]
+		    ,page: true
+		    ,id: 'testReload'
+		  });
+	  
+	  //监听行工具事件
+	  table.on('tool(test)', function(obj){
+	    var data = obj.data;
+	    console.log(obj)
+	    if(obj.event === 'collect_detail'){
+	      if(data.contentType == 'subject_collect'){  //查看试题详情
+	    	  var sid = data.sid;
+	          $.ajax({
+	        	  type:'GET',
+	        	  url:'/EXAM/show_subject_by_sid.action',
+	        	  data:{"sid":sid},
+	    		  dataType:"json",
+	    		  success:function(result){
+	    			  layer.open({  //查看试题
+	    				  type: 2
+	    		          ,content: ['/EXAM/admin/student/subject_show.html','yes']
+	    		          ,area: ['700px', '500px']
+	    		          ,shade: 0.4
+	    		          ,id: 'subject_show' //设定一个id，防止重复弹出
+	    		          ,moveType: 1 //拖拽模式，0或者1
+	    		          ,success:function(layero, index){
+	    			          var iframe = window['layui-layer-iframe' + index];
+	    			          iframe.child(result);
+	    		          }
+	    			  });
+	    		  }
+	        	  
+	          });
+	      }else if(data.contentType == 'paper_collect'){ //查看试卷详情
+	    	  var pid = data.pid;
+	          $.ajax({
+	        	  type:'GET',
+	        	  url:'/EXAM/student_preview_paper.action',
+	        	  data:{"pid":pid},
+	    		  dataType:"json",
+	    		  success:function(result){
+	    			  layer.open({  //打开试卷预览页面
+	    				  type: 2
+	    		          ,content: ['/EXAM/admin/student/paper_preview.html','yes']
+	    		          ,area: ['700px', '500px']
+	    		          ,shade: 0.4
+	    		          ,id: 'paper_preview' //设定一个id，防止重复弹出
+	    		          ,moveType: 1 //拖拽模式，0或者1
+	    		          ,success:function(layero, index){
+	    			          var iframe = window['layui-layer-iframe' + index];
+	    			          iframe.child(result);
+	    		          }
+	    			  });
+	    		  }
+	        	  
+	          });
+	      }else{
+	    	  layer.msg('数据异常');
+	      }
+	    } else if(obj.event === 'del_collect'){
+	    	layer.confirm('确认移除收藏内容吗', function(index){  //移除收藏内容
+		        $.ajax({ //通过一部请求发送申请加入班级
+		        	url:'/EXAM/user_delete_collect.action',
+		        	data:{'collectid':data.collectid},
+		        	type:'post',
+		        	dataType:'json',
+		        	success:function(result){
+		        		layer.msg(result.msg,{time:2000},function(){
+		        			if(result.msg == '删除成功'){
+		        				location.reload();
+		        			}
+		        		});
+		        		
+		        	}
+		        });
+		      });
+	    }else{
+	    	layer.msg('数据异常');
+	    }
+	  });
+	  
+  /*给搜索框进行设置*/
+  var $ = layui.$, active = {
+		  
+		  subject_collect:function(){
+			  table.reload('testReload', {
+			        page: {
+			          curr: 1 //重新从第 1 页开始
+			        }
+			        ,where: {
+			          //key: {
+			            contentType:'subject_collect'
+			          //}
+			        }
+			      });
+		  },
+		     
+		  paper_collect:function(){
+			  table.reload('testReload', {
+			        page: {
+			          curr: 1 //重新从第 1 页开始
+			        }
+			        ,where: {
+			          //key: {
+			            contentType:'paper_collect'
+			          //}
+			        }
+			      });
+		  }  
+		      
+	}
+		
+		  
+		  $('.layui-btn').on('click', function(){
+		    var type = $(this).data('type');
+		    active[type] ? active[type].call(this) : '';
+		  });
+});
+</script>
+
+</body>
+</html>

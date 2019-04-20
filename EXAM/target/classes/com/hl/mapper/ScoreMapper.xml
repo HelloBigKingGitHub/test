@@ -6,4 +6,30 @@
 		insert into user_paper(userid,pid,score) values(#{userid},#{pid},#{score});
 	</insert>
 	
+	<select id="listScoreByUser" resultMap="ScoreDetailMap">
+	   select p.*,up.upid,up.score from paper p 
+	   inner join (select up.* from user_paper up where userid = #{userid}) up
+	   on up.pid = p.pid
+	   <if test="pid!= null and !''.equals(pid)">
+	   and p.pid = #{pid} 
+	   where 1 = 1
+	   </if>
+	   <if test="teacherid != null">
+	   and p.teacherid = #{teacherid}
+	   </if>
+	   <if test="papername!= null and !''.equals(papername)">
+	   and p.pname like CONCAT('%',#{papername},'%') 
+	   </if>
+	</select>
+    
+    <resultMap type="ScoreDetail" id="ScoreDetailMap">
+      <id column="upid"  property="upid" />
+      <result column="score" property="score" />
+      <association property="paper" javaType="Paper">
+        <id column="pid"  property="pid" />
+        <result column="pname" property="pname" />
+        <result column="teacherid" property="teacherid" />
+      </association>
+    </resultMap>
+	
 </mapper>
