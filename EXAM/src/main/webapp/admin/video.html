@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<title>视频课程播放页面</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="Author" content="larry" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<link rel="Shortcut Icon" href="/EXAM/admin/favicon.ico" />
+<link rel="stylesheet" type="text/css" href="/EXAM/admin/layui/css/layui.css"
+	media="all">
+<style>
+body {
+	background: #f2f2f2;
+}
+
+.video {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+.margin15 {
+	margin: 15px;
+}
+
+ul li{
+	display: inline;
+	margin: 10px;
+	
+}
+
+li, ol {
+	list-style: none;
+	vertical-align: bottom;
+}
+</style>
+</head>
+
+<body>
+	<div class="layui-container">
+		<div class=" layui-row">
+			<div class="layui-card ">
+				<div class="layui-card-body">
+					<div class="video" id="video"
+						data-url="http://img.ksbbs.com/asset/Mon_1703/05cacb4e02f9d9e.mp4">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="layui-card ">
+			<ul id="courseVideo" class="layui-card-body" style="height: auto;">
+				
+			</ul>
+		</div>
+		
+	</div>
+	<script type="text/javascript" src="/EXAM/admin/layui/layui.js"></script>
+	<script type="text/javascript">
+    layui.config({
+        base: '/EXAM/admin/lib/'
+    }).extend({
+        ckplayer: 'ckplayer/ckplayer'
+    }).use(['jquery', 'ckplayer'], function() {
+        var $ = layui.$,
+            ckplayer = layui.ckplayer;
+        var vUrl = $('#video').data('url'),
+        	videoObject = {
+            container: '#video',
+            loop: true,
+            autoplay: true,
+            video: [
+                [vUrl, 'video/mp4']
+            ]
+        };
+        var player = new ckplayer(videoObject);
+        
+        //异步请求课程的所有视频文件
+        var search = location.search;
+        var courseid = ''
+        if(search.indexOf('=')>0){
+        	courseid = search.split('=')[1];
+        }
+        
+    	$.ajax({
+	    	url:'/EXAM/get_videos_from_course.action',
+	    	data:{'courseid':courseid,'fileType':'courseVideo'},
+	    	dataType:'json',
+	    	type:'get',
+	    	success:function(result){
+	    		
+	    		var files = result.files;
+	    		var file = null;
+	    		var name = '';
+	    		//console.info(files);
+	    		var text = '';
+	    	    for (var i = 0; i < files.length; i++) {
+	    	    	text = '';
+	    	    	file = files[i];
+	    	    	name = file.filename.substring(file.filename.lastIndexOf('_')+1);
+	    	    	text = '<li><a data-fileurl="'+file.fileurl+'">'+name+'</a></li>'
+	    	    	$('#courseVideo').append(text);
+	    	    	bind();
+				}
+	    		
+	    		//console.info(video);
+	    		
+	    	}
+	    });
+    	
+    	var href = window.location.href;
+    	var baseUrl = href.split("//")[0]+"//"+href.split("//")[1].split("/")[0];
+        function bind(){
+        	$('#courseVideo > li > a').on('click',function(){
+        		//console.info('修改视频路径'+$(this));
+        		var fileurl = $(this).data('fileurl');
+        		console.info(fileurl);
+        		fileurl = baseUrl +'/'+ fileurl;
+                $('#video').data('url',fileurl);
+                console.info($('#video').data('url'));
+                var vUrl = $('#video').data('url'),
+              	videoObject = {
+                  container: '#video',
+                  loop: true,
+                  autoplay: true,
+                  video: [
+                      [vUrl, 'video/mp4']
+                  ]
+              };
+                player = new ckplayer(videoObject);
+        		
+        	});
+        }
+        /* $('#update').on('click',function(){
+          console.info('修改视频路径');
+          $('#video').data('url','http://player.youku.com/player.php/sid/XODA3MzU4ODg4/v.swf');
+          console.info($('#video').data('url'));
+          var vUrl = $('#video').data('url'),
+        	videoObject = {
+            container: '#video',
+            loop: true,
+            autoplay: true,
+            video: [
+                [vUrl, 'video/mp4']
+            ]
+        };
+          player = new ckplayer(videoObject);
+          //console.info(player);
+        }); */
+    });
+    </script>
+</body>
+
+</html>

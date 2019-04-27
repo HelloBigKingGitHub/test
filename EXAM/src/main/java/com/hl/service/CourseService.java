@@ -103,4 +103,64 @@ public interface CourseService {
 	 */
 	List<File> listFileFromCourse(String courseid, String fileType);
 
+	
+
+	/**
+	 * 
+	 * <p>Title: listStudentCourse</p>  
+	 * <p>Description: 分页展示学生的所有课程信息</p> 
+	 * <p>data:2019年4月21日 下午2:30:47 </p> 
+	 * @param limit
+	 * @param page
+	 * @param coursename
+	 * @param user
+	 * @return
+	 */
+	Map<String, Object> listStudentCourse(String limit, String page, String coursename, Userinfo user);
+
+
+	/**
+	 * 
+	 * <p>Title: listCourse4Student</p>  
+	 * <p>Description: 根据多个查询条件对课程进行检索</p> 
+	 * <p>data:2019年4月21日 下午3:27:18 </p> 
+	 * @param user
+	 * @param page
+	 * @param limit
+	 * @param teacherid
+	 * @param teachername
+	 * @param coursename
+	 * @param starttime
+	 * @param endtime
+	 * @param coursedetail
+	 * @return
+	 */
+	Map<String, Object> listCourse4Student(String page, String limit, String teacherid,
+			String teachername, String coursename, String starttime, String endtime, String coursedetail);
+
+	
+
+	/**
+	 * 
+	 * <p>Title: userJoinCourse</p>  
+	 * <p>Description: 用户报名参加课程</p> 
+	 * <p>data:2019年4月22日 下午9:43:09 </p> 
+	 * @param user
+	 * @param courseid
+	 * @return code 0:成功 1:重复报名 2:报名失败
+	 */
+	int userJoinCourse(Userinfo user, String courseid);
+
+
+	/**
+	 * 
+	 * <p>Title: userExitCourse</p>  
+	 * <p>Description: 学生退出指定课程</p> 
+	 * <p>data:2019年4月22日 下午10:50:42 </p> 
+	 * @param user
+	 * @param courseid
+	 * @return
+	 */
+	boolean userExitCourse(Userinfo user, String courseid);
+
 }

@@ -7,7 +7,7 @@
 	   values(#{filename},#{fileurl},#{uploadpath},#{type})
 	</insert>
 	
-	<select id="listFileFromCourse" resultType="File">
+	<select id="listFileFromCourse" resultMap="fileMap">
 	  select f.* from course c
 	  inner join course_file cf
 	  on c.courseid = cf.cid
@@ -18,6 +18,13 @@
 	    and f.type = #{fileType}
 	  </if>
 	</select>
+	
+	<resultMap type="File" id="fileMap">
+	  <id column="fileid" property="fileid" />
+	  <result column="url" property="fileurl" />
+	  <result column="uploadpath" property="uploadpath" />
+	  <result column="type" property="type" />
+	</resultMap>
 	
 	
 </mapper>

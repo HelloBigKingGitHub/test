@@ -95,7 +95,7 @@ public class CollectController {
 	 */
 	@RequestMapping(value="user_get_collect.action",produces= {"text/html;charset=utf-8"})
 	@ResponseBody
-	public String userGetErrorSubjcet(String limit ,String page,String contentType,HttpSession session) {
+	public String userGetCollect(String limit ,String page,String contentType,HttpSession session) {
 		Userinfo  user = (Userinfo) session.getAttribute("crruentUser"); //得到当前用户。 
 		Map<String,Object> collectList = collectService.getUserCollect(limit,page,contentType,user);
 		return TableUtil.tableRander(Collect.class, collectList, "list");

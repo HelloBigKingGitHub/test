@@ -14,6 +14,7 @@ import com.hl.mapper.UserDetailMapper;
 import com.hl.service.UserDetailService;
 import com.hl.service.UserService;
 import com.hl.util.file.FileUploadUtil;
+import com.hl.util.string.StringUtil;
 
 @Service
 public class UserDetailServiceImpl implements UserDetailService{
@@ -127,6 +128,22 @@ public class UserDetailServiceImpl implements UserDetailService{
 		userDetail.setSex(userSetBean.getSex());
 		userDetail.setUcity(userSetBean.getCity());
 		return userDetail;
+	}
+
+
+
+	
+	@Override
+	public UserDetail getUserDetailByUserid(String userid) {
+		if(!StringUtil.isInteger(userid)) {
+			return new  UserDetail();
+		}
+		int useridInt = Integer.parseInt(userid);
+		UserDetail userDetail = new UserDetail();
+		Userinfo user = new Userinfo();
+		user.setUserid(useridInt);
+		userDetail.setUser(user);
+		return userDetailMapper.getUserDetail(userDetail);
 	}
 
 

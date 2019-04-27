@@ -34,4 +34,63 @@
 	 where courseid = #{0}
 	</delete>
 	
+	<select id="listStudentCourse" resultType="course">
+	   select c.* from user_course uc
+	   inner join course c
+	   on c.courseid = uc.courseid
+	   where uc.userid = #{userid}
+	   <if test="coursename != null and !''.equals(coursename) ">
+	     and c.coursename like concat('%',#{coursename},'%')
+	   </if> 
+	</select>
+	
+	<select id="listCourse4Student" resultType="course">
+ 	  select  c.* from course c
+	  inner join sysuser u
+	  on u.userid = c.teacherid
+	  where 1 = 1
+	  <if test="teacherid != null">
+	     and c.teacherid = #{teacherid}
+	  </if>
+	  
+	  <if test="teachername != null and !''.equals(teachername)" >
+	     and u.usertruename like concat('%',#{teachername},'%') 
+	  </if>
+	  
+	  <if test="coursename != null and !''.equals(coursename)">
+	    and c.coursename like concat('%',#{coursename},'%')
+	  </if>
+	  
+	  <if test="starttime != null and !''.equals(starttime)">
+	     and c.starttime >= #{starttime} 
+	  </if>
+	  
+	  <if test="endtime != null and !''.equals(endtime)">
+	     and #{endtime} >= c.endtime 
+	  </if>
+	  
+	  <if test="coursedetail != null and !''.equals(coursedetail)">
+	     and c.coursedetail like concat('%',#{coursedetail},'%')
+	  </if>
+	
+	</select>
+	
+	<select id="courseOfUserIsExist"  resultType="_int">
+	  select count(ucid) from user_course
+	  where userid = #{userid} 
+	  and courseid = #{courseid}
+	</select>
+	
+	<insert id="userJoinCourse">
+	   insert into user_course (userid,courseid)
+	   values(#{userid},#{courseid})
+	</insert>
+	
+	<delete id="userExitCourse" >
+	  delete from user_course
+	  where userid = #{userid}
+	  and courseid = #{courseid}
+	
+	</delete>
+	
 </mapper>

@@ -40,7 +40,7 @@
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 --> 
  
 <script>
-layui.use('table', function(){
+layui.use(['table','element'], function(){
   var table = layui.table;
   var layer = layui.layer;
   var $ = layui.jquery; 
@@ -108,7 +108,32 @@ layui.use('table', function(){
         layer.close(index);
       });
     } else if(obj.event === 'analyse'){ // 展示课程内容
-      window.location.href='/EXAM/admin/teacher/class_detail.html?classid='+data.classid;
+      //window.location.href='/EXAM/admin/teacher/class_detail.html?classid='+data.classid;
+	    $.ajax({
+	    	url:'/EXAM/get_videos_from_course.action',
+	    	data:{'courseid':data.courseid,'fileType':'courseVideo'},
+	    	dataType:'json',
+	    	type:'get',
+	    	success:function(result){
+	    		var files = result.files;
+	    		var file = null;
+	    		var name = '';
+	    		console.info(files);
+	    		//构建html代码
+	    		var video = '';
+	    	    for (var i = 0; i < files.length; i++) {
+	    	    	file = files[i];
+	    	    	name = file.filename.substring(file.filename.lastIndexOf('_')+1);
+	    	    	video = video + name + ' <br/> ';
+				}
+	    		
+	    		console.info(video);
+	    		layer.msg(video,{time:5000},function(){
+	    			
+	    		});
+	    	}
+	    });
+    	
     }
   });
   /*给搜索框进行设置*/

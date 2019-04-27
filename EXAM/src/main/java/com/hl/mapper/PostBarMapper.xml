@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hl.mapper.PostBarMapper">
+	
+	<insert id="addPostBar" parameterType="PostBar" >
+	  insert into postbar(questitle,quescontent,reward,questime,userid)
+	  values(#{questitle},#{quescontent},#{reward},#{questime},#{userid})
+	</insert>
+	
+	<select id="listPostBarByTitle" resultType="PostBar" parameterType="string">
+	   select * from postbar p
+	   
+	   where 1 = 1
+	   <if test="questitle != null and !''.equals(questitle)">
+          and p.questitle like concat('%',#{questitle},'%')	   
+	   </if>
+	   order by pbid DESC
+	</select>
+	
+	<select id="getPostBarByPbid" resultType="PostBar">
+	  select * from postbar
+	  where pbid = #{0}
+	</select>
+	
+	<update id="update">
+	  update postbar p
+	  <trim prefix="set" suffixOverrides=",">
+		  <if test="quescount != 0"> p.quescount = p.quescount+1 ,</if>
+		  <if test="liulancount != null"> p.liulancount = p.liulancount+1,</if>
+		  <if test="liulantime!=null">p.liulantime = #{liulantime},</if>
+	 </trim>
+	 where p.pbid=#{pbid}
+	</update>
+	
+</mapper>

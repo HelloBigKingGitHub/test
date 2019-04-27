@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>发表问题</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="/EXAM/postbar/css/head.css"/>
+  <link rel="stylesheet" href="/EXAM/postbar/layui/css/layui.css">
+
+<link rel="stylesheet" href="/EXAM/postbar/css/global.css">
+
+<script src="/EXAM/postbar/layui/layui.js"></script>
+</head>
+<body >
+
+<div class="dvhead">
+	<div class="dvlogo"><a href="index.html">你问我答</a></div>
+	
+</div>
+
+<div class="main layui-clear">
+  <div class="fly-panel" pad20>
+    <h2 class="page-title">发表问题</h2>
+    
+    <!-- <div class="fly-none">并无权限</div> -->
+
+    <div class="layui-form-pane">
+      <form class="layui-form" >
+        <div class="layui-form-item">
+          <label for="L_title" class="layui-form-label">标题</label>
+          <div class="layui-input-block">
+            <input type="text" id="L_title" name="title" required lay-verify="required" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+          <div class="layui-input-block">
+             <div>
+    			<textarea id="content" name="content" style="width:1040px;height:450px;visibility:hidden;"></textarea>
+  			 </div>
+          </div>
+          <label for="L_content" class="layui-form-label" style="top: -2px;">描述</label>
+        </div>
+        <div class="layui-form-item">
+          <label for="L_title" class="layui-form-label">悬赏</label>
+          <div class="layui-input-block">
+            <input type="number"  name="reward" required lay-verify="required" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <button class="layui-btn" lay-filter="postbar_submit" lay-submit>立即发布</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+layui.use(['layedit','form'], function(){
+	  var form = layui.form;
+	  var layedit = layui.layedit;
+	  var edit = layedit.build('content'); //建立编辑器
+	  var form = layui.form;
+	  var layer = layui.layer;
+	  var $ = layui.jquery;
+		form.on('submit(postbar_submit)', function(data){
+			var field = data.field;
+			  console.log(field) //当前容器的全部表单字段，名值对形式：{name: value}
+			  var content = layedit.getContent(edit);
+			  console.info(content);
+			  $.ajax({
+				  url:'/EXAM/add_postbar.action',
+				  data:{'title':field.title,'content':content,'reward':field.reward},
+				  dataType:'json',
+				  type:'get',
+				  success:function(result){
+					  layer.msg(result.msg,{time:2000},function(){
+						  if(result.msg == '发帖成功'){
+							  history.go(-1);
+						  }
+					  });
+				  }
+				  
+			  });
+			  return false;//防止页面跳转
+	});
+		
+		
+});
+</script>
+</body>
+</html>

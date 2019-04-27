@@ -59,5 +59,11 @@ public class UserDetailServiceImplTest extends BaseTest{
 		
 		
 	}
+	@Test
+	public void testGetUserDetailByUserid() {
+		String userid = "6";
+		UserDetail userDetailByUserid = userDetailService.getUserDetailByUserid(userid);
+		System.out.println(userDetailByUserid);
+	}
 
 }

@@ -59,4 +59,15 @@ public interface UserDetailService {
 	 * @return 头像的访问路径
 	 */
 	String getUserIcon(Userinfo currentUser);
+
+	
+	/**
+	 * 
+	 * <p>Title: getUserDetailByUserid</p>  
+	 * <p>Description: 得到用户的详细信息</p> 
+	 * <p>data:2019年4月27日 下午4:20:22 </p> 
+	 * @param userid
+	 * @return
+	 */
+	UserDetail getUserDetailByUserid(String userid);
 }

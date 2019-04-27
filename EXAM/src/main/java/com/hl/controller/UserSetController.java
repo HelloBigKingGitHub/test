@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.hl.entity.UserDetail;
 import com.hl.entity.Userinfo;
 import com.hl.formbean.UserSetBean;
 import com.hl.service.UserDetailService;
@@ -109,6 +110,25 @@ public class UserSetController {
 			msg = "请确认两次密码一致";
 		}
 		result.put("msg", msg);
+		return result.toString();
+	}
+	
+	
+	/**
+	 * 
+	 * <p>Title: getUserDetailByUserid</p>  
+	 * <p>Description: 根据用户id得到用户的详细信息</p> 
+	 * <p>data:2019年4月27日 下午4:19:19 </p> 
+	 * @param userid
+	 * @return
+	 */
+	@RequestMapping(value="get_userdetail_by_userid.action",produces= {"text/html;charset=utf-8"})
+	@ResponseBody
+	public String getUserDetailByUserid(String userid) {
+		
+		UserDetail userDetail = userDetailService.getUserDetailByUserid(userid);
+		JSONObject result = new JSONObject();
+		result.put("userdetail", userDetail);
 		return result.toString();
 	}
 	

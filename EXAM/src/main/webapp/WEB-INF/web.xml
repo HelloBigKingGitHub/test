@@ -11,6 +11,16 @@
   	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
   
+  <!-- 配置自定义登录过滤器 -->
+	<filter>
+		<description>登录过滤器</description>
+		<filter-name>loginFilter</filter-name>
+		<filter-class>com.hl.filter.LoginFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>loginFilter</filter-name>
+		<url-pattern>/admin/*</url-pattern>
+	</filter-mapping>
   <!-- 配置前端控制器负责控制前端页面的请求发给前端控制器 -->
   <servlet>
   	<servlet-name>springmvc</servlet-name>

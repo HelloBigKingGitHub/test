@@ -136,7 +136,7 @@ layui.use(['table','element','laypage'], function(){
 												 url:'/EXAM/user_delete_error_subject.action',
 												 data:{'esid':esid},
 												 type:'get',
-												 dateType:'json',
+												 dataType:'json',
 												 success:function(result){
 													 layer.msg(result,{time:2000},function(){
 														 window.reload();

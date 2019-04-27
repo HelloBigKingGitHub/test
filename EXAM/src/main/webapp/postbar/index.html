@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	<link rel="stylesheet" type="text/css" href="css/index.css">
+	<link rel="stylesheet" href="/EXAM/postbar/layui/css/layui.css">
+	<link rel="icon" href="/EXAM/images/logo.png">
+</head>
+<div class="dvhead">
+	<div class="dvlogo"><a href="index.html">你问我答</a></div>
+</div>
+<div class="dvContent">
+	<div class="dvquesleft">
+
+		<div class="dvqstitle">
+			<image class="imgbean" src="images/bean.jpg">
+			<span class="qsTitle">问答</span>
+			<span class="back"><a  href="/EXAM/index.jsp">《《返回首页</a></span>
+		</div>
+		<div class="dvtabhead">
+			<div class="tabheads tabcurrent">全部问题</div>
+			<div class="tabheads">我的问题</div>
+			<div class="tabheads">关注问题</div>
+			<div class="tabheads">问题标签</div>
+		</div>
+		<div class="tabContent">
+			<div class="dvtags">
+				<a class="curenttag">待解决</a><span class="line"></span>
+				<a>高分</a><span class="line"></span>
+				<a>新回答</a><span class="line"></span>
+				<a>已解决</a>
+			</div>
+			
+			<div class="tab" id="tab1">
+			
+			
+				
+			</div>
+			<div class="tab hidden" id="tab2">2</div>
+			<div class="tab hidden" id="tab3">3</div>
+			<div class="tab hidden" id="tab4">4</div>
+		</div>
+	</div>
+	<div class="dvquesright">
+		<div>
+			<buton class="btnques" onclick="location.href='add.html'">提个问题</buton>
+		</div>
+		<div class="dvorder">
+			<div class="orderTitle">专家排行榜</div>
+			<div class="users">
+				<image class="userface" src="images/0.gif" />
+				<div class="dvuser">
+					<div class="userTitle">陈有龙</div>
+					<div class="userdeital">大牛6级 豆:14006</div>
+				</div>
+			</div>
+			<div class="users">
+				<image class="userface" src="images/1.gif" />
+				<div class="dvuser">
+					<div class="userTitle">陈有龙</div>
+					<div class="userdeital">大牛6级 豆:14006</div>
+				</div>
+			</div>
+			<div class="users">
+				<image class="userface" src="images/2.gif" />
+				<div class="dvuser">
+					<div class="userTitle">陈有龙</div>
+					<div class="userdeital">大牛6级 豆:14006</div>
+				</div>
+			</div>
+			<div class="users">
+				<image class="userface" src="images/3.gif" />
+				<div class="dvuser">
+					<div class="userTitle">陈有龙</div>
+					<div class="userdeital">大牛6级 豆:14006</div>
+				</div>
+			</div>
+			<div class="users">
+				<image class="userface" src="images/4.gif" />
+				<div class="dvuser">
+					<div class="userTitle">陈有龙</div>
+					<div class="userdeital">大牛6级 豆:14006</div>
+				</div>
+			</div>
+			<div class="users">
+				<image class="userface" src="images/5.gif" />
+				<div class="dvuser">
+					<div class="userTitle">陈有龙</div>
+					<div class="userdeital">大牛6级 豆:14006</div>
+				</div>
+			</div>
+			<div class="users">
+				<image class="userface" src="images/6.gif" />
+				<div class="dvuser">
+					<div class="userTitle">陈有龙</div>
+					<div class="userdeital">大牛6级 豆:14006</div>
+				</div>
+			</div>
+
+
+		</div>
+
+	</div>
+    <div style="margin: 50px; margin-top: 10px" id="page"></div>
+
+
+
+
+
+</div>
+<script src="/EXAM/postbar/layui/layui.js"></script>
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript">
+	$(function()
+	{
+
+		$(".tabheads").click(function()
+		{
+			$(".tabheads").removeClass("tabcurrent").eq($(this).index()).addClass("tabcurrent");
+			$(".tab").hide().eq($(this).index()).show();
+		});
+		
+		//主要逻辑
+		
+		
+	});
+	var href = window.location.href;
+	var baseUrl = href.split("//")[0]+"//"+href.split("//")[1].split("/")[0];
+	function rande(postbar, userdetail){
+		var html = 	'<div class="dvques" data-pbid="'+postbar.pbid+'">'+
+		'	<div class="quesCount">'+
+		'		<div class="count">'+postbar.quescount+'</div>'+
+		'		<div class="ques">回答数</div>'+
+		'	</div>'+
+		'	<div class="quesContent">'+
+		'		<div class="quesTitle">'+
+		'			'+postbar.reward+
+		'			<image src="images/bean.jpg" class="bean"> <span'+
+		'				class="spanques">'+postbar.questitle+'</span>'+
+		'		</div>'+
+		'		<div class="qContent">'+postbar.quescontent+'</div>'+
+		'		<div class="tags">'+
+		'			<span class="tag">'+postbar.tags+'</span>'+
+		'		</div>'+
+		'		<div class="quesUser">'+
+		'			<image src="'+baseUrl+'/'+userdetail.icon+'" class="imguser" />'+
+		'		<div class="userName">'+
+		'				'+userdetail.user.usertruename+
+		'				<div class="liulan">浏览 ('+postbar.liulancount+')'+postbar.liulantime+'</div>'+
+		'			</div>'+
+		'		</div>'+
+		'	</div>'+
+		'</div>'
+		
+		$('#tab1').append(html); //添加元素结点
+		
+	}
+	/*************************************************/
+	layui.use(['table','element','laypage'], function(){
+		  var table = layui.table;
+		  var layer = layui.layer;
+		  var $ = layui.jquery; 
+		  var element = layui.element;
+		  var layer = layui.layer;
+		  var laypage = layui.laypage;
+		  function page(title,urlparm){
+			  $.ajax({  
+					 type:'post',
+					 data:{'page':'1','limit':'10','title':title},
+					 dataType:'json',
+					 url:urlparm,
+					 success:function(result){
+						 laypage.render({
+							    elem: 'page'
+							    ,limit:10
+							    ,count: result.count //数据总数
+							    ,jump: function(obj){ //分页回调函数
+							    	
+							    	$('.tab').html(''); //先清空上次分页的信息
+							    	
+							    	 var page = obj.curr ;   //console.log(obj.curr); 得到当前页，以便向服务端请求对应页的数据。
+							    	 var limit = obj.limit;  //console.log(obj.limit); //得到每页显示的条数
+							    	 $.ajax({               //异步请求分页信息
+										 type:'post',
+										 data:{'page':page,'limit':limit,'title':title},
+										 dataType:'json',
+										 url:urlparm,
+										 success:function(result){
+											 //console.info(result);
+											 var postbars = result.PostBars;
+											 //console.info(postbars.length);
+											 var length = postbars.length;
+											 for (var i = 0; i < length; i++) {
+												 var postbar = postbars[i];
+												 var userdetail = '';
+												 $.ajax({ //获得发帖人的详细信息（姓名，头像）
+													 url:'/EXAM/get_userdetail_by_userid.action',
+													 async: false, 
+													 data:{'userid':postbar.userid},
+													 dataType:'json',
+													 type:'get',
+													 success:function(result){
+														 userdetail = result.userdetail;
+														 rande(postbar,userdetail);
+														 //console.info(postbar.liulancount);
+														 //添加点击事件
+														 $(".dvques").on('click',function(){
+															 var pbid = $(this).data('pbid');
+															 var href = window.location.href;
+															 var baseUrl = href.split("//")[0]+"//"+href.split("//")[1].split("/")[0]+"/"+href.split("//")[1].split("/")[1];
+														    	//baseUrl是项目部署的基本路径
+															window.open(baseUrl+'/postbar/detail.html?pbid='+pbid);   
+															 
+														 });
+													 }
+													 
+												 });
+												 //console.info(file)
+											 } 
+												 
+										 }
+							    	 });
+							    }
+							  }); 
+					 }
+					 
+				 }); 
+		  }
+		  page('','/EXAM/show_postbar_list.action');
+	});
+	/*********************************************************/
+</script>
+<body>
+</body>
+</html>
+

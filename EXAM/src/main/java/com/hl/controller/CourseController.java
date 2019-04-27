@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hl.entity.Course;
+import com.hl.entity.ErrorSubject;
 import com.hl.entity.File;
 import com.hl.entity.Userinfo;
 import com.hl.service.CourseService;
@@ -33,7 +34,7 @@ public class CourseController {
 	private CourseService courseService;
 
 	/**
-	 * 获取当前用户的所有课程
+	 * 获取当前用户的开设所有课程(处理老师的请求)
 	 * 
 	 * @return
 	 */
@@ -171,5 +172,104 @@ public class CourseController {
 		return result.toString();
 	}
 	
+	/**
+	 * 
+	 * <p>Title: showMyCourse</p>  
+	 * <p>Description: 学生用户自己课程的展示页</p> 
+	 * <p>data:2019年4月21日 下午3:17:54 </p> 
+	 * @param session
+	 * @param limit
+	 * @param page
+	 * @param coursename
+	 * @return
+	 */
+	@RequestMapping(value = "show_my_course.action", produces = { "html/text;charset=utf-8" })
+	@ResponseBody
+	public String showMyCourse(HttpSession session, String limit, String page, String coursename ) {
+		Userinfo user = (Userinfo) session.getAttribute("crruentUser");
+		JSONObject result = new JSONObject();
+		Map<String,Object> courseList = courseService.listStudentCourse(limit,page,coursename,user);
+		result.put("count", (long)courseList.get("count"));
+		result.put("course", (List<Course>)courseList.get("list"));
+		return result.toString();
+	}
+	
+	/**
+	 * 
+	 * <p>Title: listCourse4Teacher</p>  
+	 * <p>Description: 根据详细的查询信息查看课程信息</p> 
+	 * <p>data:2019年4月21日 下午3:23:04 </p> 
+	 * @param page
+	 * @param limit
+	 * @param teacherid
+	 * @param teachername
+	 * @param coursename
+	 * @param starttime
+	 * @param endtime
+	 * @param coursedetaiil
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "list_course_for_student.action", produces = { "html/text;charset=utf-8" })
+	@ResponseBody
+	public String listCourse4Teacher(String page, String limit, String teacherid,String teachername,
+			String coursename, String starttime, String endtime, String coursedetail, HttpSession session) {
+
+		Map<String, Object> map = courseService.listCourse4Student(page, limit, teacherid, teachername, coursename, 
+				starttime, endtime, coursedetail);
+		return TableUtil.tableRander(Course.class, map, "list");
+
+	}
+	/**
+	 * 
+	 * <p>Title: userJoinCourse</p>  
+	 * <p>Description: 学生报名参加课程</p> 
+	 * <p>data:2019年4月22日 下午9:41:10 </p> 
+	 * @param session
+	 * @param courseid
+	 * @return
+	 */
+	@RequestMapping(value = "join_course.action", produces = { "html/text;charset=utf-8" })
+	@ResponseBody
+	public String userJoinCourse(HttpSession session, String courseid) {
+		Userinfo user = (Userinfo) session.getAttribute("crruentUser");
+		JSONObject result = new JSONObject();
+		String msg = "报名失败";
+		int code = courseService.userJoinCourse(user,courseid);
+		if(code == 1) {
+			msg = "您已经报名了该课程，请勿重复报名";
+		}else if(code == 2) {
+			msg = "请确认是否选择了课程";
+		}else if(code == 0) {
+			msg = "报名成功";
+		}else {
+			msg = "系统错误，请联系技术人员";
+		}
+		result.put("msg", msg);
+		return result.toString();
+	}
+	
+	/**
+	 * 
+	 * <p>Title: userExitCourse</p>  
+	 * <p>Description: </p> 
+	 * <p>data:2019年4月22日 下午10:48:51 </p> 
+	 * @param session
+	 * @param courseid
+	 * @return
+	 */
+	@RequestMapping(value = "user_exit_course.action", produces = { "html/text;charset=utf-8" })
+	@ResponseBody
+	public String userExitCourse(HttpSession session, String courseid) {
+		Userinfo user = (Userinfo) session.getAttribute("crruentUser");
+		JSONObject result = new JSONObject();
+		String msg = "退出失败";
+		boolean isok = courseService.userExitCourse(user,courseid);
+		if(isok) {
+		   msg = "退出成功";
+		}
+		result.put("msg", msg);
+		return result.toString();
+	}
 
 }

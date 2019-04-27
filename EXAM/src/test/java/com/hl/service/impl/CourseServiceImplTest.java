@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.hl.BaseTest;
 import com.hl.entity.Course;
 import com.hl.entity.File;
+import com.hl.entity.Userinfo;
 import com.hl.service.CourseService;
 import com.hl.util.date.SimpleDateFormatUtil;
 
@@ -61,6 +63,49 @@ public class CourseServiceImplTest extends BaseTest{
 		for (File file : listFileFromCourse) {
 			System.out.println(file);
 		}
+	}
+	
+	@Test
+	public void testListStudentCourse() {
+		Userinfo user = new Userinfo();
+		user.setUserid(3);
+		String limit = "10";
+		String page = "1";
+		String coursename = null;
+		Map<String, Object> listStudentCourse = courseSerivce.listStudentCourse(limit, page, coursename, user);
+		List<Course> list = (List<Course>)listStudentCourse.get("list");
+		for (Course course : list) {
+			System.out.println(course);
+		}
+	}
+	
+	@Test
+	public void testListCourse4Student() {
+		
+		String limit = "10";
+		String page = "1";
+		String teacherid = "";
+		String teachername = "黄亮";
+		String coursename = "";
+		String starttime = "2019-04-01";
+		String endtime = "2019-04-26";
+		String coursedetail = "";
+		Map<String, Object> listCourse4Student = courseSerivce.listCourse4Student(page, limit, teacherid, teachername, coursename, 
+				starttime, endtime, coursedetail);
+		List<Course> list = (List<Course>)listCourse4Student.get("list");
+		for (Course course : list) {
+			System.out.println(course);
+		}
+		
+	}
+	
+	@Test
+	public void testUserJoinCourse() {
+		Userinfo user = new Userinfo();
+		user.setUserid(3);
+		String courseid = "7";
+		int userJoinCourse = courseSerivce.userJoinCourse(user, courseid);
+		System.out.println(userJoinCourse);
 	}
 
 }

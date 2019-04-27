@@ -73,7 +73,6 @@ public interface UserService {
 	 * @return 重置后的密码
 	 */
 	String resetUserPassword(String nowpass, String pass,Userinfo user);
-	
-	
+
 
 }

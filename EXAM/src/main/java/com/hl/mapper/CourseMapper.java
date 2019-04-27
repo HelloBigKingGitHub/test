@@ -65,4 +65,69 @@ public interface CourseMapper {
 	 * @return
 	 */
 	int deleteCourseByCourseid(int courseidInt);
+
+
+	/**
+	 * 
+	 * <p>Title: listStudentCourse</p>  
+	 * <p>Description: 展示学生所有的课程信息</p> 
+	 * <p>data:2019年4月21日 下午2:38:42 </p> 
+	 * @param userid
+	 * @param coursename
+	 * @return
+	 */
+	List<Course> listStudentCourse(@Param("userid")int userid, @Param("coursename")String coursename);
+
+
+	/**
+	 * 
+	 * <p>Title: listCourse4Student</p>  
+	 * <p>Description: 多条件为检索课程信息</p> 
+	 * <p>data:2019年4月21日 下午3:33:42 </p> 
+	 * @param teacheridInt
+	 * @param teachername
+	 * @param coursename
+	 * @param starttime
+	 * @param endtime
+	 * @param coursedetail
+	 * @return
+	 */
+	List<Course> listCourse4Student(@Param("teacherid")Integer teacheridInt, @Param("teachername")String teachername, 
+			@Param("coursename")String coursename, @Param("starttime")String starttime, @Param("endtime")String endtime, 
+			@Param("coursedetail")String coursedetail);
+
+
+	/**
+	 * 
+	 * <p>Title: courseOfUserIsExist</p>  
+	 * <p>Description: 判断user是否加入了课程</p> 
+	 * <p>data:2019年4月22日 下午9:49:56 </p> 
+	 * @param userid
+	 * @param courseidInt
+	 * @return
+	 */
+	int courseOfUserIsExist(@Param("userid")int userid, @Param("courseid")int courseid);
+
+
+	/**
+	 * 
+	 * <p>Title: userJoinCourse</p>  
+	 * <p>Description: 用户报名课程</p> 
+	 * <p>data:2019年4月22日 下午10:10:43 </p> 
+	 * @param userid
+	 * @param courseidInt
+	 * @return
+	 */
+	int userJoinCourse(@Param("userid")int userid, @Param("courseid")int courseid);
+
+	/**
+	 * 
+	 * <p>Title: userExitCourse</p>  
+	 * <p>Description: 学生退出课程</p> 
+	 * <p>data:2019年4月22日 下午10:54:12 </p> 
+	 * @param userid
+	 * @param courseidInt
+	 * @return
+	 */
+	int userExitCourse(@Param("userid")int userid, @Param("courseid")int courseid);
 }

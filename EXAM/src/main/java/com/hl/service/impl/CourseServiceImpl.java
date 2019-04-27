@@ -4,8 +4,10 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.hl.entity.Course;
+import com.hl.entity.ErrorSubject;
 import com.hl.entity.File;
 import com.hl.entity.Userinfo;
 import com.hl.mapper.CourseMapper;
@@ -151,6 +154,79 @@ public class CourseServiceImpl implements CourseService {
 		
 		List<File> list =  fileService.listFileFromCourse(courseidInt,fileType);
 		return list;
+	}
+
+
+	@Override
+	public Map<String, Object> listStudentCourse(String limitStr, String pageStr, String coursename, Userinfo user) {
+		
+		if(!StringUtil.isInteger(pageStr)||!StringUtil.isInteger(limitStr)) {
+			return new HashMap<String,Object>(0);
+		}
+		int userid = user.getUserid();
+		Map<String,Object> result = new HashMap<>();
+		int pageInt = Integer.parseInt(pageStr);
+		int limit = Integer.parseInt(limitStr);
+		Page<Object> page = PageHelper.startPage(pageInt, limit, true);
+		List<Course> list = courseMapper.listStudentCourse(userid,coursename);
+		int pages = page.getPages();
+		long count = page.getTotal();
+		result.put("list", list);
+		result.put("pages", pages);
+		result.put("count", count);
+		return result;
+	}
+
+
+	@Override
+	public Map<String, Object> listCourse4Student(String pageStr, String limitStr, String teacherid, String teachername,
+			String coursename, String starttime, String endtime, String coursedetail) {
+		if(!StringUtil.isInteger(pageStr)||!StringUtil.isInteger(limitStr)) {
+			return new HashMap<String,Object>(0);
+		}
+		Integer teacheridInt = null;
+		if(StringUtil.isInteger(teacherid)) {
+			teacheridInt = Integer.parseInt(teacherid);
+		}
+		Map<String,Object> result = new HashMap<>();
+		int pageInt = Integer.parseInt(pageStr);
+		int limit = Integer.parseInt(limitStr);
+		Page<Object> page = PageHelper.startPage(pageInt, limit, true);
+		List<Course> list = courseMapper.listCourse4Student( teacheridInt,  teachername,
+				 coursename,  starttime,  endtime,  coursedetail);
+		int pages = page.getPages();
+		long count = page.getTotal();
+		result.put("list", list);
+		result.put("pages", pages);
+		result.put("count", count);
+		return result;
+	}
+
+
+	@Override
+	public int userJoinCourse(Userinfo user, String courseid) {
+		if(!StringUtil.isInteger(courseid)) {
+			return 2;  //报名失败
+		}
+		int courseidInt = Integer.parseInt(courseid);
+		int userid = user.getUserid();
+		if(courseMapper.courseOfUserIsExist(userid,courseidInt) > 0) {
+			return 1; //已经报名参加
+		}else {
+			return  courseMapper.userJoinCourse(userid,courseidInt) - 1;
+		}
+	}
+
+
+	@Override
+	public boolean userExitCourse(Userinfo user, String courseid) {
+
+		if(!StringUtil.isInteger(courseid)) {
+			return false;
+		}
+		int courseidInt = Integer.parseInt(courseid);
+		int userid = user.getUserid();
+		return courseMapper.userExitCourse(userid,courseidInt) > 0;
 	}
 	
 	
