@@ -84,9 +84,11 @@ layui.use(['table','element','laypage'], function(){
 	    		          ,id: 'subject_show' //设定一个id，防止重复弹出
 	    		          ,moveType: 1 //拖拽模式，0或者1
 	    		          ,success:function(layero, index){
+	    		        	  result.collect = data;
 	    			          var iframe = window['layui-layer-iframe' + index];
 	    			          iframe.child(result);
 	    		          }
+
 	    			  });
 	    		  }
 	        	  
@@ -101,13 +103,14 @@ layui.use(['table','element','laypage'], function(){
 	    		  success:function(result){
 	    			  layer.open({  //打开试卷预览页面
 	    				  type: 2
-	    		          ,content: ['/EXAM/admin/student/paper_preview.html','yes']
+	    		          ,content: ['/EXAM/admin/student/paper_show.html','yes']
 	    		          ,area: ['700px', '500px']
 	    		          ,shade: 0.4
 	    		          ,id: 'paper_preview' //设定一个id，防止重复弹出
 	    		          ,moveType: 1 //拖拽模式，0或者1
 	    		          ,success:function(layero, index){
 	    			          var iframe = window['layui-layer-iframe' + index];
+	    			          result.collect = data;
 	    			          iframe.child(result);
 	    		          }
 	    			  });

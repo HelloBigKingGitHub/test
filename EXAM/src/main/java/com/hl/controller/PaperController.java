@@ -1,5 +1,6 @@
 package com.hl.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +21,7 @@ import com.hl.entity.PaperDetail;
 import com.hl.entity.ScoreDetail;
 import com.hl.entity.Userinfo;
 import com.hl.formbean.PaperFormBean;
+import com.hl.interceptor.LoginInterceptor;
 import com.hl.service.ExamService;
 import com.hl.service.PaperCheckService;
 import com.hl.service.PaperService;
@@ -35,6 +38,9 @@ import net.sf.json.JSONObject;
  *
  */
 public class PaperController {
+	
+	private static Logger logger = Logger.getLogger(PaperController.class);
+	
 	@Autowired
 	private PaperService service;
 	
@@ -154,7 +160,76 @@ public class PaperController {
 		Map <String,Object>map = scoreService.listScoreByUser( page, limit,user,pid,ptitle,teacherid);
 		return TableUtil.tableRander(ScoreDetail.class, map, "list");
 	}
-
+	
+	
+	/**
+	 * 
+	 * <p>Title: deleteCheckPaper</p>  
+	 * <p>Description: 推诿指定的审查任务</p> 
+	 * <p>data:2019年5月2日 下午4:04:58 </p> 
+	 * @param pid
+	 * @param checkteacherid
+	 * @return
+	 */
+	@RequestMapping(value="delete_check_paper.action",produces= {"text/html;charset=utf-8"})
+	@ResponseBody
+	public String deleteCheckPaper(String pid, String checkteacherid) {
+		JSONObject result = new JSONObject();
+		String msg = "推诿失败";
+		boolean isok = paperCheckService.deleteCheckPaper(pid,checkteacherid);
+		if(isok) {
+			msg = "推诿成功";
+		}
+		result.put("msg", msg);
+		return result.toString();
+	}
+	
+	
+	/**
+	 * 
+	 * <p>Title: paperCheckResult</p>  
+	 * <p>Description: 查看审查结果</p> 
+	 * <p>data:2019年5月2日 下午5:21:49 </p> 
+	 * @param pid
+	 * @param checkteacherid
+	 * @return
+	 */
+	@RequestMapping(value="paper_check_result.action",produces= {"text/html;charset=utf-8"})
+	@ResponseBody
+	public String paperCheckResult(String pid, String checkteacherid) {
+		JSONObject result = new JSONObject();
+		ArrayList<String> msg = new ArrayList<String>();
+		msg.add("暂时没有审查结果");
+		result.put("msg", msg);
+		List<String> cs = paperCheckService.getCheckResult(pid);
+		if(cs != null && cs.size()!=0) {
+			result.put("msg", cs);
+		}
+		return result.toString();
+		
+	}
+	
+	/**
+	 * 
+	 * <p>Title: checkPaper</p>  
+	 * <p>Description: 审查试卷</p> 
+	 * <p>data:2019年5月2日 下午5:22:06 </p> 
+	 * @return
+	 */
+	@RequestMapping(value="check_paper.action",produces= {"text/html;charset=utf-8"})
+	@ResponseBody
+	public String checkPaper(HttpSession session, String pid, String checkcontent ) {
+		logger.info("==============进入试卷审查action=================");
+		JSONObject result = new JSONObject();
+		Userinfo  user = (Userinfo) session.getAttribute("crruentUser");
+		String msg = "审查失败";
+		boolean isok = paperCheckService.CheckPaper(pid,checkcontent,user);
+		if(isok) {
+			msg = "审查成功";
+		}
+		result.put("msg", msg);
+		return result.toString();
+	}
 	
 
 }

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hl.mapper.ClazzDetailMapper">
+	
+	<select id="getFilesByClassid" resultType="File" parameterType="_int">
+	  select f.* from file f
+	  inner join clazz_file cf
+	  on cf .fileid = f.fileid
+	  where cf.classid = #{0}
+	</select>
+	
+	<select id="getTeacherByClassid" resultMap="userDetailMap" parameterType="_int">
+	  select ud.*,u.usertruename,u.usertel,u.userstate,u.roleid
+	  from userdetail ud
+	  inner join sysuser u
+	  on ud.userid = u.userid
+	  inner join  clazz c
+	  on c.classteacherid = u.userid
+	  where c.classid = #{0}
+	</select>
+	
+	<select id="getStudentsByClassid" resultMap="userDetailMap" parameterType="_int">
+	  select ud.*,u.usertruename,u.usertel,u.userstate,u.roleid
+	  from sysuser u
+	  left join userdetail ud
+	  on ud.userid = u.userid
+	  inner join  user_clazz uc
+	  on u.userid = uc.studentid
+	  where uc.classid = #{0}
+	</select>
+	
+	
+	<select id="getAnnouncementsByClassid"  resultType="ClazzAnnouncement"  parameterType="_int">
+	   select ca.* from clazz_announcement ca
+	   where classid = #{0}
+	</select>
+	
+	<resultMap type="UserDetail" id="userDetailMap">
+	  <id property="udid" column="udid" />
+	  <result property="sex" column="sex" />
+	  <result property="motto" column="motto" />
+	  <result property="follow" column="follow" />
+	  <result property="icon" column="icon" />
+	  <result property="email" column="email" />
+	  <result property="ucity" column="ucity" />
+	  <association property="user" javaType="Userinfo">
+	    <id property="userid" column="userid" />
+	    <result property="usertruename" column="usertruename" />
+	    <result property="usertel" column="usertel" />
+	    <result property="userstate" column="userstate" />
+	    <result property="roleid" column="roleid" />
+	  </association>
+	</resultMap>
+
+	
+</mapper>

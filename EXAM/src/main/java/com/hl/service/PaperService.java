@@ -47,6 +47,15 @@ public interface PaperService {
 	 */
 	boolean addPaper(PaperFormBean paperFormBean, Userinfo currentUser)throws Exception;
 
+	/**
+	 * 
+	 * <p>Title: updatePaperState</p>  
+	 * <p>Description: 更新paper表中state字段</p> 
+	 * <p>data:2019年5月2日 下午5:39:09 </p> 
+	 * @param i
+	 */
+	void updatePaperState(int i ,int pid);
+
 	
 
 }

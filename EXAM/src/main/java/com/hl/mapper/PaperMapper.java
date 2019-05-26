@@ -3,6 +3,8 @@ package com.hl.mapper;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.hl.entity.ChoseSubject;
 import com.hl.entity.Paper;
 import com.hl.entity.PaperDetail;
@@ -69,6 +71,16 @@ public interface PaperMapper {
 	 * @return 操作数
 	 */
 	int insertPaperSubject(Map<String,Integer> pidSid);
+
+	/**
+	 * 
+	 * <p>Title: updatePaperState</p>  
+	 * <p>Description: 更新paper中state字段</p> 
+	 * <p>data:2019年5月2日 下午5:41:04 </p> 
+	 * @param i
+	 * @param pid
+	 */
+	int updatePaperState(@Param("pstate")int i, @Param("pid")int pid);
 	
 	
 

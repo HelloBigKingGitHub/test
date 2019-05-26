@@ -60,7 +60,7 @@
       <ul class="layui-nav layui-nav-tree"  lay-filter="test">
       
         <li class="layui-nav-item layui-nav-itemed">
-          <img class="layui-circle" style="padding-left: 30px;padding-right: 30px; width: 120px; height: 120px"
+          <img id="usericon"class="layui-circle" style="padding-left: 30px;padding-right: 30px; width: 120px; height: 120px"
              src="/EXAM/images/1.jpg">
         </li>
         
@@ -105,7 +105,7 @@
   
   <div class="layui-body"> 
     <!-- 内容主体区域 -->
-    <iframe id="option" name="option" src="/EXAM/admin/personalpage.html" style="overflow: visible;"  frameborder="no" width="100%" height="100%"></iframe>
+    <iframe id="option" name="option" src="/EXAM/admin/student/student_home.html" style="overflow: visible;"  frameborder="no" width="100%" height="100%"></iframe>
 
   </div>
   
@@ -137,6 +137,7 @@ layui.use('element', function(){
 	  success:function(result){
 		  icon = '/' + result.iconUrl;
 		  $('#currentUserIcon').attr('src',icon);
+		  $('#usericon').attr('src',icon);
 		  
 	  }
   });

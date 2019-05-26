@@ -90,4 +90,9 @@
 	  insert into paper_subject (pid,sid) values(#{pid} ,#{sid})
 	</insert>
 	
+	<update id="updatePaperState">
+	   update paper set pstate = #{pstate}
+	   where pid = #{pid}
+	</update>
+	
 </mapper>

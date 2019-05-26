@@ -14,6 +14,7 @@ import com.hl.entity.PostBar;
 import com.hl.entity.RPostBar;
 import com.hl.entity.Userinfo;
 import com.hl.service.PostBarService;
+import com.hl.service.RPostBarService;
 
 import net.sf.json.JSONObject;
 
@@ -29,6 +30,9 @@ public class PostBarController {
 	
 	@Autowired
 	private PostBarService postBarService;
+	
+	@Autowired
+	private RPostBarService rPostBarService;
 
 	/**
 	 * 
@@ -95,5 +99,49 @@ public class PostBarController {
 		result.put("rpostbars", (List<RPostBar>)postBarList.get("rpostbars"));
 		return result.toString();
 	}
+	
+	/**
+	 * 
+	 * <p>Title: showPostBarList</p>  
+	 * <p>Description: 根据id的到一个帖子和他的回帖</p> 
+	 * <p>data:2019年4月27日 下午3:39:14 </p> 
+	 * @return
+	 */
+	@RequestMapping(value = "show_my_postbar_list.action", produces = { "html/text;charset=utf-8" })
+	@ResponseBody
+	public String showMyPostBarDetail(String page, String limit, String title, HttpSession session) {
+		JSONObject result = new JSONObject();
+		Userinfo user = (Userinfo) session.getAttribute("crruentUser");
+		Map<String,Object> postBarList = postBarService.listUserPostBarByTitle(page, limit, title,user);
+		result.put("count", (long)postBarList.get("count"));
+		result.put("PostBars", (List<PostBar>)postBarList.get("list"));
+		return result.toString();
+	}
+	
+	/**
+	 * 
+	 * <p>Title: showPostBarList</p>  
+	 * <p>Description: 根据id的到一个帖子和他的回帖</p> 
+	 * <p>data:2019年4月27日 下午3:39:14 </p> 
+	 * @return
+	 */
+	@RequestMapping(value = "receive_postbar.action", produces = { "html/text;charset=utf-8" })
+	@ResponseBody
+	public String receivePostbar(HttpSession session, String rquescontent ,String pbid) {
+		JSONObject result = new JSONObject();
+		Userinfo user = (Userinfo) session.getAttribute("crruentUser");
+		String msg = "回帖失败";
+		boolean isok = rPostBarService.receivePostBar(pbid,rquescontent,user);	
+		if(isok) {
+			msg = "回帖成功";
+		}
+		result.put("msg", msg);
+		return result.toString();
+	}
+	
+	
+	
+	
+	
 	
 }

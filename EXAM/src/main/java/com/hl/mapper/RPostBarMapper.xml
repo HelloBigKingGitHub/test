@@ -8,4 +8,9 @@
 	   order by rp.rpbid DESC
 	</select>
 	
+	<insert id="addRPostBar" parameterType="RPostBar"> 
+	  insert into rpostbar (rquescontent ,rqtime,userid,pbid)
+	  values(#{rquescontent},#{rqtime},#{userid},#{pbid})
+	</insert>
+	
 </mapper>

@@ -106,4 +106,23 @@ public class PostBarServiceImpl implements PostBarService{
 		return result;
 	}
 
+	@Override
+	public Map<String, Object> listUserPostBarByTitle(String pageStr, String limitStr, String title, Userinfo user) {
+		if(!StringUtil.isInteger(limitStr) || !StringUtil.isInteger(pageStr) || user == null) {
+			return new HashMap<>(0);
+		}
+		int userid = user.getUserid();
+		Map<String,Object> result = new HashMap<>();
+		int pageInt = Integer.parseInt(pageStr);
+		int limit = Integer.parseInt(limitStr);
+		Page<Object> page = PageHelper.startPage(pageInt, limit, true);
+		List<PostBar> list = postBarMapper.listUserPostBarByTitle(title,userid);
+		int pages = page.getPages();
+		long count = page.getTotal();
+		result.put("list", list);
+		result.put("pages", pages);
+		result.put("count", count);
+		return result;
+	}
+
 }

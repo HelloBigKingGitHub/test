@@ -3,7 +3,7 @@
 <mapper namespace="com.hl.mapper.UserDetailMapper">
 	
 	<select id="getUserDetail" resultMap="userDetailMap" parameterType="UserDetail">
-	  select ud.*,u.usertruename,u.usertel 
+	  select ud.*,u.usertruename,u.usertel,u.userstate,u.roleid
 	  from userdetail ud
 	  inner join sysuser u
 	  on ud.userid = u.userid
@@ -21,6 +21,8 @@
 	    <id property="userid" column="userid" />
 	    <result property="usertruename" column="usertruename" />
 	    <result property="usertel" column="usertel" />
+	    <result property="userstate" column="userstate" />
+	    <result property="roleid" column="roleid" />
 	  </association>
 	</resultMap>
 	

@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.hl.entity.ClassApply;
 import com.hl.entity.Clazz;
 import com.hl.entity.ClazzAnnouncement;
 import com.hl.entity.ClazzDetail;
 import com.hl.entity.Userinfo;
 import com.hl.formbean.ClazzFormBean;
+import com.hl.service.ClassApplyService;
 import com.hl.service.ClazzAnnouncementService;
 import com.hl.service.ClazzService;
 import com.hl.util.ui.TableUtil;
@@ -37,7 +39,10 @@ import net.sf.json.JSONObject;
 public class ClazzController {
 	
 	@Autowired
-	private ClazzService clazzService; 
+	private ClazzService clazzService;
+	
+	@Autowired
+	private ClassApplyService classApplyService;
 	
 	@Autowired
 	private ClazzAnnouncementService clazzAnnountcementService;
@@ -299,6 +304,7 @@ public class ClazzController {
 	}
 	
 	
+	
 	/**
 	 * 表单提交上来的数据进行转化
 	 * @param clazzFormBean
@@ -319,4 +325,44 @@ public class ClazzController {
 		}
 		return clazz;
 	}
+	
+	
+	/**
+	 * 
+	 * <p>Title: listCurrentUserAllClassApply</p>  
+	 * <p>Description: 展示所有申请加入当前用户（老师）创建的班级的申请信息</p> 
+	 * <p>data:2019年5月4日 下午12:50:33 </p> 
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value="list_all_class_apply",produces= {"text/html;charset=utf-8"})
+	@ResponseBody
+	public String listCurrentUserAllClassApply(String page, String limit, HttpSession session) {
+		Userinfo user = (Userinfo) session.getAttribute("crruentUser");
+		Map<String, Object> apply = classApplyService.listUserAllClassApply(page, limit ,user);
+		String result = TableUtil.tableRander(ClassApply.class, apply, "list");
+		return result;
+	}
+	
+	
+	
+	
+	
+	@RequestMapping(value="agree_student_join_class.action",produces= {"text/html;charset=utf-8"})
+	@ResponseBody
+	public String agreeStudentJoinClass(String applyuser, String classid, String idea) {
+		JSONObject result = new JSONObject();
+		String msg = "";
+		boolean isok = classApplyService.agreeStudentJoinClass(applyuser,classid,idea);
+		if(isok) {
+			msg = "已将该同学加入到班级";
+		}else {
+			msg = "操作失败";
+		}
+		result.put("msg", msg);
+		return result.toString();
+		
+	}
+	
+	
 }

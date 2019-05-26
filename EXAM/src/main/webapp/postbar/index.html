@@ -39,6 +39,7 @@
 			<div class="tab hidden" id="tab2">2</div>
 			<div class="tab hidden" id="tab3">3</div>
 			<div class="tab hidden" id="tab4">4</div>
+			<div style="margin: 50px; margin-top: 10px" id="page"></div>
 		</div>
 	</div>
 	<div class="dvquesright">
@@ -101,7 +102,7 @@
 		</div>
 
 	</div>
-    <div style="margin: 50px; margin-top: 10px" id="page"></div>
+    
 
 
 
@@ -126,7 +127,7 @@
 	});
 	var href = window.location.href;
 	var baseUrl = href.split("//")[0]+"//"+href.split("//")[1].split("/")[0];
-	function rande(postbar, userdetail){
+	function rande(select,postbar, userdetail){
 		var html = 	'<div class="dvques" data-pbid="'+postbar.pbid+'">'+
 		'	<div class="quesCount">'+
 		'		<div class="count">'+postbar.quescount+'</div>'+
@@ -152,7 +153,7 @@
 		'	</div>'+
 		'</div>'
 		
-		$('#tab1').append(html); //添加元素结点
+		$(select).append(html); //添加元素结点
 		
 	}
 	/*************************************************/
@@ -163,16 +164,16 @@
 		  var element = layui.element;
 		  var layer = layui.layer;
 		  var laypage = layui.laypage;
-		  function page(title,urlparm){
+		  function page(title,select,urlparm){
 			  $.ajax({  
 					 type:'post',
-					 data:{'page':'1','limit':'10','title':title},
+					 data:{'page':'1','limit':'3','title':title},
 					 dataType:'json',
 					 url:urlparm,
 					 success:function(result){
 						 laypage.render({
 							    elem: 'page'
-							    ,limit:10
+							    ,limit:3
 							    ,count: result.count //数据总数
 							    ,jump: function(obj){ //分页回调函数
 							    	
@@ -201,7 +202,7 @@
 													 type:'get',
 													 success:function(result){
 														 userdetail = result.userdetail;
-														 rande(postbar,userdetail);
+														 rande(select,postbar,userdetail);
 														 //console.info(postbar.liulancount);
 														 //添加点击事件
 														 $(".dvques").on('click',function(){
@@ -226,7 +227,9 @@
 					 
 				 }); 
 		  }
-		  page('','/EXAM/show_postbar_list.action');
+		  page('','#tab1','/EXAM/show_postbar_list.action');//再也面渲染所有的帖子
+		  page('','#tab2','/EXAM/show_my_postbar_list.action');//再也面渲染所有的帖子
+		  
 	});
 	/*********************************************************/
 </script>

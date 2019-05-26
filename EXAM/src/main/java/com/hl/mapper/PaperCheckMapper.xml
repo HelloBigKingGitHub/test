@@ -32,4 +32,24 @@
         </association>
 	</resultMap>
 	
+	<delete id="deleteCheckPaper"> 
+	  delete from paper_check 
+	  where paperid = #{pid}
+	  and checkteacherid = #{checkteacherid}
+	</delete>
+	
+	<select id="getCheckRest" parameterType="_int" resultType="string">
+	   select checkcontent from paper_check
+	   where paperid = #{pid}
+	</select>
+	
+	<update id="update">
+	  update paper_check set checkcontent = #{checkcontent}
+	  where paperid = #{pid}
+	  and checkteacherid = #{checkteacherid}
+	</update>
+	
+	
+	
+	
 </mapper>

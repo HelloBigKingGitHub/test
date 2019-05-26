@@ -74,4 +74,18 @@ public interface PostBarService {
 	 */
 	Map<String, Object> showPostBarDetailByPbid(String pbid);
 
+	
+	/**
+	 * 
+	 * <p>Title: listMyPostBarByTitle</p>  
+	 * <p>Description: 展示某个用户的发帖</p> 
+	 * <p>data:2019年5月2日 上午1:15:38 </p> 
+	 * @param page
+	 * @param limit
+	 * @param title
+	 * @param user
+	 * @return
+	 */
+	Map<String, Object> listUserPostBarByTitle(String page, String limit, String title, Userinfo user);
+
 }

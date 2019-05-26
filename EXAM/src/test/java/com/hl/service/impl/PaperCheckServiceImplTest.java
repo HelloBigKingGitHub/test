@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hl.BaseTest;
 import com.hl.entity.Paper;
+import com.hl.entity.Userinfo;
 import com.hl.service.PaperCheckService;
 
 public class PaperCheckServiceImplTest extends BaseTest{
@@ -24,5 +25,30 @@ public class PaperCheckServiceImplTest extends BaseTest{
 			System.out.println(paper);
 		}
 	}
+	@Test
+	public void testDeleteCheckPaper() {
+		String pid = "6";
+		String checkteacherid = "4";
+		ps.deleteCheckPaper(pid, checkteacherid);
+		
+	}
+	
+	@Test
+	public void testGetCheckResult() {
+		String pid = "6";
+		ps.getCheckResult(pid);
+	}
+	
+	@Test
+	public void testCheckPaper() {
+		String pid = "6";
+		String checkcontent = "同意 asdsadsadsadsadasdsadas";
+		Userinfo user = new Userinfo();
+		user.setUserid(4);
+		ps.CheckPaper(pid, checkcontent, user);
+		
+	}
+	
+	
 
 }

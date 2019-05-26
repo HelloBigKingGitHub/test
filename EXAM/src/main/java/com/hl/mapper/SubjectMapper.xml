@@ -4,7 +4,7 @@
 
 	<select id="listChoseSubject" resultType="ChoseSubject">
 	    select * from subject
-	
+	    where sid != 0
 	</select>
 	
 	<select id="listChoseSubjectLikeScontent" parameterType="string" resultType="ChoseSubject">

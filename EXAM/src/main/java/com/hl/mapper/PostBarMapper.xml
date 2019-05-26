@@ -32,4 +32,15 @@
 	 where p.pbid=#{pbid}
 	</update>
 	
+	
+	<select id="listUserPostBarByTitle" resultType="PostBar" parameterType="string">
+	   select * from postbar p
+	   
+	   where p.userid = #{userid}
+	   <if test="questitle != null and !''.equals(questitle)">
+          and p.questitle like concat('%',#{questitle},'%')	   
+	   </if>
+	   order by pbid DESC
+	</select>
+	
 </mapper>

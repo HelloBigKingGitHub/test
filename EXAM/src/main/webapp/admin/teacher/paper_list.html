@@ -55,13 +55,12 @@
   <div class="layui-btn-container">
     <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
     <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
-    <button class="layui-btn layui-btn-sm" lay-event="addClazz">创建班级</button>
   </div>
 </script>
  
 <script type="text/html" id="barDemo">
-  <a class="layui-btn layui-btn-xs" lay-event="updata_paper">修改试卷</a>
-  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="check_paper">审查试卷</a>
+  <a class="layui-btn layui-btn-xs" lay-event="chakan_paper">查看试卷</a>
+  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="check_detail">审查结果</a>
 </script>
               
           
@@ -111,13 +110,6 @@ layui.use(['table','form'], function(){
         var data = checkStatus.data;
         layer.msg('选中了：'+ data.length + ' 个');
       break;
-      case 'addClazz':
-        layer.open({
-        	type: 2
-            ,content: ['/EXAM/admin/teacher/add_clazz.html','no']
-            ,area: ['450px', '550px']
-        });
-      break;
     };
   });
   
@@ -125,21 +117,52 @@ layui.use(['table','form'], function(){
   table.on('tool(test)', function(obj){
     var data = obj.data;
     console.log(obj)
-    if(obj.event === 'del'){
-      layer.confirm('真的删除行么', function(index){
-        obj.del();
-        layer.close(index);
-      });
-    } else if(obj.event === 'analyse'){
-      layer.prompt({
-        formType: 2
-        ,value: data.email
-      }, function(value, index){
-        obj.update({
-          email: value
+    if(obj.event === 'chakan_paper'){ //更新试卷详细信息
+    	var pid = data.paper.pid;
+        $.ajax({
+      	  type:'GET',
+      	  url:'/EXAM/student_preview_paper.action',
+      	  data:{"pid":pid},
+  		  dataType:"json",
+  		  success:function(result){
+  			  layer.open({  //打开试卷预览页面
+  				  type: 2
+  		          ,content: ['/EXAM/admin/teacher/paper_show2.html','yes']
+  		          ,area: ['700px', '500px']
+  		          ,shade: 0.4
+  		          ,id: 'paper_preview' //设定一个id，防止重复弹出
+  		          ,moveType: 1 //拖拽模式，0或者1
+  		          ,success:function(layero, index){
+  			          var iframe = window['layui-layer-iframe' + index];
+  			          iframe.child(result);
+  		          }
+  			  });
+  		  }
+      	  
         });
-        layer.close(index);
-      });
+    	
+    } else if(obj.event === 'check_detail'){ //查看试卷的审查情况
+    	var pid = data.paper.pid;
+        $.ajax({
+      	  type:'GET',
+      	  url:'/EXAM/paper_check_result.action',
+      	  data:{"pid":pid},
+  		  dataType:"json",
+  		  success:function(result){
+  			  var msg = '';
+  			  if(result.msg != null ){
+  				 var length = result.msg.length;
+  				 for (var i = 0; i < length; i++) {
+  					msg = msg + result.msg[i] + '</br>'
+				}
+  			  }
+  			layer.open({
+  			  title: '审查结果'
+  			  ,content: msg
+  			});    
+  		  }
+      	  
+        });
     }
   });
   /*给搜索框进行设置*/

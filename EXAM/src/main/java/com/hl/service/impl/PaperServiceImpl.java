@@ -107,4 +107,11 @@ public class PaperServiceImpl implements PaperService{
 		return true;
 	}
 	
+	
+	@Override
+	public void updatePaperState(int i, int pid) {
+		mapper.updatePaperState(i,pid);
+		
+	}
+	
 }

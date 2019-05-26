@@ -21,26 +21,29 @@ public class LoginFilter implements Filter{
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		// TODO Auto-generated method stub
-		logger.info("==============过滤器初始化================");
+		logger.info("==============登录过滤器初始化================");
 		
 	}
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		logger.info("==============过滤器执行中================");
+		logger.info("==============登录过滤器执行中================");
 		 HttpServletRequest req = (HttpServletRequest) request;
 	     HttpServletResponse res = (HttpServletResponse) response;
 	     String contextPath = req.getContextPath();
 	     String requestUri = req.getRequestURI();
 	     if(requestUri.contains("login.action") || requestUri.contains("reg.action")
 				|| requestUri.contains("user_code.action") || requestUri.contains("user_phoneCode.action")) {
+	    	 logger.info("==============登录过滤器放行================");
 	    	 chain.doFilter(req, res);
 	     }else {
 	    	 Userinfo user = (Userinfo) req.getSession().getAttribute("crruentUser");
 	    	 if(user == null) {
+	    		 logger.info("==============登录过滤器跳转================");
 	    		 res.sendRedirect(contextPath+"/log_reg.jsp");
 	    	 }else {
+	    		 logger.info("==============登录过滤器放行================");
 	    		 chain.doFilter(req, res);
 	    	 }
 	     }

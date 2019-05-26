@@ -7,4 +7,37 @@
 	  values(#{1},#{0})
 	</insert>
 	
+	<select id="listClassApplyByUserid" resultMap="classApplyMap" parameterType="_int">
+	   select c.classid,c.classname,u.userid,u.usertel,u.usertruename,cp.applyid
+	   from class_apply cp
+	   inner join clazz c
+	   on c.classid = cp.classid
+	   inner join sysuser u
+	   on cp.applyuser = u.userid
+	   where c.classteacherid = #{0}
+	</select>
+	
+	<resultMap type="ClassApply" id="classApplyMap">
+	  <id column="applyid" property="applyid" />
+	  <association property="clazz" javaType="Clazz">
+	    <id column="classid" property="classid" />
+	    <result column="classname" property="classname" />
+	  </association>
+	    
+	  <association property="userinfo" javaType="Userinfo">
+	    <id column="userid" property="userid" />
+	    <result column="usertel" property="usertel" />
+	    <result column="usertruename" property="usertruename" />
+	  </association>
+	
+	</resultMap>
+	
+	<delete id="deleteApply" >
+	
+	  delete from class_apply
+	  where applyuser = #{applyuser}
+	  and classid = #{classid}
+	
+	</delete>
+	
 </mapper>

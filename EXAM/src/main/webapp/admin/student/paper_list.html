@@ -119,44 +119,53 @@ layui.use(['table','form'], function(){
     console.log(obj)
     if(obj.event === 'preview_paper'){  // 预览试卷
     	var pid = data.paper.pid;
-      $.ajax({
-    	  type:'GET',
-    	  url:'/EXAM/student_preview_paper.action',
-    	  data:{"pid":pid},
-		  dataType:"json",
-		  success:function(result){
-			  layer.open({  //打开试卷预览页面
-				  type: 2
-		          ,content: ['/EXAM/admin/student/paper_preview.html','yes']
-		          ,area: ['700px', '500px']
-		          ,shade: 0.4
-		          ,id: 'paper_preview' //设定一个id，防止重复弹出
-		          ,moveType: 1 //拖拽模式，0或者1
-		          ,success:function(layero, index){
-			          var iframe = window['layui-layer-iframe' + index];
-			          iframe.child(result);
-		          }
-			  });
-		  }
-    	  
-      });
+    	if(data.paper.pstate == 0){
+    		layer.msg('该试卷暂未启用');
+    	}else{
+    		
+	      $.ajax({
+	    	  type:'GET',
+	    	  url:'/EXAM/student_preview_paper.action',
+	    	  data:{"pid":pid},
+			  dataType:"json",
+			  success:function(result){
+				  layer.open({  //打开试卷预览页面
+					  type: 2
+			          ,content: ['/EXAM/admin/student/paper_preview.html','yes']
+			          ,area: ['700px', '500px']
+			          ,shade: 0.4
+			          ,id: 'paper_preview' //设定一个id，防止重复弹出
+			          ,moveType: 1 //拖拽模式，0或者1
+			          ,success:function(layero, index){
+				          var iframe = window['layui-layer-iframe' + index];
+				          iframe.child(result);
+			          }
+				  });
+			  }
+	      });
+    	}
     } else if(obj.event === 'start_exam'){  //开始考试
     	var pid = data.paper.pid;
     	//console.info(data.paper);
-    	$.ajax({  //异步请求后台考试路径
-			contentType:"application/json;charset=utf-8",
-			type:"GET",
-			url:"/EXAM/test_start.action",
-			data:{"pid":pid},
-		    dataType:"TEXT",
-		    success:function(result){
-		    	//alert(result);
-		    	var href = window.location.href;
-				var baseUrl = href.split("//")[0]+"//"+href.split("//")[1].split("/")[0]+"/"+href.split("//")[1].split("/")[1];
-		    	//baseUrl是项目部署的基本路径
-				window.open(baseUrl+result);   
-		    }
-		});
+    	if(data.paper.pstate == 0){
+    		layer.msg('该试卷暂未启用');
+    	}else{
+    		
+	    	$.ajax({  //异步请求后台考试路径
+				contentType:"application/json;charset=utf-8",
+				type:"GET",
+				url:"/EXAM/test_start.action",
+				data:{"pid":pid},
+			    dataType:"TEXT",
+			    success:function(result){
+			    	//alert(result);
+			    	var href = window.location.href;
+					var baseUrl = href.split("//")[0]+"//"+href.split("//")[1].split("/")[0]+"/"+href.split("//")[1].split("/")[1];
+			    	//baseUrl是项目部署的基本路径
+					window.open(baseUrl+result);   
+			    }
+			});
+    	}
     }
   });
   

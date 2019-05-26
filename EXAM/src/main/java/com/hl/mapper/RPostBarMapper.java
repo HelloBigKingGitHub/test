@@ -25,4 +25,14 @@ public interface RPostBarMapper {
 	 */
 	List<RPostBar> listRPostBar(@Param("pbid")int pbidInt);
 
+	/**
+	 * 
+	 * <p>Title: addRPostBar</p>  
+	 * <p>Description: 添加回帖内容</p> 
+	 * <p>data:2019年5月2日 下午2:35:01 </p> 
+	 * @param rPostBar
+	 * @return
+	 */
+	int addRPostBar(RPostBar rPostBar);
+
 }

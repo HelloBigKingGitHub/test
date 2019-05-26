@@ -19,10 +19,10 @@
         <div class="layui-card text-center">
           <div class="layui-card-body">
             <div class="layadmin-homepage-pad-ver">
-              <img class="layadmin-homepage-pad-img" src="/EXAM/images/1.jpg" width="96" height="96">
+              <img id="teachericon" class="layadmin-homepage-pad-img" src="/EXAM/images/1.jpg" width="96" height="96">
             </div>
             <h4 class="layadmin-homepage-font">班主任</h4>
-            <p class="layadmin-homepage-min-font">李四</p>
+            <p class="layadmin-homepage-min-font" id="teachername">李四</p>
             <div class="layadmin-homepage-pad-ver">
               <a href="javascript:;" class="layui-icon layui-icon-cellphone" ></a>
               <a href="javascript:;" class="layui-icon layui-icon-vercode"></a>
@@ -36,11 +36,11 @@
           关于班主任
         </p>
         <ul class="layadmin-homepage-list-group">
-          <li class="list-group-item"><i class="layui-icon layui-icon-location"></i>湖南科技大学</li>
+          <li class="list-group-item"><i class="layui-icon layui-icon-location"></i><span id="city">湖南科技大学</span></li>
           <li class="list-group-item"><a href="javascript:;" class="color"><i class="layui-icon layui-icon-snowflake"></i><span style="word-wrap:break-word;">https://weibo.com/hu_ge</span></a></li>
         </ul>
         <div class="layadmin-homepage-pad-hor">
-          <mdall>高智商，低情商，IT理工男。程序猿，攻城狮。</mdall>
+          <span id="motto">高智商，低情商，IT理工男。程序猿，攻城狮。</span>
         </div>
         <p class="layadmin-homepage-about">
           技能
@@ -61,7 +61,7 @@
             <div class="layui-row layadmin-homepage-text-center">
               <div class="layui-col-md3 layui-col-sm3 layui-col-xs3">
                 <p class="h4">52K</p>
-                <mdall>班级人数</mdall>
+                <mdall id="classpeople">班级人数</mdall>
               </div>
              
               
@@ -369,13 +369,17 @@
 		  var $ = layui.jquery;
 		  var layer = layui.layer;
 		  $.ajax({ //异步请求班级详细信息
-			url:'/EXAM/get_class_detail.action',  
+			//url:'/EXAM/get_class_detail.action',  弃用，后端的实现方法不理智
+			url:'/EXAM/get_teacher_by_classid.action',
 			data:{'classid':classid},
 			type:'POST',
 			dataType:'json',
 			success:function(result){
-				
-				
+				var teacher = result.teacher;
+				$('#teachericon').attr('src','/'+teacher.icon);
+				$('#teachername').text(teacher.user.usertruename);
+				$('#city').text(teacher.ucity);
+				$('#motto').text(teacher.motto);
 			}
 		  });
 		  

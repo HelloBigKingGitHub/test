@@ -40,10 +40,7 @@ import net.sf.json.JSONObject;
  *
  */
 public class LoginAndRegisterController {
-	//图片验证码的字符串
-	private StringBuffer codeStr; 
-	//手机验证随机码
-	private String randomCode;
+	
 	@Autowired
 	private UserService userServiceImpl;
 	
@@ -94,7 +91,7 @@ public class LoginAndRegisterController {
 	 */
 	@RequestMapping("user_code.action")
 	public void code(Model model,HttpServletRequest httpServletRequest,
-		       HttpServletResponse httpServletResponse) {
+		       HttpServletResponse httpServletResponse, HttpSession session) {
 		try {
 			//获得一个数组输出流
 			ByteArrayOutputStream  out = new ByteArrayOutputStream();
@@ -102,7 +99,8 @@ public class LoginAndRegisterController {
 			Map<String,Object> map = CodeUtil.generateCodeAndPic();
 			BufferedImage buffImg = (BufferedImage) map.get("codePic");
 			//获得图片的验证码字符串
-			codeStr = (StringBuffer) map.get("code");
+			StringBuffer codeStr = (StringBuffer) map.get("code");
+			session.setAttribute("codeStr", codeStr);
 			//将图片资源写入到输出流中
 			ImageIO.write(buffImg, "jpeg", out);
 			// img为图片的二进制流
@@ -124,17 +122,19 @@ public class LoginAndRegisterController {
 	 * @param phoneNumber 手机号码
 	 */
 	@RequestMapping("user_phoneCode.action")
-	public void phoneCode(String phoneNumber) {
+	public void phoneCode(String phoneNumber,HttpSession session) {
 		//1.获取随机验证码
-		randomCode = IndustrySMS.RandomCode();
+		String randomCode = IndustrySMS.RandomCode();
+		session.setAttribute("randomCode", randomCode);
 		//2.调用自定义util包中的api发送验证码到指定的手机上
 		IndustrySMS.execute(phoneNumber, randomCode);
 	}
 	
 	@RequestMapping(value="reg.action",method={RequestMethod.POST,RequestMethod.GET})
-	public @ResponseBody String userReg(@RequestBody RegFormBean regForm ) {
+	public @ResponseBody String userReg(@RequestBody RegFormBean regForm ,HttpSession session) {
 		System.out.println(regForm);
 		Userinfo userinfo = new Userinfo();
+		String randomCode = (String) session.getAttribute("randomCode");
 		//对传输进来的手机验证码进行判断，不为空，不为空串，并且与随机码相同就进行下一步的业务
 		if(regForm.getPhoneCode()!=null&&(!"".equals(regForm.getPhoneCode()))&&regForm.getPhoneCode().equals(randomCode)){
 			//进行表单bean与实体bean间的属性拷贝
@@ -166,6 +166,7 @@ public class LoginAndRegisterController {
 	public @ResponseBody String userLogin(@RequestBody LoginFormBean loginForm,HttpSession session ) {
 		System.out.println(loginForm);
 		Userinfo userinfo = new Userinfo();
+		StringBuffer  codeStr= (StringBuffer) session.getAttribute("codeStr");
 		//首先判断输入的图片验证码信息是否正确 返回-1表示验证码错误
 		if(!codeStr.toString().equals(loginForm.getImgCode())) {
 			return "-1";

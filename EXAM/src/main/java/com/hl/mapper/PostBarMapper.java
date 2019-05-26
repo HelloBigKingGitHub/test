@@ -60,6 +60,18 @@ public interface PostBarMapper {
 	 * @return
 	 */
 	int update(@Param("quescount")int quescount, @Param("liulancount")String liulancount, @Param("liulantime")String liulantime, @Param("pbid")int pbid);
+
+
+	/**
+	 * 
+	 * <p>Title: listUserPostBarByTitle</p>  
+	 * <p>Description:  查询某一用户的所有的帖子信息</p> 
+	 * <p>data:2019年5月2日 上午11:53:22 </p> 
+	 * @param title
+	 * @param userid
+	 * @return
+	 */
+	List<PostBar> listUserPostBarByTitle(@Param("questitle")String title, @Param("userid")int userid);
 	
 	
 

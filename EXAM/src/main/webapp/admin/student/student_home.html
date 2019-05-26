@@ -11,32 +11,32 @@
 </head>
 <body style="margin-top: 10px;">
 <div class="fly-home fly-panel" style="background-image: url();">
-  <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" alt="贤心">
+  <img id="icon"src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" alt="贤心">
   <i class="iconfont icon-renzheng" title="Fly社区认证"></i>
   <h1>
-    贤心
-    <i class="iconfont icon-nan"></i>
-    <!-- <i class="iconfont icon-nv"></i>  -->
+   <span id="username">xingming</span>
+    <i class="iconfont icon-nan" id="nan"></i>
+    <i class="iconfont icon-nv" id="nv"></i>
     <i class="layui-badge fly-badge-vip">VIP3</i>
     
-    <span style="color:#c00;">（管理员）</span>
+    <span style="color:#c00;" id="shengfen">（学员）</span>
     <span style="color:#5FB878;">（社区之光）</span>
-    <span>（该号已被封）</span>
+    <span id="userstate">（该号已被封）</span>
     
   </h1>
 
-  <p style="padding: 10px 0; color: #5FB878;">认证信息：layui 作者</p>
+  <p style="padding: 10px 0; color: #5FB878;">认证信息：ekao 用户</p>
 
   <p class="fly-home-info">
     <i class="iconfont icon-kiss" title="飞吻"></i><span style="color: #FF7200;">66666 飞吻</span>
     <i class="iconfont icon-shijian"></i><span>2015-6-17 加入</span>
-    <i class="iconfont icon-chengshi"></i><span>来自杭州</span>
+    <i class="iconfont icon-chengshi"></i><span id='city'>来自杭州</span>
   </p>
 
-  <p class="fly-home-sign">（人生仿若一场修行）</p>
+  <p class="fly-home-sign" id="motto">（人生仿若一场修行）</p>
 
   <div class="fly-sns" data-user="">
-    <a href="javascript:;" class="layui-btn layui-btn-primary fly-imActive" >踢出班级</a>
+    <a href="javascript:;" class="layui-btn layui-btn-primary fly-imActive" >发送消息</a>
     <a href="javascript:;" class="layui-btn layui-btn-normal fly-imActive" onclick="history.back()">返回上级</a>
   </div>
 
@@ -46,14 +46,14 @@
   <div class="layui-row layui-col-space15">
     <div class="layui-col-md6 fly-home-jie">
       <div class="fly-panel">
-        <h3 class="fly-panel-title">贤心 最近的提问</h3>
+        <h3 class="fly-panel-title"> 最近的提问</h3>
         
       </div>
     </div>
     
     <div class="layui-col-md6 fly-home-da">
       <div class="fly-panel">
-        <h3 class="fly-panel-title">贤心 最近的回答</h3>
+        <h3 class="fly-panel-title"> 最近的回答</h3>
         
       </div>
     </div>
@@ -65,13 +65,38 @@
 <script src="/EXAM/admin/layui/layui.js"></script>
 <script>
 layui.use('form',function(){
-	
-   var useridAndClassid = window.location.search ;
+	var $ = layui.jquery;
+	var crruentUserid = $('#crruentUserid', parent.document).text();
+	 $.ajax({
+		   url:'/EXAM/get_userdetail_by_userid.action',
+		   type:'post',
+		   data:{'userid':crruentUserid},
+		   dataType:'json',
+		   success:function(result){
+			   var userdetail = result.userdetail;
+			   var user = userdetail.user;
+			   if(user.roleid == 2){
+				   $('#shengfen').text('（老师）');
+			   }
+			   if(user.userstate == 1){
+				   $('#userstate').text('（该号正常）');
+			   }
+			   if(userdetail.sex == 0){ //性别男
+				   $('#nv').addClass('layui-hide');
+				   
+			   }else{
+				   $('#nan').addClass('layui-hide');
+			   }
+			   $('#city').text('来自'+userdetail.ucity);
+			   $('#motto').text(userdetail.motto);
+			   $('#username').text(user.usertruename);
+			   $('#icon').attr('src','/'+userdetail.icon);
+			   $('icon').attr('alt',user.usertruename);
+		   }
+		   
+		   
+	   });
    
-   var userid = useridAndClassid.split("&")[0].split("=")[1];
-   var classid =  useridAndClassid.split("&")[1].split("=")[1];
-   alert(userid);
-   alert(classid);
 	
 });
 

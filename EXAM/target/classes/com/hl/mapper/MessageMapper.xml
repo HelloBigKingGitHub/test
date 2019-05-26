@@ -10,12 +10,13 @@
 	<select id="getMessageBySendUser" resultMap="messageMap" parameterType="Userinfo">
 	   select * from message m 
 	   where m.sendid = #{userid}
-	
+	   order by m.mtime desc
 	</select>
 	
 	<select id="getMessageByReceiveUser" resultMap="messageMap" parameterType="Userinfo">
 	   select * from message m 
 	   where m.receiveid = #{userid}
+	   order by m.mtime desc
 	</select>
 	
 	<select id="getMessageByMessageid" resultMap="messageMap" parameterType="int">

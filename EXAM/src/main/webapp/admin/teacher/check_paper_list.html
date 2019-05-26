@@ -60,7 +60,7 @@
 </script>
  
 <script type="text/html" id="barDemo">
-  <a class="layui-btn layui-btn-xs" lay-event="updata_paper">修改试卷</a>
+  <a class="layui-btn layui-btn-xs" lay-event="donot_check">推诿审查</a>
   <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="check_paper">审查试卷</a>
 </script>
               
@@ -119,21 +119,46 @@ layui.use(['table','form'], function(){
   table.on('tool(test)', function(obj){
     var data = obj.data;
     console.log(obj)
-    if(obj.event === 'del'){
-      layer.confirm('真的删除行么', function(index){
-        obj.del();
-        layer.close(index);
-      });
-    } else if(obj.event === 'analyse'){
-      layer.prompt({
-        formType: 2
-        ,value: data.email
-      }, function(value, index){
-        obj.update({
-          email: value
+    if(obj.event === 'donot_check'){
+    	var pid = data.paper.pid;
+      layer.confirm('你确定不受理改试卷的审查工作吗？', function(index){ //不受理试卷的审查工作
+        $.ajax({
+        	type:'GET',
+        	url:'/EXAM/delete_check_paper.action',
+        	data:{"pid":pid,"checkteacherid":crruentUserid},
+    		dataType:"json",
+    		success:function(result){
+    			layer.msg(result.msg,{time:2000},function(){
+    				if(result.msg == '推诿成功'){
+    					location.reload();
+    				}
+    			});
+    		}
         });
-        layer.close(index);
       });
+    } else if(obj.event === 'check_paper'){
+    	var pid = data.paper.pid;
+        $.ajax({
+      	  type:'GET',
+      	  url:'/EXAM/student_preview_paper.action',
+      	  data:{"pid":pid},
+  		  dataType:"json",
+  		  success:function(result){
+  			  layer.open({  //打开试卷预览页面
+  				  type: 2
+  		          ,content: ['/EXAM/admin/teacher/paper_show.html','yes']
+  		          ,area: ['700px', '500px']
+  		          ,shade: 0.4
+  		          ,id: 'paper_show2' //设定一个id，防止重复弹出
+  		          ,moveType: 1 //拖拽模式，0或者1
+  		          ,success:function(layero, index){
+  			          var iframe = window['layui-layer-iframe' + index];
+  			          iframe.child(result);
+  		          }
+  			  });
+  		  }
+      	  
+        });
     }
   });
   /*给搜索框进行设置*/

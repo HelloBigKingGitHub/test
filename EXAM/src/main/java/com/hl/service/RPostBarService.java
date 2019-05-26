@@ -3,6 +3,7 @@ package com.hl.service;
 import java.util.List;
 
 import com.hl.entity.RPostBar;
+import com.hl.entity.Userinfo;
 
 /**
  * 
@@ -27,4 +28,16 @@ public interface RPostBarService {
 	 * @return
 	 */
 	List<RPostBar> showRPostBarByPbid(String pbid);
+
+	/**
+	 * 
+	 * <p>Title: receivePostBar</p>  
+	 * <p>Description: 回复指定的帖子</p> 
+	 * <p>data:2019年5月2日 下午2:07:01 </p> 
+	 * @param pbid
+	 * @param rquescontent
+	 * @param user
+	 * @return
+	 */
+	boolean receivePostBar(String pbid, String rquescontent, Userinfo user);
 }
